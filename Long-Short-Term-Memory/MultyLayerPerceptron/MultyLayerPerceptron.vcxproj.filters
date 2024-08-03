@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="mlp\activation-functions.cpp">
+      <Filter>mlp\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="mlp\layer.cpp">
+      <Filter>mlp\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="mlp\lost-function.cpp">
+      <Filter>mlp\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="mlp\mlp-builder.cpp">
+      <Filter>mlp\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="mlp\multy-layer-perceptron.cpp">
+      <Filter>mlp\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="mlp\neuron.cpp">
+      <Filter>mlp\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\utils.cpp">
+      <Filter>utils\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="lstm\lstm.cpp">
+      <Filter>lstm\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\lstmUtils.cpp">
+      <Filter>utils\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="lstm\lstm-builder.cpp">
+      <Filter>lstm\Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="mlp">
+      <UniqueIdentifier>{46723ffb-7d3e-44e7-a922-f502ef5d54ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mlp\Headers">
+      <UniqueIdentifier>{6c1a5183-41da-452d-b2be-409e8ede90f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mlp\Sources">
+      <UniqueIdentifier>{fafee676-e274-4e5f-b73e-3310de0b7e43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{04f582ba-214c-455c-a4ff-87cb2899c978}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils\Headers">
+      <UniqueIdentifier>{e46d3aa3-3a01-476e-9dbe-f00476721a42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils\Sources">
+      <UniqueIdentifier>{4155b60f-50d0-4066-a346-9ffb6367049a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lstm">
+      <UniqueIdentifier>{8446dcdd-da2e-4674-a36d-5e1fb6fe9bb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lstm\Headers">
+      <UniqueIdentifier>{e88ceedc-8496-49f5-ac84-8fa3d83f1a70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lstm\Sources">
+      <UniqueIdentifier>{5b9e996b-5d6b-4a61-8caa-98dd98498f0f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="mlp\activation-functions.h">
+      <Filter>mlp\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="mlp\layer.h">
+      <Filter>mlp\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="mlp\lost-function.h">
+      <Filter>mlp\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="mlp\mlp-builder.h">
+      <Filter>mlp\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="mlp\multy-layer-perceptron.h">
+      <Filter>mlp\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="mlp\neuron.h">
+      <Filter>mlp\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\basic-includes.h">
+      <Filter>utils\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\utils.h">
+      <Filter>utils\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="lstm\lstm.h">
+      <Filter>lstm\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\lstmUtils.h">
+      <Filter>utils\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="lstm\lstm-builder.h">
+      <Filter>lstm\Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
