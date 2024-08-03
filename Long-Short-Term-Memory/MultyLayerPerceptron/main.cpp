@@ -100,22 +100,17 @@ int main(int argc, const char** argv)
     //--- build LSTM
     LSTM lstm  =  LSTMbuilder()
         .InputSize(28*28)
-        //.CellStateSize(5)
         .ForgetArchitecture({
-            //LayerSignature(10, new Sigmoid(), 0.01),
-            LayerSignature(25, new Sigmoid(), 0.01)
+            LayerSignature(3, new Sigmoid(), 0.01)
         })
         .InputArchitecture({
-            //LayerSignature(10, new Sigmoid(), 0.01),
-            LayerSignature(25, new Sigmoid(), 0.01)
+            LayerSignature(3, new Sigmoid(), 0.01)
         })
         .CandidateArchitecture({
-            //LayerSignature(10, new Tanh(), 0.01),
-            LayerSignature(25, new Tanh(), 0.01)
+            LayerSignature(3, new Tanh(), 0.01)
         })
         .OutputArchitecture({
-            //LayerSignature(10, new Sigmoid(), 0.01),
-            LayerSignature(25, new Sigmoid(), 0.01)
+            LayerSignature(3, new Sigmoid(), 0.01)
         })
         .LearningRate(0.01)
         .LossFunction(new MSE())
@@ -126,7 +121,7 @@ int main(int argc, const char** argv)
 
     //--- train
     size_t epoch = 0;
-    while (epoch < 40) {
+    while (epoch < 100) {
 
         //--- train for this epoch
         for (size_t i = 0; i < trainigDataSet.size(); i++) {
@@ -139,9 +134,9 @@ int main(int argc, const char** argv)
 
 
         //--- shuffle
-        std::random_device rd;
-        std::mt19937 g(rd());
-        std::shuffle(trainigDataSet.begin(), trainigDataSet.end(), g);
+        //std::random_device rd;
+        //std::mt19937 g(rd());
+        //std::shuffle(trainigDataSet.begin(), trainigDataSet.end(), g);
 
 
         //--- epoch training avaliation
@@ -161,12 +156,12 @@ int main(int argc, const char** argv)
 
 
     //--- evaluating training on MNIST test set
-    std::cout << "training concluded!!!\n\n\n";
+    /*std::cout << "training concluded!!!\n\n\n";
 
     double accuracy = 0.0;
     Eigen::MatrixXd confusionMatrix  =  TestingModelAccuracyLSTM(&lstm, "..\\..\\.resources\\test", &accuracy);
     std::cout << "Testing Accuracy: " << accuracy << "\n\n";
-    std::cout << confusionMatrix << "\n\n\n\n";
+    std::cout << confusionMatrix << "\n\n\n\n";*/
 
 
     //--- plot chart
@@ -188,6 +183,13 @@ int main(int argc, const char** argv)
 
 
 
+//        _____ ______   ___       ________
+//        |\   _ \  _   \|\  \     |\   __  \
+//        \ \  \\\__\ \  \ \  \    \ \  \|\  \
+//        \ \  \\|__| \  \ \  \    \ \   ____\
+//        \ \  \    \ \  \ \  \____\ \  \___|
+//        \ \__\    \ \__\ \_______\ \__\
+//        \|__|     \|__|\|_______|\|__|
 
 
 
@@ -272,7 +274,7 @@ std::vector<double> ParseLabelToEspectedOutput(size_t l)
 
 
 
-int _main___(int argc, const char** argv)
+int _main___MLP(int argc, const char** argv)
 {
     //--- initialize gnuplot to plot chart
     Gnuplot gnuplot;

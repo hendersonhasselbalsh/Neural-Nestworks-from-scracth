@@ -13,45 +13,6 @@ LSTM::~LSTM()
 
 
 
-std::vector<double> LSTM::Softmax(const std::vector<double>& input)
-{
-	std::vector<double> output(input.size());
-
-	double sum = 0.0;
-	for (double val : input) {
-		sum += std::exp(val);
-	}
-
-	for (size_t i = 0; i < input.size(); ++i) {
-		output[i] = std::exp( input[i] ) / sum;
-	}
-
-	return output;
-}
-
-
-
-std::vector<double> LSTM::dSoftmax(const std::vector<double>& input)
-{
-	std::vector<double> result(input.size(), 0.0);
-
-	double sum = 0.0;
-	for (size_t i = 0; i < input.size(); i++) {
-		double exp_val  =  std::exp( input[i] );
-		result[i]  =  exp_val; 
-		sum  +=  exp_val;
-	}
-
-	for (size_t i = 0; i < input.size(); i++) {
-
-		result[i] =  ( result[i] * (sum - result[i]) ) / (sum*sum);
-	}
-
-	return result;
-}
-
-
-
 std::vector<double> LSTM::Foward(std::vector<double> input)
 {
 	_gatesInput  =  std::vector<double>();
@@ -74,7 +35,7 @@ std::vector<double> LSTM::Foward(std::vector<double> input)
 	Utils::PointwiseMult(&_forgetActivation, &_previousCellState, &fMULTc);
 	Utils::PointwiseMult(&_inputActivation, &_candidateActivation, &iMULTpc);
 	Utils::PointwiseAdd(&fMULTc, &iMULTpc, &_cellState);
-	_previousCellState  =  _cellState;
+	//_previousCellState  =  _cellState;       // <-- i'm not sure if it is correctly positioned here or ... (see line 98)
 
 
 	// hidden state: H<t>  =  tanh(C<t>)  [x]  o 
@@ -88,10 +49,10 @@ std::vector<double> LSTM::Foward(std::vector<double> input)
 
 	std::vector<double> predicted_y;
 
-	_linearOutput  =  _linearMLP.Foward( hiddenState );  // use softmax
-	predicted_y  =  Softmax( _linearOutput );            // use softmax
+	//_linearOutput  =  _linearMLP.Foward( hiddenState );  // use softmax
+	//predicted_y  =  Softmax( _linearOutput );            // use softmax
 
-	//predicted_y  =  _linearMLP.Foward(hiddenState);  // don't use softmax
+	predicted_y  =  _linearMLP.Foward(hiddenState);  // don't use softmax
 
 
 	return predicted_y;
@@ -132,6 +93,9 @@ void LSTM::Backward(std::vector<double> predictedY, std::vector<double> correctY
 	// update forget MLP 
 	std::vector<double> dLoss_dForget = LossPartialWithRespectToForget( dLoss_dCellState );
 	_forgetMLP.Backward( dLoss_dForget );
+
+
+	_previousCellState  =  _cellState;   // <-- ... or should i put it here.
 }
 
 
@@ -234,4 +198,53 @@ std::vector<double> LSTM::LossPartialWithRespectToForget(std::vector<double>& dL
 
 	return dLoss_dForget;
 }
+
+
+
+
+
+std::vector<double> LSTM::Softmax(const std::vector<double>& input)
+{
+	std::vector<double> output(input.size());
+
+	double sum = 0.0;
+	for (double val : input) {
+		sum += std::exp(val);
+	}
+
+	for (size_t i = 0; i < input.size(); ++i) {
+		output[i] = std::exp(input[i]) / sum;
+	}
+
+	return output;
+}
+
+
+
+std::vector<double> LSTM::dSoftmax(const std::vector<double>& input)
+{
+	std::vector<double> result  =  Softmax(input);
+
+	for (auto& r : result) {
+		r  =  r * (1.0 - r);
+	}
+
+
+
+
+	/*double sum = 0.0;
+	for (size_t i = 0; i < input.size(); i++) {
+		double exp_val  =  std::exp(input[i]);
+		result[i]  =  exp_val;
+		sum  +=  exp_val;
+	}
+
+	for (size_t i = 0; i < input.size(); i++) {
+
+		result[i] =  (result[i] * (sum - result[i])) / (sum*sum);
+	}*/
+
+	return result;
+}
+
 
