@@ -15,6 +15,8 @@ LSTM::~LSTM()
 
 std::vector<double> LSTM::Foward(std::vector<double> input)
 {
+	_previousCellState  =  _cellState;
+
 	_gatesInput  =  std::vector<double>();
 	_gatesInput.insert(_gatesInput.end(), _hiddenState.begin(), _hiddenState.end());
 	_gatesInput.insert(_gatesInput.end(), input.begin(), input.end());
@@ -35,7 +37,6 @@ std::vector<double> LSTM::Foward(std::vector<double> input)
 	Utils::PointwiseMult(&_forgetActivation, &_previousCellState, &fMULTc);
 	Utils::PointwiseMult(&_inputActivation, &_candidateActivation, &iMULTpc);
 	Utils::PointwiseAdd(&fMULTc, &iMULTpc, &_cellState);
-	//_previousCellState  =  _cellState;       // <-- i'm not sure if it is correctly positioned here or ... (see line 98)
 
 
 	// hidden state: H<t>  =  tanh(C<t>)  [x]  o 
@@ -93,9 +94,6 @@ void LSTM::Backward(std::vector<double> predictedY, std::vector<double> correctY
 	// update forget MLP 
 	std::vector<double> dLoss_dForget = LossPartialWithRespectToForget( dLoss_dCellState );
 	_forgetMLP.Backward( dLoss_dForget );
-
-
-	_previousCellState  =  _cellState;   // <-- ... or should i put it here.
 }
 
 
@@ -126,8 +124,8 @@ std::vector<double> LSTM::LossPartialWithRespectToHiddenState(std::vector<double
 		double sum  =  0.0;
 
 		for (size_t j = 0; j < predictedY.size(); j++) {
-			//sum  +=  _lossFunc->df(predictedY[j],correctY[j])  *  dSoftmax[j]  *  linearWeights[j][i];    // <-- use softmax
-			sum  +=  _lossFunc->df(predictedY[j], correctY[j])  *  linearWeights[j][i];                 // <-- don't use softmax
+			//sum  +=  _lossFunc->df(predictedY[j],correctY[j])  *  dSoftmax[j]  *  linearWeights(j,i);    // <-- use softmax
+			sum  +=  _lossFunc->df(predictedY[j], correctY[j])  *  linearWeights(j,i);                 // <-- don't use softmax
 		}
 
 		dLoss_dHiddenState[i]  =  sum;

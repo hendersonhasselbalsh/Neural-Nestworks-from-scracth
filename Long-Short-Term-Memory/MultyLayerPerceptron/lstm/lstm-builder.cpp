@@ -4,6 +4,7 @@
 
 LSTMbuilder::LSTMbuilder()
 {
+	_learningRate  =  0.01;
 	_lstm  =  LSTM();
 }
 

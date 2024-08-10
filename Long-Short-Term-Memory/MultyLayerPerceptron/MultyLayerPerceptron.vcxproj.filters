@@ -17,9 +17,6 @@
     <ClCompile Include="mlp\multy-layer-perceptron.cpp">
       <Filter>mlp\Sources</Filter>
     </ClCompile>
-    <ClCompile Include="mlp\neuron.cpp">
-      <Filter>mlp\Sources</Filter>
-    </ClCompile>
     <ClCompile Include="utils\utils.cpp">
       <Filter>utils\Sources</Filter>
     </ClCompile>
@@ -76,9 +73,6 @@
       <Filter>mlp\Headers</Filter>
     </ClInclude>
     <ClInclude Include="mlp\multy-layer-perceptron.h">
-      <Filter>mlp\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="mlp\neuron.h">
       <Filter>mlp\Headers</Filter>
     </ClInclude>
     <ClInclude Include="utils\basic-includes.h">

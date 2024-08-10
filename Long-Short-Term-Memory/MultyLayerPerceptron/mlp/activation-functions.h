@@ -63,7 +63,10 @@ class ReLU : public IActivationFunction {
 
 
 class LeakyReLU : public IActivationFunction {
+	private:
+		double _a;
 	public:
+		LeakyReLU(double a = 0.1);
 		virtual double f(double x) override;
 		virtual double df(double x) override;
 		virtual const char* ToString() override;

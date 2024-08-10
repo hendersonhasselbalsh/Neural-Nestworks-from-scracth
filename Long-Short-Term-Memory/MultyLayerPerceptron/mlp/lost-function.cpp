@@ -65,5 +65,9 @@ double CrossEntropy::f(double predicted, double correct)
 
 double CrossEntropy::df(double predicted, double correct)
 {
+	double epsilon = 1e-10;
+	// asure that predict is neither 0 or 1
+	predicted = std::max(std::min(predicted, 1.0 - epsilon), epsilon);
+
 	return - (correct / predicted) + ( (1 - correct) / (1 - predicted) );
 }

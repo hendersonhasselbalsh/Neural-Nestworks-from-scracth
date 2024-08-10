@@ -37,7 +37,7 @@ class MLP {
 
 	//--- backward and forward
 		std::vector<double> Foward(std::vector<double> input);
-		std::vector<double> Backward(std::vector<double> correctValues, std::vector<double> predictedValues);
+		std::vector<double> Backward(std::vector<double> predictedValues, std::vector<double> correctValues);
 		std::vector<double> Backward(std::vector<double> lossGradientWithRespectToOutput);
 		
 		void BuildJson();

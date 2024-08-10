@@ -1,7 +1,7 @@
 #include "utils.h"
 
 
-double Utils::RandomUniformDistribution(double min, double max)
+double Utils::RandomNormalDistributionValue(double min, double max)
 {
 // Create a random number generator
     std::random_device rd;  // Seed
@@ -24,7 +24,7 @@ double Utils::RandomUniformDistribution(double min, double max)
 }
 
 
-double Utils::RandomNormalDistributionValue(double min, double max)
+double Utils::RandomUniformDistribution(double min, double max)
 {
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -100,7 +100,7 @@ Eigen::MatrixXd Utils::ImageToMatrix(cv::Mat mat)
     for (int i = 0; i < mat.rows; i++) {
         for (int j = 0; j < mat.cols; j++) {
             double pixel  =  (double)mat.at<uchar>(i, j) / 255.0;
-            //double pixel  =  (double)mat.at<uchar>(i, j);             //  <----- VERSAO APENAS PARA DEBUG UTILIZE A VERSAO ANTERIOR
+            //double pixel  =  (255.0 - (double)mat.at<uchar>(i, j)) * 10.0;             //  <----- VERSAO APENAS PARA DEBUG UTILIZE A VERSAO ANTERIOR
             matrix(i, j) =  pixel;
         }
     }
@@ -126,27 +126,31 @@ cv::Mat Utils::MatrixToImage(Eigen::MatrixXd matrix)
 
 std::vector<double> Utils::FlatMatrix(Eigen::MatrixXd input)
 {
-    std::vector<double> vec;
-    vec.reserve(input.size());
+    Eigen::ArrayXXd arr  =  input.array();
+    std::vector<double> vec(arr.data(), arr.data() + arr.size());
+    /*vec.reserve(input.size());
 
     for (int i = 0; i < input.rows(); i++) {
         for (int j = 0; j < input.cols(); j++) {
             vec.push_back(input(i, j));
         }
-    }
+    }*/
 
     return vec;
 }
 
-Eigen::MatrixXd Utils::ReshapeMatrix(std::vector<double> gradients, size_t rows, size_t cols)
+Eigen::MatrixXd Utils::ReshapeMatrix(std::vector<double> arr, size_t rows, size_t cols)
 {
-    Eigen::MatrixXd reshapedMatrix  =  Eigen::MatrixXd::Zero(rows, cols);
+    assert(arr.size() == rows * cols);
+    Eigen::MatrixXd reshapedMatrix = Eigen::Map<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>(arr.data(), rows, cols);
+
+    /*Eigen::MatrixXd reshapedMatrix  =  Eigen::MatrixXd::Zero(rows, cols);
 
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
             reshapedMatrix(i, j)  =  gradients[i*cols + j];
         }
-    }
+    }*/
 
     return reshapedMatrix;
 }

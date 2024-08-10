@@ -88,7 +88,7 @@ int main(int argc, const char** argv)
     gnuplot.OutFile("..\\..\\.resources\\gnuplot-output\\res.dat");
     gnuplot.xRange("0", "");
     gnuplot.yRange("-0.01", "1.05");
-    gnuplot.Grid("1", "0.1");
+    gnuplot.Grid("10", "0.1");
 
 
 
@@ -99,29 +99,29 @@ int main(int argc, const char** argv)
 
     //--- build LSTM
     LSTM lstm  =  LSTMbuilder()
-        .InputSize(28*28)
-        .ForgetArchitecture({
-            LayerSignature(3, new Sigmoid(), 0.01)
-        })
-        .InputArchitecture({
-            LayerSignature(3, new Sigmoid(), 0.01)
-        })
-        .CandidateArchitecture({
-            LayerSignature(3, new Tanh(), 0.01)
-        })
-        .OutputArchitecture({
-            LayerSignature(3, new Sigmoid(), 0.01)
-        })
-        .LearningRate(0.01)
-        .LossFunction(new MSE())
-        .OutputClasses(10)
-        .Build();
+                        .InputSize(28*28)
+                        .ForgetArchitecture({
+                            LayerSignature(30, new Sigmoid(), 0.001)
+                        })
+                        .InputArchitecture({
+                            LayerSignature(30, new Sigmoid(), 0.001)
+                        })
+                        .CandidateArchitecture({
+                            LayerSignature(30, new Tanh(), 0.001)
+                        })
+                        .OutputArchitecture({
+                            LayerSignature(30, new Sigmoid(), 0.001)
+                        })
+                        //.LearningRate(0.001)     // Linear MLP learning rate
+                        .LossFunction(new MSE())
+                        .OutputClasses(10)
+                        .Build();
         
 
 
     //--- train
     size_t epoch = 0;
-    while (epoch < 100) {
+    while (epoch < 300) {
 
         //--- train for this epoch
         for (size_t i = 0; i < trainigDataSet.size(); i++) {
@@ -134,9 +134,9 @@ int main(int argc, const char** argv)
 
 
         //--- shuffle
-        //std::random_device rd;
-        //std::mt19937 g(rd());
-        //std::shuffle(trainigDataSet.begin(), trainigDataSet.end(), g);
+        std::random_device rd;
+        std::mt19937 g(rd());
+        std::shuffle(trainigDataSet.begin(), trainigDataSet.end(), g);
 
 
         //--- epoch training avaliation
@@ -190,10 +190,6 @@ int main(int argc, const char** argv)
 //        \ \  \    \ \  \ \  \____\ \  \___|
 //        \ \__\    \ \__\ \_______\ \__\
 //        \|__|     \|__|\|_______|\|__|
-
-
-
-
 
 
 
@@ -274,31 +270,31 @@ std::vector<double> ParseLabelToEspectedOutput(size_t l)
 
 
 
-int _main___MLP(int argc, const char** argv)
+int __main__MLP__(int argc, const char** argv)
 {
     //--- initialize gnuplot to plot chart
     Gnuplot gnuplot;
     gnuplot.OutFile("..\\..\\.resources\\gnuplot-output\\res.dat");
     gnuplot.xRange("0", "");
     gnuplot.yRange("-0.01","1.05");
-    gnuplot.Grid("1", "0.1");
+    gnuplot.Grid("5", "0.1");
 
 
     //--- load MNIST training set
-    std::vector<MLP_DATA> trainigDataSet  =  LoadData("..\\..\\.resources\\train" );
+    std::vector<MLP_DATA> trainigDataSet  =  LoadData("..\\..\\.resources\\train-debug-8x8" );
 
 
     //--- build mlp architecture and hiperparam
     MLP mlp  =  MlpBuilder()
                     .InputSize(28*28)
                     .Architecture({
-                        LayerSignature(100, new Sigmoid(), 0.01),
-                        LayerSignature(10, new Sigmoid(), 0.01, new MSE())
+                        LayerSignature(100, new NormalizedTanh(), 0.001),
+                        LayerSignature(10, new Linear(), 0.001, new MSE())
                     })
-                    .MaxEpochs(20)
+                    .MaxEpochs(300)
                     .ParseLabelToVector( ParseLabelToEspectedOutput )
                     .SaveOn("..\\..\\.resources\\gnuplot-output\\mlp\\mlp.json")
-        .Build();
+                    .Build();
 
 
     //--- training model, and do a callback on each epoch
@@ -308,7 +304,7 @@ int _main___MLP(int argc, const char** argv)
         ephocCounter++;
         double accuracy = 0.0;
 
-        Eigen::MatrixXd confusionMatrix  =  TestingModelAccuracy(&mlp, "..\\..\\.resources\\train", &accuracy);
+        Eigen::MatrixXd confusionMatrix  =  TestingModelAccuracy(&mlp, "..\\..\\.resources\\train-debug-8x8", &accuracy);
 
         std::cout << "Training Epoch: " << ephocCounter << "\n";
         std::cout << "Training Accuracy: " << accuracy << "\n\n";

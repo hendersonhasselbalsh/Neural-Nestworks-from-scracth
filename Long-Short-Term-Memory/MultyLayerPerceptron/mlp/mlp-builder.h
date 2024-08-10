@@ -13,7 +13,7 @@ class LayerSignature {
 		ILostFunction* _lostFunction;
 		double _learningRate;
 
-		LayerSignature(size_t qntNeurons, IActivationFunction* activationFunction = new Tanh(), double learningRate = 0.03, ILostFunction* lostFunction = nullptr)
+		LayerSignature(size_t qntNeurons, IActivationFunction* activationFunction = new Tanh(), double learningRate = 0.01, ILostFunction* lostFunction = nullptr)
 			: _qntNeurons(qntNeurons), _activationFunction(activationFunction), _learningRate(learningRate), _lostFunction(lostFunction)
 		{ }
 

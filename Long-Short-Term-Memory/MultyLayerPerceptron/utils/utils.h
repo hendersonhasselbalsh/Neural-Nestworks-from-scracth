@@ -34,9 +34,9 @@ struct MLP_DATA {
 
 namespace Utils {
 
-	double RandomUniformDistribution(double min, double max);
-
 	double RandomNormalDistributionValue(double min, double max);
+
+	double RandomUniformDistribution(double min, double max);
 	double ScalarProduct(std::vector<double> inputs, std::vector<double> weights);
 	double Normalize(double value, double min, double max, double initial = -1.0, double final = 1.0);
 	std::vector<double> BatchNormalization(std::vector<double> originalInput);
@@ -78,5 +78,7 @@ namespace Utils {
 	void ScalateAndShift(std::vector<double>* inputs, double* alpha = nullptr, double* beta = nullptr);
 
 }
+
+
 
 

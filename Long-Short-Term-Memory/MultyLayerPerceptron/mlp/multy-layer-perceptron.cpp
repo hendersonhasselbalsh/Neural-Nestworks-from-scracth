@@ -27,42 +27,44 @@ std::vector<double> MLP::Foward(std::vector<double> input)
 
 
 
-std::vector<double> MLP::Backward(std::vector<double> correctValues, std::vector<double> predictedValues)
+std::vector<double> MLP::Backward(std::vector<double> predictedValues, std::vector<double> correctValues)
 {
 	int layerIndex  =  _layers.size() - 1;
+	Eigen::MatrixXd dLoss_dInput;
 
 
 	//--- update last layer
-	_layers[layerIndex--].LastLayerLossGradient(correctValues, predictedValues);
+	dLoss_dInput = _layers[layerIndex--].UpdateLastLayerWeight(predictedValues, correctValues);
 
 
 	// update hidden layers
 	for (layerIndex; layerIndex >= 0; layerIndex--) {
-		std::vector<double> gradients  =  _layers[layerIndex+1].LossPartialWithRespectToInput();
-		_layers[layerIndex].HiddenLayerLossGradient( gradients );
+		dLoss_dInput = _layers[layerIndex].UpdateHiddenLayerWeight( dLoss_dInput );
 	}
 
-	return  _layers[0].LossPartialWithRespectToInput();
+	return  Utils::FlatMatrix( dLoss_dInput );
 }
 
 
 std::vector<double> MLP::Backward(std::vector<double> lossGradientWithRespectToOutput)
 {
 	int layerIndex  =  _layers.size() - 1;
+	Eigen::MatrixXd dLoss_dInput  =  Utils::ReshapeMatrix(lossGradientWithRespectToOutput, lossGradientWithRespectToOutput.size(), 1);
 
 
 	//--- update last layer
-	_layers[layerIndex--].HiddenLayerLossGradient(lossGradientWithRespectToOutput);
+	dLoss_dInput = _layers[layerIndex--].UpdateHiddenLayerWeight( dLoss_dInput );
 
 
 	// update hidden layers
 	for (layerIndex; layerIndex >= 0; layerIndex--) {
-		std::vector<double> gradients  =  _layers[layerIndex+1].LossPartialWithRespectToInput();
-		_layers[layerIndex].HiddenLayerLossGradient( gradients );
+		dLoss_dInput = _layers[layerIndex].UpdateHiddenLayerWeight(dLoss_dInput);
 	}
 
-	return  _layers[0].LossPartialWithRespectToInput();
+	return  Utils::FlatMatrix(dLoss_dInput);
 }
+
+
 
 
 
@@ -81,7 +83,7 @@ void MLP::Training(std::vector<TrainigData> trainigSet, std::function<void(void)
 			input.insert(input.begin(), 1.0);
 
 			std::vector<double> predictedOutput  =  Foward( input );
-			Backward(label, predictedOutput);
+			Backward( predictedOutput, label );
 		}
 
 		callback();
@@ -89,7 +91,7 @@ void MLP::Training(std::vector<TrainigData> trainigSet, std::function<void(void)
 		std::random_device rd;
 		std::mt19937 g(rd());
 		std::shuffle(trainigSet.begin(), trainigSet.end(), g);
-
+		
 		ChangeLearningRate(epoch, 0.0);
 
 		epoch++;
@@ -154,10 +156,8 @@ void MLP::ChangeLearningRate(size_t epoch, double accuracy)
 {
 	if (WhenToUpdateLeraningRate(epoch, accuracy)) {
 		for (auto& layer : _layers) {
-			double newRate  =  HowToUpdateLeraningRate(epoch, accuracy, layer._neuronLerningRate);
-			for (auto& neuron : layer._neurons) {
-				neuron.Set<Neuron::Attribute::LEARNING_RATE, double>(newRate);
-			}
+			double newRate  =  HowToUpdateLeraningRate(epoch, accuracy, layer._learningRate);
+			layer.Set<Layer::Attribute::LEARNING_RATE, double>(newRate);
 		}
 	}
 }

@@ -90,14 +90,19 @@ const char* ReLU::ToString()
 ///  LeakyReLU
 ///-------------
 
+LeakyReLU::LeakyReLU(double a)
+{
+    _a = a;
+}
+
 double LeakyReLU::f(double x)
 {
-    return std::max(0.10 * x, x);
+    return std::max(_a * x, x);
 }
 
 double LeakyReLU::df(double x)
 {
-    if (x < 0) { return 0.10; } else { return 1.0; };
+    if (x < 0) { return _a; } else { return 1.0; };
 }
 
 const char* LeakyReLU::ToString()
