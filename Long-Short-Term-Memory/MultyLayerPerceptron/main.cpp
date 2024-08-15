@@ -81,7 +81,7 @@ Eigen::MatrixXd TestingModelAccuracyLSTM(LSTM* lstm, std::string path, double* a
 
 
 
-int main(int argc, const char** argv)
+int ___main___LSTM(int argc, const char** argv)
 {
     //--- initialize gnuplot to plot chart
     Gnuplot gnuplot;
@@ -193,8 +193,6 @@ int main(int argc, const char** argv)
 
 
 
-
-
 std::vector<MLP_DATA> LoadData(const std::string& folderPath)
 {
     std::vector<MLP_DATA> set;
@@ -270,7 +268,7 @@ std::vector<double> ParseLabelToEspectedOutput(size_t l)
 
 
 
-int __main__MLP__(int argc, const char** argv)
+int main(int argc, const char** argv)
 {
     //--- initialize gnuplot to plot chart
     Gnuplot gnuplot;
@@ -288,10 +286,10 @@ int __main__MLP__(int argc, const char** argv)
     MLP mlp  =  MlpBuilder()
                     .InputSize(28*28)
                     .Architecture({
-                        LayerSignature(100, new NormalizedTanh(), 0.001),
+                        LayerSignature(100, new Tanh(), 0.001),
                         LayerSignature(10, new Linear(), 0.001, new MSE())
                     })
-                    .MaxEpochs(300)
+                    .MaxEpochs(100)
                     .ParseLabelToVector( ParseLabelToEspectedOutput )
                     .SaveOn("..\\..\\.resources\\gnuplot-output\\mlp\\mlp.json")
                     .Build();

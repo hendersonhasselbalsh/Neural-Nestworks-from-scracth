@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="mlp\activation-functions.cpp">
+      <Filter>mlp\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="mlp\layer.cpp">
+      <Filter>mlp\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="mlp\lost-function.cpp">
+      <Filter>mlp\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="mlp\mlp-builder.cpp">
+      <Filter>mlp\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="mlp\multy-layer-perceptron.cpp">
+      <Filter>mlp\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="mlp\neuron.cpp">
+      <Filter>mlp\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\utils.cpp">
+      <Filter>utils\Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="mlp">
+      <UniqueIdentifier>{eef9ba0f-b5fd-43ec-b127-20f6fc1298f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mlp\Headers">
+      <UniqueIdentifier>{b43befbb-eda8-4773-9a63-8e1f9cff5ae6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mlp\Sources">
+      <UniqueIdentifier>{a72a7243-f1ee-4aca-b599-71f8062e8f39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{6d4020d9-ed5d-42c3-8e45-e0ffd6e5c7be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils\Headers">
+      <UniqueIdentifier>{839fe028-2842-4417-9657-e4706cc4e8da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils\Sources">
+      <UniqueIdentifier>{31bf6462-2f9c-42f9-a2b4-e8381aeccf32}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="mlp\activation-functions.h">
+      <Filter>mlp\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="mlp\layer.h">
+      <Filter>mlp\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="mlp\lost-function.h">
+      <Filter>mlp\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="mlp\mlp-builder.h">
+      <Filter>mlp\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="mlp\multy-layer-perceptron.h">
+      <Filter>mlp\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="mlp\neuron.h">
+      <Filter>mlp\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\basic-includes.h">
+      <Filter>utils\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\utils.h">
+      <Filter>utils\Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

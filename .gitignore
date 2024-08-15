@@ -396,3 +396,8 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# personal folders, do not import
+.backups
+.dependency
+.resources

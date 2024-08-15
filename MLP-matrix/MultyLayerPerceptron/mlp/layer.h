@@ -12,7 +12,6 @@ using Json = nlohmann::json;
 
 class MLP;
 class LSTM;
-class MlpBuilder;
 
 
 class Layer {
@@ -65,8 +64,6 @@ class Layer {
 	//--- metodos de acesso (get e set)
 		void XavierWeightInitialization(size_t inputSize, size_t outputSize);
 
-		const double operator()(size_t neuronIndex, size_t weightIndex);
-
 		 Json ToJson() const;
 		 Layer LoadWeightsFromJson(const Json& j);
 
@@ -83,7 +80,6 @@ class Layer {
 
 	friend class MLP;
 	friend class LSTM;
-	friend class MlpBuilder;
 };
 
 

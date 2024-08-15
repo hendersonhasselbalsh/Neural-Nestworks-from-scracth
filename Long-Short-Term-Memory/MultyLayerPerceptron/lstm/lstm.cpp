@@ -227,21 +227,6 @@ std::vector<double> LSTM::dSoftmax(const std::vector<double>& input)
 		r  =  r * (1.0 - r);
 	}
 
-
-
-
-	/*double sum = 0.0;
-	for (size_t i = 0; i < input.size(); i++) {
-		double exp_val  =  std::exp(input[i]);
-		result[i]  =  exp_val;
-		sum  +=  exp_val;
-	}
-
-	for (size_t i = 0; i < input.size(); i++) {
-
-		result[i] =  (result[i] * (sum - result[i])) / (sum*sum);
-	}*/
-
 	return result;
 }
 

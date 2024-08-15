@@ -88,11 +88,11 @@ void MLP::Training(std::vector<TrainigData> trainigSet, std::function<void(void)
 
 		callback();
 
-		std::random_device rd;
-		std::mt19937 g(rd());
-		std::shuffle(trainigSet.begin(), trainigSet.end(), g);
-		
-		ChangeLearningRate(epoch, 0.0);
+		//std::random_device rd;
+		//std::mt19937 g(rd());
+		//std::shuffle(trainigSet.begin(), trainigSet.end(), g);
+		//
+		//ChangeLearningRate(epoch, 0.0);
 
 		epoch++;
 		if (epoch > _maxEpochs) {  keepGoing = false;  }
@@ -181,8 +181,10 @@ Json MLP::ToJson() const
 {
 	Json mlpJson;
 
+	mlpJson["inputSize"] = _inputSize;
+
 	for (auto& layer : _layers) {
-		mlpJson["MLP"].push_back(layer.ToJson());
+		mlpJson["layers"].push_back(layer.ToJson());
 	}
 
 	return mlpJson;

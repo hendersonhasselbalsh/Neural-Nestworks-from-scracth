@@ -56,6 +56,17 @@ Eigen::MatrixXd Layer::UpdateLastLayerWeight(std::vector<double> predictedValues
 	Eigen::MatrixXd dLoss_dWeightedSum = LossPartialWithRespectToWeightedSum( dLoss_dActivation);
 	Eigen::MatrixXd dLoss_dWeight  =  LossPartialWithRespectToWeight( dLoss_dWeightedSum );
 
+	//--- DEBUG
+	for (size_t i = 0; i < dLoss_dActivation.rows(); i++) {
+		for (size_t j = 0; j < dLoss_dActivation.cols(); j++) {
+			if ( std::isnan(dLoss_dActivation(i,j)) ) {
+				std::cout << dLoss_dActivation<<"\n\n";
+				int DEBUG = 0;
+			}
+		}
+	}
+	//---
+
 	_weights  =  _weights  -  _learningRate * dLoss_dWeight;
 
 	Eigen::MatrixXd dLoss_dInput  =  LossPartialWithRespectToInput( dLoss_dWeightedSum );
@@ -187,57 +198,38 @@ void Layer::XavierWeightInitialization(size_t inputSize, size_t outputSize)
 }
 
 
-const double Layer::operator()(size_t neuronIndex, size_t weightIndex)
-{
-	return (double) _weights(neuronIndex,weightIndex);
-}
-
-
 
 
 
 Json Layer::ToJson() const
 {
-	size_t rows  =  _weights.rows();
-	size_t cols  =  _weights.cols();
-
-	std::vector<std::vector<double>> weightMatrix(rows, std::vector<double>(cols));
-
-	for (int i = 0; i < _weights.rows(); ++i) {
-		for (int j = 0; j < _weights.cols(); ++j) {
-			weightMatrix[i][j] = _weights(i, j);
-		}
-	}
-
-	Json layerJson;
-	layerJson["learning-rate"] = _learningRate;
-	layerJson["activation-function"] = _activationFunc->ToString();
-	layerJson["neuronsQnt"] = rows;
-	layerJson["weightQnt"] = cols;
-	layerJson["weights"] = weightMatrix;
-
-
-	return { layerJson };
+	/*Json layerJson;
+	layerJson["inputSize"]  =  _inputSize;
+	layerJson["actFunc"]  =  _activationFunction->ToString();
+	layerJson["learningRate"]   =  _neuronLerningRate;
+	for (const auto& neuron : _neurons) {  layerJson["neurons"].push_back( neuron.ToJson() );  }
+	return { {"layer", layerJson} };*/
+	return { };
 }
 
 
 
 Layer Layer::LoadWeightsFromJson(const Json& j)
 {
-	_activationFunc  =  Utils::StringToActivationFunction(j.at("activation-function").get<std::string>());
-	_learningRate  =  j.at("learning-rate").get<double>();
+	/*
+	_activationFunction  =  Utils::StringToActivationFunction( j.at("layer").at("actFunc").get<std::string>() );
+	_neuronLerningRate  =  j.at("layer").at("learningRate").get<double>();
+	_inputSize  =  j.at("layer").at("inputSize").get<size_t>();
 
-	size_t neuronQnt = j.at("neuronsQnt").get<size_t>();
-	size_t weightQnt = j.at("weightQnt").get<size_t>();
-	const auto& weightJson = j.at("weights");
+	int neuronIndex = 0;
+	for (const auto& neuronJson : j.at("layer").at("neurons")) {
+		Neuron n = Neuron(_inputSize, _activationFunction, _neuronLerningRate);
+		n.LoadWeightsFromJson(neuronJson);
 
-	_weights  =  Eigen::MatrixXd::Ones(neuronQnt, weightQnt);
+		(*this)._neurons[neuronIndex] = n;
 
-	for (size_t i = 0; i < neuronQnt; i++) {
-		for (size_t j = 0; j < weightQnt; j++) {
-			_weights(i,j)  =  weightJson[i][j];
-		}
-	}
+		neuronIndex++;
+	}*/
 
 	return (*this);
 }

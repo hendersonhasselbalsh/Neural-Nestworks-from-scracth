@@ -126,14 +126,17 @@ MlpBuilder MlpBuilder::LoadArchitectureFromJson(std::string file)
 	jsonFile >> json;
 	jsonFile.close();
 
-	for (const auto& layerJson : json.at("MLP")) {
-		Layer layer = Layer(0, 1);
-		layer.LoadWeightsFromJson(layerJson);
-		
+	_mlp._inputSize  =  json.at("inputSize").get<size_t>();
+
+
+	for (const auto& layerJson : json.at("layers")) {
+		size_t numberOfNeurons  =  layerJson.at("layer").at("neurons").size();
+		Layer layer = Layer(0, numberOfNeurons);
+		layer.LoadWeightsFromJson( layerJson );
+
 		_mlp._layers.push_back( layer );
 	}
 
-	_mlp._inputSize  =  _mlp._layers[0]._weights.cols();
 
 	return (*this);
 }
