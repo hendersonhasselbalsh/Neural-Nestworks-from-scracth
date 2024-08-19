@@ -419,3 +419,10 @@ void Utils::ScalateAndShift(std::vector<double>* inputs, double* alpha, double* 
     }
 }
 
+
+
+Eigen::MatrixXd Utils::Rotate_180Degree(Eigen::MatrixXd& matrix)
+{
+    Eigen::MatrixXd flippedMatrix = matrix.colwise().reverse().rowwise().reverse();
+    return flippedMatrix;
+}

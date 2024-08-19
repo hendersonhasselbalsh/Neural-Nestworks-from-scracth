@@ -10,6 +10,7 @@ using TrainigData = std::pair<std::vector<double>, std::vector<double>>;
 
 
 class MlpBuilder;
+class CNN;
 
 
 
@@ -64,8 +65,8 @@ class MLP {
 
 
 		friend class MlpBuilder;
-		friend class LSTM;
-		friend class LstmBuilder;
+		friend class CNN;
+
 };
 
 

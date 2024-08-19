@@ -5,6 +5,57 @@
 #include "utils/basic-includes.h"
 #include "mlp/multy-layer-perceptron.h"
 
+#include "cnn/ConvolutionCell.h"
+
+
+
+
+int main(int argc, const char** argv)
+{
+    cv::Mat img = cv::imread("..\\..\\.resources\\humano-original.png");
+    Eigen::MatrixXd imgMatrix = Utils::ImageToMatrix(img);
+
+    Eigen::MatrixXd filter = Eigen::MatrixXd(3,3);
+    filter << 
+        (1.0/9.0), (1.0/9.0), (1.0/9.0),
+        (1.0/9.0), (1.0/9.0), (1.0/9.0),
+        (1.0/9.0), (1.0/9.0), (1.0/9.0);
+
+    Eigen::MatrixXd convMatrix = ConvolutionCell::Convolute(imgMatrix, filter);
+    cv::Mat convolvedImg = Utils::MatrixToImage(convMatrix);
+
+
+    cv::imshow("original", img);
+    cv::imshow("convolved", convolvedImg);
+
+
+    cv::waitKey(0);
+
+    std::cout << "[SUCESSO!!!!!]\n";
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //        _____ ______   ___       ________
 //        |\   _ \  _   \|\  \     |\   __  \
@@ -91,7 +142,7 @@ std::vector<double> ParseLabelToEspectedOutput(size_t l)
 
 
 
-int main(int argc, const char** argv)
+int _main__MLP__(int argc, const char** argv)
 {
     //--- initialize gnuplot to plot chart
     Gnuplot gnuplot;
@@ -109,7 +160,8 @@ int main(int argc, const char** argv)
     MLP mlp  =  MlpBuilder()
                     .InputSize(28*28)
                     .Architecture({
-                        LayerSignature(100, new Tanh(), 0.001),
+                        LayerSignature(5, new Tanh(), 0.001),
+                        LayerSignature(7, new Tanh(), 0.001),
                         LayerSignature(10, new Linear(), 0.001, new MSE())
                     })
                     .MaxEpochs(100)

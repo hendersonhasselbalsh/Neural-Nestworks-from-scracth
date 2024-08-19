@@ -79,6 +79,11 @@ namespace Utils {
 
 }
 
+namespace Utils {
+
+	Eigen::MatrixXd Rotate_180Degree(Eigen::MatrixXd& matrix);
+
+}
 
 
 
