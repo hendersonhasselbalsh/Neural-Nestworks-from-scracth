@@ -29,6 +29,9 @@
     <ClCompile Include="cnn\CNNbuilder.cpp">
       <Filter>cnn\Sources</Filter>
     </ClCompile>
+    <ClCompile Include="cnn\ActivationCell.cpp">
+      <Filter>cnn\Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="mlp">
@@ -91,6 +94,9 @@
       <Filter>cnn\Headers</Filter>
     </ClInclude>
     <ClInclude Include="cnn\CNNbuilder.h">
+      <Filter>cnn\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="cnn\ActivationCell.h">
       <Filter>cnn\Headers</Filter>
     </ClInclude>
   </ItemGroup>

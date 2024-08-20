@@ -95,11 +95,13 @@ int main(int argc, const char** argv)
                     .InputSize(28,28)
                     .ProcessingArchitecture({
                         //new ConvolutionCell(5,5),
-                        new ConvolutionCell(3,3, 0.001)
+                        new ConvolutionCell(6,6, 0.001),
+                        new ActivationCell( new ReLU() )
                     })
                     .DenseArchitecture({
-                        DenseLayer(5, new NormalizedTanh(), 0.001),
-                        DenseLayer(7, new NormalizedTanh(), 0.001),
+                        /*DenseLayer(5, new NormalizedTanh(), 0.001),
+                        DenseLayer(7, new NormalizedTanh(), 0.001),*/
+                        DenseLayer(50, new NormalizedTanh(), 0.001),
                         DenseLayer(10, new NormalizedTanh(), 0.001)
                     })
                     .LostFunction( new MSE() )
@@ -108,7 +110,7 @@ int main(int argc, const char** argv)
 
     //--- training 
     size_t epoch = 0;
-    while (epoch < 100) {
+    while (epoch < 400) {
 
         for (auto& data : trainigDataSet) {
 
@@ -246,7 +248,7 @@ std::vector<double> ParseLabelToEspectedOutput(size_t l)
 
 
 
-int _main__MLP__(int argc, const char** argv)
+int ___main(int argc, const char** argv)
 {
     //--- initialize gnuplot to plot chart
     Gnuplot gnuplot;
@@ -264,11 +266,11 @@ int _main__MLP__(int argc, const char** argv)
     MLP mlp  =  MlpBuilder()
                     .InputSize(28*28)
                     .Architecture({
-                        DenseLayer(5, new Tanh(), 0.001),
-                        DenseLayer(7, new Tanh(), 0.001),
-                        DenseLayer(10, new Linear(), 0.001, new MSE())
+                        DenseLayer(5, new NormalizedTanh(), 0.001),
+                        DenseLayer(7, new NormalizedTanh(), 0.001),
+                        DenseLayer(10, new NormalizedTanh(), 0.001, new MSE())
                     })
-                    .MaxEpochs(100)
+                    .MaxEpochs(400)
                     .ParseLabelToVector( ParseLabelToEspectedOutput )
                     .SaveOn("..\\..\\.resources\\gnuplot-output\\mlp\\mlp.json")
                     .Build();

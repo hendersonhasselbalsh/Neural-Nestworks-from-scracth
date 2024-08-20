@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ConvolutionCell.h"
+#include "ActivationCell.h"
 #include "../mlp/multy-layer-perceptron.h"
 #include "../utils/basic-includes.h"
 
