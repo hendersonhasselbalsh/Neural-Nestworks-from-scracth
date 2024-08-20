@@ -21,7 +21,7 @@ ConvolutionCell::ConvolutionCell(size_t filterRow, size_t filterCol, double lear
 
     for (size_t i = 0; i < _filter.rows(); i++) {
         for (size_t j = 0; j < _filter.cols(); j++) {
-            _filter(i, j)  =  (1.0)//Utils::RandomUniformDistribution(-1.0, 1.0);
+            _filter(i, j)  =  (1.0 / (double)(filterRow*filterCol));//Utils::RandomUniformDistribution(-1.0, 1.0);
         }
     }
 

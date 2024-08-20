@@ -95,12 +95,12 @@ int main(int argc, const char** argv)
                     .InputSize(28,28)
                     .ProcessingArchitecture({
                         //new ConvolutionCell(5,5),
-                        new ConvolutionCell(3,3)
+                        new ConvolutionCell(3,3, 0.001)
                     })
                     .DenseArchitecture({
-                        //DenseLayer(5, new Tanh(), 0.001),
-                        DenseLayer(100, new Tanh(), 0.001),
-                        DenseLayer(10, new Linear(), 0.001)
+                        DenseLayer(5, new NormalizedTanh(), 0.001),
+                        DenseLayer(7, new NormalizedTanh(), 0.001),
+                        DenseLayer(10, new NormalizedTanh(), 0.001)
                     })
                     .LostFunction( new MSE() )
                     .Build();
@@ -130,6 +130,12 @@ int main(int argc, const char** argv)
 
         epoch++;
     }
+
+    //--- plot chart
+    gnuplot.out.close();
+    gnuplot << "plot \'..\\..\\.resources\\gnuplot-output\\res.dat\' using 1:2 w l title \"Training Accuracy\" \n";
+    gnuplot << "set terminal pngcairo enhanced \n set output \'..\\..\\.resources\\gnuplot-output\\accuracy.png\' \n";
+    gnuplot << " \n";
 
 
     std::cout << "[SUCESSO!!!!!]\n";
