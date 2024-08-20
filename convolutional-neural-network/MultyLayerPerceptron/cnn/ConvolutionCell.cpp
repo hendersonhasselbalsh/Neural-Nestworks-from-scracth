@@ -6,13 +6,31 @@ ConvolutionCell::ConvolutionCell(size_t filterSize, double learnRate)
 {
     _learningRate = learnRate;
 	_filter  =  Eigen::MatrixXd::Ones(filterSize, filterSize);
+
+    for (size_t i = 0; i < _filter.rows(); i++) {
+        for (size_t j = 0; j < _filter.cols(); j++) {
+            _filter(i,j)  =  Utils::RandomUniformDistribution(-1.0, 1.0);
+        }
+    }
 }
 
 ConvolutionCell::ConvolutionCell(size_t filterRow, size_t filterCol, double learnRate)
 {
     _learningRate = learnRate;
-	_filter  =  Eigen::MatrixXd::Ones(filterRow, filterCol);
+    _filter  =  Eigen::MatrixXd::Ones(filterRow, filterCol);
+
+    for (size_t i = 0; i < _filter.rows(); i++) {
+        for (size_t j = 0; j < _filter.cols(); j++) {
+            _filter(i, j)  =  Utils::RandomUniformDistribution(-1.0, 1.0);
+        }
+    }
 }
+
+
+ConvolutionCell::~ConvolutionCell()
+{
+}
+
 
 
 
@@ -65,12 +83,17 @@ Eigen::MatrixXd ConvolutionCell::Convolute(Eigen::MatrixXd& input, Eigen::Matrix
 }
 
 
+
+
+
+
 Eigen::MatrixXd ConvolutionCell::Forward(Eigen::MatrixXd& input)
 {
     _receivedInput = input;
     Eigen::MatrixXd convolvedInput = Convolute(input, _filter);
     return convolvedInput;
 }
+
 
 
 Eigen::MatrixXd ConvolutionCell::Backward(Eigen::MatrixXd& dLoss_dOutput)
@@ -82,7 +105,7 @@ Eigen::MatrixXd ConvolutionCell::Backward(Eigen::MatrixXd& dLoss_dOutput)
 
     size_t paddingSize = dLoss_dOutput.rows() - 1;
     Eigen::MatrixXd rotated_dLoss_dOutput = Utils::Rotate_180Degree(dLoss_dOutput);
-    Eigen::MatrixXd dLoss_dInput  =  Convolute(_receivedInput, rotated_dLoss_dOutput, paddingSize);
+    Eigen::MatrixXd dLoss_dInput  =  Convolute(_filter, rotated_dLoss_dOutput, paddingSize);
 
     return dLoss_dInput;
 }

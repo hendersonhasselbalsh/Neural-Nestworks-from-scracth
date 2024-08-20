@@ -45,7 +45,7 @@ MlpBuilder MlpBuilder::Architecture(std::vector<size_t> neuronsInLayer)
 }
 
 
-MlpBuilder MlpBuilder::Architecture(std::vector<LayerSignature> layerSignature) 
+MlpBuilder MlpBuilder::Architecture(std::vector<DenseLayer> layerSignature) 
 {
 	assert( inputSize > 0 && "DEFINE inputsize FISRT" );
 

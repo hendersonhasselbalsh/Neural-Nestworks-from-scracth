@@ -87,5 +87,8 @@
     <ClInclude Include="cnn\cnn.h">
       <Filter>cnn\Headers</Filter>
     </ClInclude>
+    <ClInclude Include="cnn\CNNbuilder.h">
+      <Filter>cnn\Headers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

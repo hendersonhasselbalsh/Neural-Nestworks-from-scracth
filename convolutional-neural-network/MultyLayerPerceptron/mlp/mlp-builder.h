@@ -5,7 +5,7 @@
 
 
 
-class LayerSignature {
+class DenseLayer {
 
 	public:
 		size_t _qntNeurons;
@@ -13,7 +13,7 @@ class LayerSignature {
 		ILostFunction* _lostFunction;
 		double _learningRate;
 
-		LayerSignature(size_t qntNeurons, IActivationFunction* activationFunction = new Tanh(), double learningRate = 0.01, ILostFunction* lostFunction = nullptr)
+		DenseLayer(size_t qntNeurons, IActivationFunction* activationFunction = new Tanh(), double learningRate = 0.01, ILostFunction* lostFunction = nullptr)
 			: _qntNeurons(qntNeurons), _activationFunction(activationFunction), _learningRate(learningRate), _lostFunction(lostFunction)
 		{ }
 
@@ -35,7 +35,7 @@ class MlpBuilder {
 
 		MlpBuilder InputSize( size_t size );
 		MlpBuilder Architecture( std::vector<size_t> neuronsInLayer );
-		MlpBuilder Architecture( std::vector<LayerSignature> layerSignature );
+		MlpBuilder Architecture( std::vector<DenseLayer> layerSignature );
 		MlpBuilder LostFunction( ILostFunction* lostFunction );
 		MlpBuilder MaxEpochs( size_t epochs );
 		MlpBuilder AcceptableAccuracy( double accuracy );

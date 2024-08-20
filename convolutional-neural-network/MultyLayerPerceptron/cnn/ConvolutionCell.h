@@ -15,6 +15,7 @@ class ConvolutionCell : public IProcessingUnit {
 	public:
 		ConvolutionCell(size_t filterSize, double learnRate = 0.01);
 		ConvolutionCell(size_t filterRow, size_t filterCol, double learnRate = 0.01);
+		~ConvolutionCell();
 
 		static Eigen::MatrixXd Convolute(Eigen::MatrixXd& input, Eigen::MatrixXd& filter);
 		static Eigen::MatrixXd Convolute(Eigen::MatrixXd& input, Eigen::MatrixXd& filter, size_t padding);

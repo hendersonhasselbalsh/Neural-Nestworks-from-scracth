@@ -160,9 +160,9 @@ int _main__MLP__(int argc, const char** argv)
     MLP mlp  =  MlpBuilder()
                     .InputSize(28*28)
                     .Architecture({
-                        LayerSignature(5, new Tanh(), 0.001),
-                        LayerSignature(7, new Tanh(), 0.001),
-                        LayerSignature(10, new Linear(), 0.001, new MSE())
+                        DenseLayer(5, new Tanh(), 0.001),
+                        DenseLayer(7, new Tanh(), 0.001),
+                        DenseLayer(10, new Linear(), 0.001, new MSE())
                     })
                     .MaxEpochs(100)
                     .ParseLabelToVector( ParseLabelToEspectedOutput )

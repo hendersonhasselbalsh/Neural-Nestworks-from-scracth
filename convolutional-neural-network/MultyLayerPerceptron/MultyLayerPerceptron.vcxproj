@@ -167,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cnn\cnn.h" />
+    <ClInclude Include="cnn\CNNbuilder.h" />
     <ClInclude Include="cnn\ConvolutionCell.h" />
     <ClInclude Include="cnn\ProcessingUnity.h" />
     <ClInclude Include="mlp\activation-functions.h" />
