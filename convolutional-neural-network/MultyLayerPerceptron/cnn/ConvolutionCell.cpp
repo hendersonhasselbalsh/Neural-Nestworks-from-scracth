@@ -2,17 +2,17 @@
 
 
 
-ConvolutionCell::ConvolutionCell(size_t filterSize, double learnRate)
-{
-    _learningRate = learnRate;
-	_filter  =  Eigen::MatrixXd::Ones(filterSize, filterSize);
-
-    for (size_t i = 0; i < _filter.rows(); i++) {
-        for (size_t j = 0; j < _filter.cols(); j++) {
-            _filter(i,j)  =  Utils::RandomUniformDistribution(-1.0, 1.0);
-        }
-    }
-}
+//ConvolutionCell::ConvolutionCell(size_t filterSize, double learnRate)
+//{
+//    _learningRate = learnRate;
+//	_filter  =  Eigen::MatrixXd::Ones(filterSize, filterSize);
+//
+//    for (size_t i = 0; i < _filter.rows(); i++) {
+//        for (size_t j = 0; j < _filter.cols(); j++) {
+//            _filter(i,j)  =  Utils::RandomUniformDistribution(-1.0, 1.0);
+//        }
+//    }
+//}
 
 ConvolutionCell::ConvolutionCell(size_t filterRow, size_t filterCol, double learnRate)
 {
@@ -21,9 +21,13 @@ ConvolutionCell::ConvolutionCell(size_t filterRow, size_t filterCol, double lear
 
     for (size_t i = 0; i < _filter.rows(); i++) {
         for (size_t j = 0; j < _filter.cols(); j++) {
-            _filter(i, j)  =  Utils::RandomUniformDistribution(-1.0, 1.0);
+            _filter(i, j)  =  (1.0)//Utils::RandomUniformDistribution(-1.0, 1.0);
         }
     }
+
+    //--- DEBUG
+    std::cout << _filter << "\n\n";
+    //--- END DEBUG
 }
 
 
@@ -37,7 +41,7 @@ ConvolutionCell::~ConvolutionCell()
 
 Eigen::MatrixXd ConvolutionCell::Convolute(Eigen::MatrixXd& input, Eigen::MatrixXd& filter)
 {
-    assert(input.size() < filter.size()  &&  "size should not be bigger than input");
+    assert(input.size() > filter.size()  &&  "size should not be bigger than input");
 
     const size_t filterRows = filter.rows();
     const size_t filterCols = filter.cols();
@@ -60,7 +64,7 @@ Eigen::MatrixXd ConvolutionCell::Convolute(Eigen::MatrixXd& input, Eigen::Matrix
 
 Eigen::MatrixXd ConvolutionCell::Convolute(Eigen::MatrixXd& input, Eigen::MatrixXd& filter, size_t padding)
 {
-    assert(input.size() < filter.size()  &&  "size should not be bigger than input");
+    assert(input.rows() + 2*padding, input.cols() + 2*padding > filter.size()  &&  "size should not be bigger than input");
 
     size_t filterRows = filter.rows();
     size_t filterCols = filter.cols();
@@ -104,8 +108,8 @@ Eigen::MatrixXd ConvolutionCell::Backward(Eigen::MatrixXd& dLoss_dOutput)
 
 
     size_t paddingSize = dLoss_dOutput.rows() - 1;
-    Eigen::MatrixXd rotated_dLoss_dOutput = Utils::Rotate_180Degree(dLoss_dOutput);
-    Eigen::MatrixXd dLoss_dInput  =  Convolute(_filter, rotated_dLoss_dOutput, paddingSize);
+    Eigen::MatrixXd rotated_filter = Utils::Rotate_180Degree( _filter );
+    Eigen::MatrixXd dLoss_dInput  =  Convolute(rotated_filter, dLoss_dOutput, paddingSize);
 
     return dLoss_dInput;
 }

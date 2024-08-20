@@ -43,8 +43,9 @@ std::vector<double> MLP::Backward(std::vector<double> predictedValues, std::vect
 	}
 
 
-	auto flat_dLoss_dInput  =  Utils::FlatMatrix(dLoss_dInput);
-	return std::vector<double>(flat_dLoss_dInput.begin()+1, flat_dLoss_dInput.end()); // avoid bais  // return  Utils::FlatMatrix(dLoss_dInput);
+	//auto flat_dLoss_dInput  =  Utils::FlatMatrix(dLoss_dInput);
+	//return std::vector<double>(flat_dLoss_dInput.begin()+1, flat_dLoss_dInput.end()); // avoid bais  // return  Utils::FlatMatrix(dLoss_dInput);
+	return  Utils::FlatMatrix(dLoss_dInput);
 }
 
 
@@ -70,7 +71,7 @@ std::vector<double> MLP::Backward(std::vector<double> lossGradientWithRespectToO
 
 
 
-void MLP::Training(std::vector<TrainigData> trainigSet, std::function<void(void)> callback)
+void MLP::Training(std::vector<MLPTrainigData> trainigSet, std::function<void(void)> callback)
 {
 	bool keepGoing  =  true;
 	size_t epoch  =  0;
@@ -105,7 +106,7 @@ void MLP::Training(std::vector<TrainigData> trainigSet, std::function<void(void)
 
 void MLP::Training(std::vector<MLP_DATA> trainigSet, std::function<void(void)> callback)
 {
-	std::vector<TrainigData> _trainingSet;
+	std::vector<MLPTrainigData> _trainingSet;
 
 	for (auto data : trainigSet) {
 		std::vector<double> label = ParseLabelToVector( data.labelIndex );

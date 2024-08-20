@@ -156,6 +156,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="cnn\cnn.cpp" />
+    <ClCompile Include="cnn\CNNbuilder.cpp" />
     <ClCompile Include="cnn\ConvolutionCell.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mlp\activation-functions.cpp" />

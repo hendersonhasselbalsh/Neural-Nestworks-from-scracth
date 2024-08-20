@@ -41,7 +41,12 @@ class MlpBuilder {
 class CNNbuilder {
 
 	private:
-		size_t inputSize;
+		size_t _inputRow;
+		size_t _inputCol;
+
+		std::vector<DenseLayer> _denseLayerSignature;
+		ILostFunction* _lossFunction;
+
 		CNN _cnn;
 
 		  
@@ -50,12 +55,10 @@ class CNNbuilder {
 
 		CNN Build();
 
-		CNNbuilder InputSize(size_t size);
-		CNNbuilder Architecture(std::vector<size_t> neuronsInLayer);
-		CNNbuilder Architecture(std::vector<DenseLayer> layerSignature);
+		CNNbuilder InputSize(size_t inputRow, size_t inputCol);
+		CNNbuilder ProcessingArchitecture(std::vector<IProcessingUnit*> processingUnits);
+		CNNbuilder DenseArchitecture(std::vector<DenseLayer> layerSignature);
 		CNNbuilder LostFunction(ILostFunction* lossFunction);
 		CNNbuilder MaxEpochs(size_t epochs);
-		//CNNbuilder SaveOn(std::string outFile);
-		//CNNbuilder LoadArchitectureFromJson(std::string file);
 
 };

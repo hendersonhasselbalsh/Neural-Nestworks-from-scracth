@@ -6,10 +6,11 @@
 
 #define INPUT first
 #define LABEL second
-using TrainigData = std::pair<std::vector<double>, std::vector<double>>;
+using MLPTrainigData = std::pair<std::vector<double>, std::vector<double>>;
 
 
 class MlpBuilder;
+class CNNbuilder;
 class CNN;
 
 
@@ -50,7 +51,7 @@ class MLP {
 	public:
 		~MLP();
 
-		void Training(std::vector<TrainigData> trainigSet, std::function<void(void)> callback = [](){} );
+		void Training(std::vector<MLPTrainigData> trainigSet, std::function<void(void)> callback = [](){} );
 		void Training(std::vector<MLP_DATA> trainigSet, std::function<void(void)> callback = [](){} );
 
 
@@ -65,6 +66,7 @@ class MLP {
 
 
 		friend class MlpBuilder;
+		friend class CNNbuilder;
 		friend class CNN;
 
 };

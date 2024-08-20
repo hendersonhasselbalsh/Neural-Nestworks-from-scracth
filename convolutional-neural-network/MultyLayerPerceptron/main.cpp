@@ -4,39 +4,137 @@
 #include "gnuplot-include.h"
 #include "utils/basic-includes.h"
 #include "mlp/multy-layer-perceptron.h"
+#include "cnn/cnn.h"
 
-#include "cnn/ConvolutionCell.h"
 
 
+std::vector<CNN_DATA> LoadData_CNN(const std::string& folderPath)
+{
+    std::vector<CNN_DATA> set;
+
+    int l = -1;
+
+    for (const auto& entry : std::filesystem::directory_iterator(folderPath)) {
+        if (std::filesystem::is_regular_file(entry.path())) {
+
+            std::string fileName = entry.path().filename().string();
+            std::string labelStr = Utils::SplitString(fileName, "_")[0];
+            size_t labelIndex = (size_t)std::stoi(labelStr);
+
+            size_t outputSize = 10;
+            auto label = std::vector<double>(outputSize, 0.0);
+            label[labelIndex] = 1.0;
+
+            std::string fullPathName = entry.path().string();
+            Eigen::MatrixXd input = Utils::ImageToMatrix(cv::imread(fullPathName));
+
+            CNN_DATA cnnData {input, labelIndex};
+            cnnData.label = label;
+
+            set.push_back(cnnData);
+
+            if (labelIndex != l) {
+                l = labelIndex;
+                std::cout << "load data: [" << (labelIndex+1)*10 << "%]\n";
+            }
+        }
+    }
+
+    return set;
+};
+
+Eigen::MatrixXd TestingModelAccuracy(CNN* cnn, std::string path, double* accuracy)  // "..\\..\\.resources\\test"
+{
+    Eigen::MatrixXd confusionMatrix = Eigen::MatrixXd::Zero(10, 10);
+    int totalData = 0;
+    int errors = 0;
+
+    for (const auto& entry : std::filesystem::directory_iterator(path.c_str())) {
+        if (std::filesystem::is_regular_file(entry.path())) {
+
+            std::string fileName = entry.path().filename().string();
+            std::string labelStr = Utils::SplitString(fileName, "_")[0];
+            int label = std::stoi(labelStr);
+
+            std::string fullPathName = entry.path().string();
+            Eigen::MatrixXd input = Utils::ImageToMatrix(cv::imread(fullPathName));
+
+            std::vector<double> givenOutput = cnn->Forward(input);
+
+            auto it = std::max_element(givenOutput.begin(), givenOutput.end());
+            int givenLabel = std::distance(givenOutput.begin(), it);
+
+            confusionMatrix(givenLabel, label) += 1.0;
+
+            totalData++;
+
+            if (givenLabel != label) { errors++; }
+        }
+    }
+
+    (*accuracy) = 1.0 - ((double)errors/totalData);
+
+    return confusionMatrix;
+}
 
 
 int main(int argc, const char** argv)
 {
-    cv::Mat img = cv::imread("..\\..\\.resources\\humano-original.png");
-    Eigen::MatrixXd imgMatrix = Utils::ImageToMatrix(img);
+    //--- initialize gnuplot to plot chart
+    Gnuplot gnuplot;
+    gnuplot.OutFile("..\\..\\.resources\\gnuplot-output\\res.dat");
+    gnuplot.xRange("0", "");
+    gnuplot.yRange("-0.01", "1.05");
+    gnuplot.Grid("5", "0.1");
 
-    Eigen::MatrixXd filter = Eigen::MatrixXd(3,3);
-    filter << 
-        (1.0/9.0), (1.0/9.0), (1.0/9.0),
-        (1.0/9.0), (1.0/9.0), (1.0/9.0),
-        (1.0/9.0), (1.0/9.0), (1.0/9.0);
+    //--- load MNIST training set
+    std::vector<CNN_DATA> trainigDataSet  =  LoadData_CNN("..\\..\\.resources\\train-debug-8x8");
 
-    Eigen::MatrixXd convMatrix = ConvolutionCell::Convolute(imgMatrix, filter);
-    cv::Mat convolvedImg = Utils::MatrixToImage(convMatrix);
+    //--- build CNN
+    CNN cnn  =  CNNbuilder()
+                    .InputSize(28,28)
+                    .ProcessingArchitecture({
+                        //new ConvolutionCell(5,5),
+                        new ConvolutionCell(3,3)
+                    })
+                    .DenseArchitecture({
+                        //DenseLayer(5, new Tanh(), 0.001),
+                        DenseLayer(100, new Tanh(), 0.001),
+                        DenseLayer(10, new Linear(), 0.001)
+                    })
+                    .LostFunction( new MSE() )
+                    .Build();
 
 
-    cv::imshow("original", img);
-    cv::imshow("convolved", convolvedImg);
+    //--- training 
+    size_t epoch = 0;
+    while (epoch < 100) {
 
+        for (auto& data : trainigDataSet) {
 
-    cv::waitKey(0);
+            auto input = data.input;
+            auto correctOutput = data.label;
+
+            std::vector<double> predictedOutput = cnn.Forward( input );
+            cnn.Backward(predictedOutput, correctOutput);
+        }
+
+        double accuracy = 0.0;
+        Eigen::MatrixXd confusionMatrix  =  TestingModelAccuracy(&cnn, "..\\..\\.resources\\train-debug-8x8", &accuracy);
+
+        std::cout << "Training Epoch: " << epoch << "\n";
+        std::cout << "Training Accuracy: " << accuracy << "\n\n";
+        std::cout << confusionMatrix << "\n\n\n\n";
+
+        gnuplot.out << epoch << " " << accuracy << "\n";
+
+        epoch++;
+    }
+
 
     std::cout << "[SUCESSO!!!!!]\n";
     return 0;
 }
-
-
-
 
 
 

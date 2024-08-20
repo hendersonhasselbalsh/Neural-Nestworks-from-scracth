@@ -13,7 +13,7 @@ class ConvolutionCell : public IProcessingUnit {
 		Eigen::MatrixXd _receivedInput;
 
 	public:
-		ConvolutionCell(size_t filterSize, double learnRate = 0.01);
+		//ConvolutionCell(size_t filterSize, double learnRate = 0.01);
 		ConvolutionCell(size_t filterRow, size_t filterCol, double learnRate = 0.01);
 		~ConvolutionCell();
 

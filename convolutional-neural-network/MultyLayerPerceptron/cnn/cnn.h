@@ -5,6 +5,10 @@
 #include "../utils/basic-includes.h"
 
 
+class CNNbuilder;
+
+
+
 class CNN {
 
 	private:
@@ -13,6 +17,7 @@ class CNN {
 
 		size_t _reshapeRows;
 		size_t _reshapeCols;
+		size_t _maxEpochs;
 
 		CNN();
 
@@ -21,6 +26,10 @@ class CNN {
 		std::vector<double> Forward(Eigen::MatrixXd& input);
 		std::vector<double> Backward(std::vector<double>& predictedValues, std::vector<double>& correctValues);
 
-
+	friend class CNNbuilder;
 };
 
+
+
+
+#include "CNNbuilder.h"

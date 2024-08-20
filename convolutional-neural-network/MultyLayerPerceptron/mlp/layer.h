@@ -11,7 +11,7 @@
 using Json = nlohmann::json;
 
 class MLP;
-class LSTM;
+class CNNbuilder;
 class MlpBuilder;
 
 
@@ -82,6 +82,7 @@ class Layer {
 
 
 	friend class MLP;
+	friend class CNNbuilder;
 	friend class MlpBuilder;
 };
 

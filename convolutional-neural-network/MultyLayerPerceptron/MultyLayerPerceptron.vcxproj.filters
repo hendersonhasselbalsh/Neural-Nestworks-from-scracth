@@ -26,6 +26,9 @@
     <ClCompile Include="cnn\cnn.cpp">
       <Filter>cnn\Sources</Filter>
     </ClCompile>
+    <ClCompile Include="cnn\CNNbuilder.cpp">
+      <Filter>cnn\Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="mlp">

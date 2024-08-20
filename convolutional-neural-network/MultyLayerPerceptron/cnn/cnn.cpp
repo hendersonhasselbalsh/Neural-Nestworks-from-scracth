@@ -2,7 +2,7 @@
 
 CNN::CNN()
 {
-
+	//_mlp = MLP();
 }
 
 
@@ -33,16 +33,16 @@ std::vector<double> CNN::Backward(std::vector<double>& predictedValues, std::vec
 {
 	std::vector<double> dLoss_dProcessedOutput  =  _mlp.Backward(predictedValues, correctValues);
 
-	Eigen::MatrixXd dLoss_dProcessedOutput = Utils::ReshapeMatrix(dLoss_dProcessedOutput, _reshapeRows, _reshapeCols);
+	Eigen::MatrixXd dLoss_dOutput = Utils::ReshapeMatrix(dLoss_dProcessedOutput, _reshapeRows, _reshapeCols);
 
 	for (size_t i = _processingUnits.size()-1; i > 0; i--) {
-		dLoss_dProcessedOutput  =  _processingUnits[i]->Backward( dLoss_dProcessedOutput );
+		dLoss_dOutput  =  _processingUnits[i]->Backward( dLoss_dOutput );
 	}
 
 
-	dLoss_dProcessedOutput  =  _processingUnits[i]->Backward(dLoss_dProcessedOutput);
+	dLoss_dOutput  =  _processingUnits[0]->Backward(dLoss_dOutput);
 
-	return Utils::FlatMatrix(dLoss_dProcessedOutput);
+	return Utils::FlatMatrix(dLoss_dOutput);
 }
 
 

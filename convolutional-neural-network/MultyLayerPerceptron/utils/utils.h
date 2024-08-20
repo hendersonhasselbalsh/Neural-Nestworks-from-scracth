@@ -10,12 +10,8 @@
 #define INPUT first
 #define LABEL second
 
-using TrainigData = std::pair<std::vector<double>, std::vector<double>>;
-
-
-enum class NeuronAtrib { BIAS, ERROR, U, GRADIENTS, WEIGHTS, OUTPUT };
-
-
+using MLPTrainigData = std::pair<std::vector<double>, std::vector<double>>;
+using CNNTrainigData = std::pair<Eigen::MatrixXd, std::vector<double>>;
 
 class MLP_DATA_CLASS {
 	public:
@@ -29,6 +25,16 @@ struct MLP_DATA {
 
 	MLP_DATA() {}
 	MLP_DATA(std::vector<double> i, size_t l) : input(i), labelIndex(l) { }
+};
+
+
+struct CNN_DATA {
+	Eigen::MatrixXd input;
+	std::vector<double> label;
+	size_t labelIndex;
+
+	CNN_DATA() { }
+	CNN_DATA(Eigen::MatrixXd i, size_t l) : input(i), labelIndex(l) { }
 };
 
 
@@ -58,14 +64,14 @@ namespace Utils {
 	std::vector<double> Add(std::vector<double> a, std::vector<double> b);
 
 
-	std::vector<std::vector<TrainigData>> ShuffleBatch(std::vector<std::vector<TrainigData>> batch);
-	std::vector<std::vector<TrainigData>> ShuffleBatch(std::vector<MLP_DATA> trainigSet, size_t batchSize, std::function<std::vector<double>(size_t)> ParseLabelToVector);
-	std::vector<std::vector<TrainigData>> ShuffleBatch(std::vector<std::vector<TrainigData>> batchs, size_t batchSize);
+	std::vector<std::vector<MLPTrainigData>> ShuffleBatch(std::vector<std::vector<MLPTrainigData>> batch);
+	std::vector<std::vector<MLPTrainigData>> ShuffleBatch(std::vector<MLP_DATA> trainigSet, size_t batchSize, std::function<std::vector<double>(size_t)> ParseLabelToVector);
+	std::vector<std::vector<MLPTrainigData>> ShuffleBatch(std::vector<std::vector<MLPTrainigData>> batchs, size_t batchSize);
 
 
 
-	void CalculateMeanVector(std::vector<TrainigData> trainigSet, std::vector<double>* meansResult);
-	void CalculateDeviationVector(std::vector<TrainigData> trainigSet, std::vector<double>* means, std::vector<double>* deviationsResult);
+	void CalculateMeanVector(std::vector<MLPTrainigData> trainigSet, std::vector<double>* meansResult);
+	void CalculateDeviationVector(std::vector<MLPTrainigData> trainigSet, std::vector<double>* means, std::vector<double>* deviationsResult);
 
 	void CalculateMeanVector(std::vector<MLP_DATA> trainigSet, std::vector<double>* meansResult);
 	void CalculateDeviationVector(std::vector<MLP_DATA> trainigSet, std::vector<double>* means, std::vector<double>* deviationsResult);

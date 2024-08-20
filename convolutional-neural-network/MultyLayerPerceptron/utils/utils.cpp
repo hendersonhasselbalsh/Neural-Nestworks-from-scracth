@@ -199,9 +199,9 @@ std::vector<double> Utils::Add(std::vector<double> a, std::vector<double> b)
     return result;
 }
 
-std::vector<std::vector<TrainigData>> Utils::ShuffleBatch(std::vector<std::vector<TrainigData>> batch)
+std::vector<std::vector<MLPTrainigData>> Utils::ShuffleBatch(std::vector<std::vector<MLPTrainigData>> batch)
 {
-    std::vector<TrainigData> set  =  std::vector<TrainigData>(batch[0]);
+    std::vector<MLPTrainigData> set  =  std::vector<MLPTrainigData>(batch[0]);
     for (size_t i = 1; i < 5; i++) {
         set.insert( set.end(), batch[i].begin(), batch[i].end() );
     }
@@ -213,7 +213,7 @@ std::vector<std::vector<TrainigData>> Utils::ShuffleBatch(std::vector<std::vecto
     size_t batchIndex  =  0;
     size_t batchSize  =  set.size() / 5;
     size_t trainingSetSize  =  set.size();
-    std::vector<std::vector<TrainigData>> batchSet  =  std::vector<std::vector<TrainigData>>((size_t)5);
+    std::vector<std::vector<MLPTrainigData>> batchSet  =  std::vector<std::vector<MLPTrainigData>>((size_t)5);
 
     for (auto& batch : batchSet) {
         for (size_t i = 0; i < batchSize && batchIndex * batchSize + i < trainingSetSize; i++) {
@@ -226,7 +226,7 @@ std::vector<std::vector<TrainigData>> Utils::ShuffleBatch(std::vector<std::vecto
     return batchSet;
 }
 
-std::vector<std::vector<TrainigData>> Utils::ShuffleBatch(std::vector<MLP_DATA> trainigSet, size_t batchSize, std::function<std::vector<double>(size_t)> ParseLabelToVector)
+std::vector<std::vector<MLPTrainigData>> Utils::ShuffleBatch(std::vector<MLP_DATA> trainigSet, size_t batchSize, std::function<std::vector<double>(size_t)> ParseLabelToVector)
 {
     std::random_device rd;
     std::mt19937 g(rd());
@@ -235,7 +235,7 @@ std::vector<std::vector<TrainigData>> Utils::ShuffleBatch(std::vector<MLP_DATA> 
     size_t batchIndex  =  0;
     size_t i = 0;
     size_t trainingSetSize  =  trainigSet.size();
-    std::vector<std::vector<TrainigData>> batchSet  =  std::vector<std::vector<TrainigData>>(trainigSet.size() / batchSize);
+    std::vector<std::vector<MLPTrainigData>> batchSet  =  std::vector<std::vector<MLPTrainigData>>(trainigSet.size() / batchSize);
 
     for (auto& batch : batchSet) {
         for (i = 0; i < batchSize && batchIndex * batchSize + i < trainingSetSize; i++) {
@@ -259,9 +259,9 @@ std::vector<std::vector<TrainigData>> Utils::ShuffleBatch(std::vector<MLP_DATA> 
 }
 
 
-std::vector<std::vector<TrainigData>> Utils::ShuffleBatch(std::vector<std::vector<TrainigData>> batchs, size_t batchSize)
+std::vector<std::vector<MLPTrainigData>> Utils::ShuffleBatch(std::vector<std::vector<MLPTrainigData>> batchs, size_t batchSize)
 {
-    std::vector<TrainigData> trainigSet  =  std::vector<TrainigData>(batchs[0]);
+    std::vector<MLPTrainigData> trainigSet  =  std::vector<MLPTrainigData>(batchs[0]);
     for (size_t i = 1; i < batchs.size(); i++) {
         trainigSet.insert( trainigSet.end(), batchs[i].begin(), batchs[i].end());
     }
@@ -272,7 +272,7 @@ std::vector<std::vector<TrainigData>> Utils::ShuffleBatch(std::vector<std::vecto
 
     size_t batchIndex  =  0;
     size_t trainingSetSize  =  trainigSet.size();
-    std::vector<std::vector<TrainigData>> batchSet  =  std::vector<std::vector<TrainigData>>(trainigSet.size() / batchSize);
+    std::vector<std::vector<MLPTrainigData>> batchSet  =  std::vector<std::vector<MLPTrainigData>>(trainigSet.size() / batchSize);
 
     for (auto& batch : batchSet) {
         for (size_t i = 0; i < batchSize && batchIndex * batchSize + i < trainingSetSize; i++) {
@@ -295,7 +295,7 @@ std::vector<std::vector<TrainigData>> Utils::ShuffleBatch(std::vector<std::vecto
 
 
 
-void Utils::CalculateMeanVector(std::vector<TrainigData> trainigSet, std::vector<double>* meansResult)
+void Utils::CalculateMeanVector(std::vector<MLPTrainigData> trainigSet, std::vector<double>* meansResult)
 {
     size_t trainingSetSize = trainigSet.size();
     size_t inputSize = trainigSet[0].INPUT.size();
@@ -310,7 +310,7 @@ void Utils::CalculateMeanVector(std::vector<TrainigData> trainigSet, std::vector
     meansResult->insert( meansResult->begin(), 1.0 );
 }
 
-void Utils::CalculateDeviationVector(std::vector<TrainigData> trainigSet, std::vector<double>* means, std::vector<double>* deviationsResult)
+void Utils::CalculateDeviationVector(std::vector<MLPTrainigData> trainigSet, std::vector<double>* means, std::vector<double>* deviationsResult)
 {
     size_t trainingSetSize = trainigSet.size();
     size_t inputSize = trainigSet[0].INPUT.size();
