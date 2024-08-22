@@ -19,10 +19,12 @@ ConvolutionCell::ConvolutionCell(size_t filterRow, size_t filterCol, double lear
     _learningRate = learnRate;
     _filter  =  Eigen::MatrixXd::Ones(filterRow, filterCol);
 
+    double range = (double)std::max(filterRow, filterCol);
+
     for (size_t i = 0; i < _filter.rows(); i++) {
         for (size_t j = 0; j < _filter.cols(); j++) {
             //_filter(i, j)  =  (1.0 / (double)(filterRow*filterCol));
-            _filter(i, j)  =  Utils::RandomUniformDistribution(-0.3, 0.3);
+            _filter(i, j)  =  Utils::RandomUniformDistribution(-range, range);
         }
     }
 

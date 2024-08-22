@@ -1,6 +1,7 @@
 #include <opencv2/opencv.hpp>
 #include <Eigen/Core>
 #include <Eigen/Dense>
+#include <unsupported/Eigen/CXX11/TensorIncludes.h>
 #include "gnuplot-include.h"
 #include "utils/basic-includes.h"
 #include "mlp/multy-layer-perceptron.h"
@@ -80,29 +81,39 @@ Eigen::MatrixXd TestingModelAccuracy(CNN* cnn, std::string path, double* accurac
 
 int main(int argc, const char** argv)
 {
+    void* val = new int(3);
+    std::vector<double>* teste = static_cast<std::vector<double>*>(val);
+
+    if (teste == nullptr) { std::cout << "cast error: nullptr\n"; }
+    else { std::cout << "not nullptr\n"; }
+
+    std::cout << "[SUCESSO!!!!!]\n";
+    return 0;
+}
+
+int __main(int argc, const char** argv)
+{
     //--- initialize gnuplot to plot chart
     Gnuplot gnuplot;
     gnuplot.OutFile("..\\..\\.resources\\gnuplot-output\\res.dat");
     gnuplot.xRange("0", "");
     gnuplot.yRange("-0.01", "1.05");
-    gnuplot.Grid("5", "0.1");
+    gnuplot.Grid("20", "0.1");
 
     //--- load MNIST training set
-    std::vector<CNN_DATA> trainigDataSet  =  LoadData_CNN("..\\..\\.resources\\train-debug-8x8");
+    std::vector<CNN_DATA> trainigDataSet  =  LoadData_CNN("..\\..\\.resources\\train");
 
     //--- build CNN
     CNN cnn  =  CNNbuilder()
                     .InputSize(28,28)
                     .ProcessingArchitecture({
-                        //new ConvolutionCell(5,5),
-                        new ConvolutionCell(6,6, 0.001),
-                        new ActivationCell( new ReLU() )
+                        new ConvolutionCell(3,3, 0.01),
+                        new ActivationCell(new NormalizedTanh()),
+                        new ActivationCell( new ReLU() ),
                     })
                     .DenseArchitecture({
-                        /*DenseLayer(5, new NormalizedTanh(), 0.001),
-                        DenseLayer(7, new NormalizedTanh(), 0.001),*/
-                        DenseLayer(50, new NormalizedTanh(), 0.001),
-                        DenseLayer(10, new NormalizedTanh(), 0.001)
+                        DenseLayer(60, new NormalizedTanh(), 0.003),
+                        DenseLayer(10, new NormalizedTanh(), 0.003)
                     })
                     .LostFunction( new MSE() )
                     .Build();
@@ -110,7 +121,7 @@ int main(int argc, const char** argv)
 
     //--- training 
     size_t epoch = 0;
-    while (epoch < 400) {
+    while (epoch < 40) {
 
         for (auto& data : trainigDataSet) {
 
@@ -121,8 +132,14 @@ int main(int argc, const char** argv)
             cnn.Backward(predictedOutput, correctOutput);
         }
 
+        //-- shuffle
+        std::random_device rd;
+        std::mt19937 g(rd());
+        std::shuffle(trainigDataSet.begin(), trainigDataSet.end(), g);
+
+
         double accuracy = 0.0;
-        Eigen::MatrixXd confusionMatrix  =  TestingModelAccuracy(&cnn, "..\\..\\.resources\\train-debug-8x8", &accuracy);
+        Eigen::MatrixXd confusionMatrix  =  TestingModelAccuracy(&cnn, "..\\..\\.resources\\train", &accuracy);
 
         std::cout << "Training Epoch: " << epoch << "\n";
         std::cout << "Training Accuracy: " << accuracy << "\n\n";
@@ -132,6 +149,13 @@ int main(int argc, const char** argv)
 
         epoch++;
     }
+
+    //--- evaluating training on MNIST test set
+    std::cout << "\n\nTraining Concluded!!!\n\n";
+    double accuracy = 0.0;
+    Eigen::MatrixXd confusionMatrix  =  TestingModelAccuracy(&cnn, "..\\..\\.resources\\test", &accuracy);
+    std::cout << "Testing Accuracy: " << accuracy << "\n\n";
+    std::cout << confusionMatrix << "\n\n\n\n";
 
     //--- plot chart
     gnuplot.out.close();
@@ -266,11 +290,10 @@ int ___main(int argc, const char** argv)
     MLP mlp  =  MlpBuilder()
                     .InputSize(28*28)
                     .Architecture({
-                        DenseLayer(5, new NormalizedTanh(), 0.001),
-                        DenseLayer(7, new NormalizedTanh(), 0.001),
-                        DenseLayer(10, new NormalizedTanh(), 0.001, new MSE())
+                        DenseLayer(100, new NormalizedTanh(), 0.005),
+                        DenseLayer(10, new NormalizedTanh(), 0.005, new MSE())
                     })
-                    .MaxEpochs(400)
+                    .MaxEpochs(100)
                     .ParseLabelToVector( ParseLabelToEspectedOutput )
                     .SaveOn("..\\..\\.resources\\gnuplot-output\\mlp\\mlp.json")
                     .Build();
