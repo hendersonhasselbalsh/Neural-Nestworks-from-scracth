@@ -66,7 +66,11 @@ class AveragePool : public IProcessingUnit {
 	private:
 		size_t _poolRow;
 		size_t _poolCol;
+
 		double _size;
+
+		size_t _inputRow;
+		size_t _inputCol;
 
 	public:
 		//ConvolutionCell(size_t poolSize, double learnRate = 0.01);

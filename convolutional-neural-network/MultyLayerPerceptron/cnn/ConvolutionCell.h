@@ -9,6 +9,7 @@ class ConvolutionCell : public IProcessingUnit {
 	
 	private:
 		double _learningRate;
+		double _bias;
 		Eigen::MatrixXd _filter;
 		Eigen::MatrixXd _receivedInput;
 
@@ -17,7 +18,7 @@ class ConvolutionCell : public IProcessingUnit {
 		ConvolutionCell(size_t filterRow, size_t filterCol, double learnRate = 0.01);
 		~ConvolutionCell();
 
-		static Eigen::MatrixXd Convolute(Eigen::MatrixXd& input, Eigen::MatrixXd& filter);
+		Eigen::MatrixXd Convolute(Eigen::MatrixXd& input, Eigen::MatrixXd& filter);
 		static Eigen::MatrixXd Convolute(Eigen::MatrixXd& input, Eigen::MatrixXd& filter, size_t padding);
 
 

@@ -29,7 +29,11 @@ ConvolutionCell::ConvolutionCell(size_t filterRow, size_t filterCol, double lear
     }
 
     //--- DEBUG
-    std::cout << _filter << "\n\n";
+    //_bias = Utils::RandomUniformDistribution(-1, 1);
+    //--- END DEBUG
+
+    //--- DEBUG
+    std::cout << "\n\n" << _filter << "\n\n";
     //--- END DEBUG
 }
 
@@ -82,7 +86,7 @@ Eigen::MatrixXd ConvolutionCell::Convolute(Eigen::MatrixXd& input, Eigen::Matrix
     for (size_t i = 0; i < rows; i++) {
         for (size_t j = 0; j < cols; j++) {
             double sum = padded.block(i, j, filterRows, filterCols).cwiseProduct(filter).sum();
-            result(i, j) = sum;
+            result(i, j) = sum;   // dont use bias here
         }
     }
 
@@ -108,7 +112,6 @@ Eigen::MatrixXd ConvolutionCell::Backward(Eigen::MatrixXd& dLoss_dOutput)
     Eigen::MatrixXd dLoss_dFilter  =  Convolute(_receivedInput, dLoss_dOutput);
 
     _filter  =  _filter - _learningRate * dLoss_dFilter;
-
 
     size_t paddingSize = dLoss_dOutput.rows() - 1;
     Eigen::MatrixXd rotated_filter = Utils::Rotate_180Degree( _filter );

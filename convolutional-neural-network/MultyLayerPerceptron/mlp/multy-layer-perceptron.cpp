@@ -37,14 +37,11 @@ std::vector<double> MLP::Backward(std::vector<double> predictedValues, std::vect
 	dLoss_dInput = _layers[layerIndex--].UpdateLastLayerWeight(predictedValues, correctValues);
 
 
-	// update hidden layers
+	//--- update hidden layers
 	for (layerIndex; layerIndex >= 0; layerIndex--) {
 		dLoss_dInput = _layers[layerIndex].UpdateHiddenLayerWeight( dLoss_dInput );
 	}
 
-
-	//auto flat_dLoss_dInput  =  Utils::FlatMatrix(dLoss_dInput);
-	//return std::vector<double>(flat_dLoss_dInput.begin()+1, flat_dLoss_dInput.end()); // avoid bais  // return  Utils::FlatMatrix(dLoss_dInput);
 	return  Utils::FlatMatrix(dLoss_dInput);
 }
 
@@ -59,7 +56,7 @@ std::vector<double> MLP::Backward(std::vector<double> lossGradientWithRespectToO
 	dLoss_dInput = _layers[layerIndex--].UpdateHiddenLayerWeight( dLoss_dInput );
 
 
-	// update hidden layers
+	//--- update hidden layers
 	for (layerIndex; layerIndex >= 0; layerIndex--) {
 		dLoss_dInput = _layers[layerIndex].UpdateHiddenLayerWeight(dLoss_dInput);
 	}

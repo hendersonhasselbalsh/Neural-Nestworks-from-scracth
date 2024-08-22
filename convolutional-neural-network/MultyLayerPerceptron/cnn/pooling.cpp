@@ -124,6 +124,9 @@ AveragePool::~AveragePool()
 
 Eigen::MatrixXd AveragePool::Forward(Eigen::MatrixXd& input)
 {
+    _inputRow = input.rows();
+    _inputCol = input.cols();
+
     const int rows = input.rows() / _poolRow;
     const int cols = input.cols() / _poolCol;
 
@@ -137,7 +140,7 @@ Eigen::MatrixXd AveragePool::Forward(Eigen::MatrixXd& input)
             Eigen::Index maxRow, maxCol;
 
             double maxElement = input.block(i*_poolRow, j*_poolCol, _poolRow, _poolCol).sum();
-            result(i, j)  =  maxElement / size;
+            result(i, j)  =  maxElement / _size;
         }
     }
     return result;
@@ -145,5 +148,13 @@ Eigen::MatrixXd AveragePool::Forward(Eigen::MatrixXd& input)
 
 Eigen::MatrixXd AveragePool::Backward(Eigen::MatrixXd& dLoss_dOutput)
 {
-    return Eigen::MatrixXd();
+    Eigen::MatrixXd dLoss_dPool = Eigen::MatrixXd::Constant(_inputRow, _inputRow, 1.0/_size) ;
+
+    for (int i = 0; i < dLoss_dOutput.rows(); i++) {
+        for (int j = 0; j < dLoss_dOutput.cols(); j++) {
+            dLoss_dPool.block(i*_poolRow, j*_poolCol, _poolRow, _poolCol) *= dLoss_dOutput(i, j);
+        }
+    }
+
+    return dLoss_dPool;
 }

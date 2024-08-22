@@ -1,7 +1,7 @@
 #include <opencv2/opencv.hpp>
 #include <Eigen/Core>
 #include <Eigen/Dense>
-#include <unsupported/Eigen/CXX11/TensorIncludes.h>
+#include <unsupported/Eigen/CXX11/Tensor>
 #include "gnuplot-include.h"
 #include "utils/basic-includes.h"
 #include "mlp/multy-layer-perceptron.h"
@@ -96,13 +96,13 @@ int main(int argc, const char** argv)
                     .InputSize(28,28)
                     .ProcessingArchitecture({
                         new ConvolutionCell(6,6, 0.01),
-                        //new ActivationCell(new NormalizedTanh()),
-                        new ActivationCell( new ReLU() ),
-                        new MinPool(2,2),
+                        new ActivationCell(new Tanh()),
+                        //new ActivationCell( new ReLU() ),
+                        //new AveragePool(2,2),
                     })
-                    .DenseArchitecture({
-                        DenseLayer(50, new NormalizedTanh(), 0.003),
-                        DenseLayer(10, new NormalizedTanh(), 0.003)
+                    .DenseArchitecture({ 
+                        DenseLayer(100, new Tanh(), 0.003),
+                        DenseLayer(10, new Tanh(), 0.003)
                     })
                     .LostFunction( new MSE() )
                     .Build();
