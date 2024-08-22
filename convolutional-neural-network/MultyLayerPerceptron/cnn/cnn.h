@@ -2,6 +2,7 @@
 
 #include "ConvolutionCell.h"
 #include "ActivationCell.h"
+#include "pooling.h"
 #include "../mlp/multy-layer-perceptron.h"
 #include "../utils/basic-includes.h"
 

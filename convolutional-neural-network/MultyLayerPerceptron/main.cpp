@@ -81,18 +81,6 @@ Eigen::MatrixXd TestingModelAccuracy(CNN* cnn, std::string path, double* accurac
 
 int main(int argc, const char** argv)
 {
-    void* val = new int(3);
-    std::vector<double>* teste = static_cast<std::vector<double>*>(val);
-
-    if (teste == nullptr) { std::cout << "cast error: nullptr\n"; }
-    else { std::cout << "not nullptr\n"; }
-
-    std::cout << "[SUCESSO!!!!!]\n";
-    return 0;
-}
-
-int __main(int argc, const char** argv)
-{
     //--- initialize gnuplot to plot chart
     Gnuplot gnuplot;
     gnuplot.OutFile("..\\..\\.resources\\gnuplot-output\\res.dat");
@@ -101,18 +89,19 @@ int __main(int argc, const char** argv)
     gnuplot.Grid("20", "0.1");
 
     //--- load MNIST training set
-    std::vector<CNN_DATA> trainigDataSet  =  LoadData_CNN("..\\..\\.resources\\train");
+    std::vector<CNN_DATA> trainigDataSet  =  LoadData_CNN("..\\..\\.resources\\train-debug-8x8");
 
     //--- build CNN
     CNN cnn  =  CNNbuilder()
                     .InputSize(28,28)
                     .ProcessingArchitecture({
-                        new ConvolutionCell(3,3, 0.01),
-                        new ActivationCell(new NormalizedTanh()),
+                        new ConvolutionCell(6,6, 0.01),
+                        //new ActivationCell(new NormalizedTanh()),
                         new ActivationCell( new ReLU() ),
+                        new MinPool(2,2),
                     })
                     .DenseArchitecture({
-                        DenseLayer(60, new NormalizedTanh(), 0.003),
+                        DenseLayer(50, new NormalizedTanh(), 0.003),
                         DenseLayer(10, new NormalizedTanh(), 0.003)
                     })
                     .LostFunction( new MSE() )
@@ -121,7 +110,7 @@ int __main(int argc, const char** argv)
 
     //--- training 
     size_t epoch = 0;
-    while (epoch < 40) {
+    while (epoch < 100) {
 
         for (auto& data : trainigDataSet) {
 
@@ -139,7 +128,7 @@ int __main(int argc, const char** argv)
 
 
         double accuracy = 0.0;
-        Eigen::MatrixXd confusionMatrix  =  TestingModelAccuracy(&cnn, "..\\..\\.resources\\train", &accuracy);
+        Eigen::MatrixXd confusionMatrix  =  TestingModelAccuracy(&cnn, "..\\..\\.resources\\train-debug-8x8", &accuracy);
 
         std::cout << "Training Epoch: " << epoch << "\n";
         std::cout << "Training Accuracy: " << accuracy << "\n\n";

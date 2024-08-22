@@ -34,7 +34,7 @@ Eigen::MatrixXd ActivationCell::Forward(Eigen::MatrixXd& input)
 
 Eigen::MatrixXd ActivationCell::Backward(Eigen::MatrixXd& dLoss_dOutput)
 {
-	assert(_receivedInput.size() != dLoss_dOutput.size()  &&  "those matrix Should have the same dimensions");
+	assert(_receivedInput.size() == dLoss_dOutput.size()  &&  "those matrix Should have the same dimensions");
 
 	size_t rows = _receivedInput.rows();
 	size_t cols = _receivedInput.cols();
