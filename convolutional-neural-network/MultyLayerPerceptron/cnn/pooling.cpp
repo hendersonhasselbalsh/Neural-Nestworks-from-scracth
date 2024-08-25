@@ -137,7 +137,7 @@ Eigen::MatrixXd AveragePool::Forward(Eigen::MatrixXd& input)
             Eigen::Index maxRow, maxCol;
 
             double maxElement = input.block(i*_poolRow, j*_poolCol, _poolRow, _poolCol).sum();
-            result(i, j)  =  maxElement / size;
+            result(i, j)  =  maxElement / _size;
         }
     }
     return result;

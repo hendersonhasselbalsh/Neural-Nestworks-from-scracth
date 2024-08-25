@@ -19,6 +19,7 @@ class ConvolutionCell : public IProcessingUnit {
 
 		static Eigen::MatrixXd Convolute(Eigen::MatrixXd& input, Eigen::MatrixXd& filter);
 		static Eigen::MatrixXd Convolute(Eigen::MatrixXd& input, Eigen::MatrixXd& filter, size_t padding);
+		static Eigen::MatrixXd Convolute(Eigen::MatrixXd& input, Eigen::MatrixXd& filter, size_t rowPadding, size_t colPadding);
 
 
 		// Inherited via IProcessingUnit
