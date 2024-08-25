@@ -93,14 +93,11 @@ int main(int argc, const char** argv)
     CNN cnn  =  CNNbuilder()
                     .InputSize(28,28)
                     .ProcessingArchitecture({
-                        new ConvolutionCell(6,2, 0.01),
-                        new ActivationCell(new Tanh()),
-                        new ConvolutionCell(2,6, 0.01),
-                        new ActivationCell(new Tanh()),
-                        //new ActivationCell(new ReLU()),
+                        new ConvolutionCell(3,3, 0.01),
+                        new Normalize(),
+                        new ActivationCell(new ReLU()),    // <-- only changing parameter
                     })
                     .DenseArchitecture({
-                        //DenseLayer(70, new NormalizedTanh(), 0.003),
                         DenseLayer(100, new NormalizedTanh(), 0.003),
                         DenseLayer(10, new NormalizedTanh(), 0.003),
                     })
@@ -111,7 +108,7 @@ int main(int argc, const char** argv)
     //--- training 
     double bestAccuracy = 0.0;
     size_t epoch = 0;
-    while (epoch < 40) {
+    while (epoch < 80) {
 
         for (auto& data : trainigDataSet) {
 

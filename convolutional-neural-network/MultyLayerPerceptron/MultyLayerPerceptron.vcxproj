@@ -159,6 +159,7 @@
     <ClCompile Include="cnn\cnn.cpp" />
     <ClCompile Include="cnn\CNNbuilder.cpp" />
     <ClCompile Include="cnn\ConvolutionCell.cpp" />
+    <ClCompile Include="cnn\data-maneging.cpp" />
     <ClCompile Include="cnn\pooling.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mlp\activation-functions.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="cnn\cnn.h" />
     <ClInclude Include="cnn\CNNbuilder.h" />
     <ClInclude Include="cnn\ConvolutionCell.h" />
+    <ClInclude Include="cnn\data-maneging.h" />
     <ClInclude Include="cnn\pooling.h" />
     <ClInclude Include="cnn\ProcessingUnity.h" />
     <ClInclude Include="mlp\activation-functions.h" />

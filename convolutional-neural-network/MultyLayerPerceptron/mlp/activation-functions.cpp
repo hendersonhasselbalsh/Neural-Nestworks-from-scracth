@@ -65,54 +65,6 @@ const char* Sigmoid::ToString()
 
 
 ///-------------
-///  ReLU
-///-------------
-
-double ReLU::f(double x)
-{
-    return std::max(0.0, x);
-}
-
-double ReLU::df(double x)
-{
-    if (x < 0) { return 0.0; } else { return 1.0; };
-}
-
-const char* ReLU::ToString()
-{
-    return "ReLU";
-}
-
-
-
-
-///-------------
-///  LeakyReLU
-///-------------
-
-LeakyReLU::LeakyReLU(double a)
-{
-    _a = a;
-}
-
-double LeakyReLU::f(double x)
-{
-    return std::max(_a * x, x);
-}
-
-double LeakyReLU::df(double x)
-{
-    if (x < 0) { return _a; } else { return 1.0; };
-}
-
-const char* LeakyReLU::ToString()
-{
-    return "LeakyReLU";
-}
-
-
-
-///-------------
 ///  Tanh
 ///-------------
 
@@ -157,7 +109,7 @@ const char* NormalizedTanh::ToString()
 
 
 ///------------------
-///  NormalizedTanh
+///  Linear
 ///------------------
 
 double Linear::f(double x)
@@ -178,7 +130,7 @@ const char* Linear::ToString()
 
 
 ///------------------
-///  NormalizedTanh
+///  Sigmoid
 ///------------------
 
 double AdaptedSigmoid::f(double x)
@@ -226,4 +178,259 @@ double ClipedLinear::df(double x)
 const char* ClipedLinear::ToString()
 {
     return "ClipedLinear";
+}
+
+
+
+///-------------
+///  ReLU
+///-------------
+
+double ReLU::f(double x)
+{
+    return std::max(0.0, x);
+}
+
+double ReLU::df(double x)
+{
+    if (x < 0) { return 0.0; } else { return 1.0; };
+}
+
+const char* ReLU::ToString()
+{
+    return "ReLU";
+}
+
+
+
+
+///-------------
+///  LeakyReLU
+///-------------
+
+LeakyReLU::LeakyReLU()
+{
+}
+
+double LeakyReLU::f(double x)
+{
+    if (x >= 0 ) { return x; }
+    else { return 0.01 * x; }
+}
+
+double LeakyReLU::df(double x)
+{
+    if (x < 0) { return 0.01; } else { return 1.0; };
+}
+
+const char* LeakyReLU::ToString()
+{
+    return "LeakyReLU";
+}
+
+
+
+
+
+///-------------
+///  ParametricReLU
+///-------------
+
+ParametricReLU::ParametricReLU(double param)
+    : _param(param)
+{
+}
+
+double ParametricReLU::f(double x)
+{
+    if (x >= 0) { return x; } 
+    else { return _param * x; }
+}
+
+double ParametricReLU::df(double x)
+{
+    if (x < 0) { return _param; } else { return 1.0; };
+}
+
+const char* ParametricReLU::ToString()
+{
+    return "ParametricReLU";
+}
+
+
+
+
+
+///-------------
+///  GeLU
+///-------------
+
+GeLU::GeLU()
+{
+}
+
+double GeLU::f(double x)
+{
+    return x * phi(x);
+}
+
+double GeLU::df(double x)
+{
+    return phi(x) + x * pdf(x);
+}
+
+const char* GeLU::ToString()
+{
+    return nullptr;
+}
+
+
+double GeLU::phi(double x)
+{
+    return 0.5 * erfc(-x / std::sqrt(2.0));
+}
+
+double GeLU::pdf(double x)
+{
+    double PI = (double)M_PI;
+    return ( 1.0/std::sqrt(2.0 * PI) ) * std::exp(-0.5 * x * x);
+}
+
+
+
+
+
+
+///-------------
+///  SiLU
+///-------------
+
+SiLU::SiLU()
+{
+}
+
+double SiLU::f(double x)
+{
+    return x * SiLU::Sigmoid(x);
+}
+
+double SiLU::df(double x)
+{
+    return x * SiLU::dSigmoid(x) + SiLU::Sigmoid(x);
+}
+
+const char* SiLU::ToString()
+{
+    return nullptr;
+}
+
+double SiLU::Sigmoid(double x)
+{
+    return (1.0 / (1.0 + std::exp(-x)) );
+}
+
+double SiLU::dSigmoid(double x)
+{
+    return SiLU::Sigmoid(x) * (1.0 - SiLU::Sigmoid(x));
+}
+
+
+
+
+
+
+
+///-------------
+///  Softplus / Smooth ReLU
+///-------------
+
+Softplus::Softplus()
+{
+}
+
+double Softplus::f(double x)
+{
+    if(x == 0.0) { return std::log(2.0); }
+    return std::log(1.0 + std::exp(x));
+}
+
+double Softplus::df(double x)
+{
+    return (1.0 / (1.0 + std::exp(-x)));
+}
+
+const char* Softplus::ToString()
+{
+    return nullptr;
+}
+
+
+
+
+///-------------
+///  Softplus / Smooth ReLU
+///-------------
+
+ELU::ELU(double a)
+    : _a(a)
+{
+}
+
+double ELU::f(double x)
+{
+    if (x > 0) { return x; }
+    else { return _a * (std::exp(x - 1.0)); }
+}
+
+double ELU::df(double x)
+{
+    if (x > 0) { return 1.0; } 
+    else { return _a * (std::exp(x)); }
+}
+
+const char* ELU::ToString()
+{
+    return nullptr;
+}
+
+
+
+
+
+
+///-------------
+///  Mish
+///-------------
+
+Mish::Mish()
+{
+}
+
+double Mish::f(double x)
+{
+    double s = Mish::Softplus(x);
+    return x * std::tanh(s);
+}
+
+double Mish::df(double x)
+{
+    double s = Mish::Softplus(x);
+    double tanh_s = std::tanh(s);
+    double dsoftplus = Mish::dSoftplus(x);
+    return Mish::f(x) + x * (1 - tanh_s * tanh_s) * dsoftplus;
+}
+
+const char* Mish::ToString()
+{
+    return nullptr;
+}
+
+double Mish::Softplus(double x)
+{
+    return std::log(1.0 + std::exp(x));
+}
+
+double Mish::dSoftplus(double x)
+{
+    return 1.0 / (1.0 + std::exp(-x));
 }

@@ -35,6 +35,9 @@
     <ClCompile Include="cnn\pooling.cpp">
       <Filter>cnn\Sources</Filter>
     </ClCompile>
+    <ClCompile Include="cnn\data-maneging.cpp">
+      <Filter>cnn\Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="mlp">
@@ -103,6 +106,9 @@
       <Filter>cnn\Headers</Filter>
     </ClInclude>
     <ClInclude Include="cnn\pooling.h">
+      <Filter>cnn\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="cnn\data-maneging.h">
       <Filter>cnn\Headers</Filter>
     </ClInclude>
   </ItemGroup>
