@@ -23,7 +23,8 @@ Layer::Layer(size_t inputSize, size_t neuronQuantity, IActivationFunction* actFu
 {
 	_weights  =  Eigen::MatrixXd::Zero(neuronQuantity, _inputSize+1);
 
-	XavierWeightInitialization(inputSize, neuronQuantity);
+	//XavierWeightInitialization(inputSize, neuronQuantity);
+	XavierWeightInitialization(inputSize, nextLayerNeuronQnt);
 
 	size_t layerOutputSize = neuronQuantity + 1;
 	_outputs  =  Eigen::MatrixXd::Ones(layerOutputSize, 1);

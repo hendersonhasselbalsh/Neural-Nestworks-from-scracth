@@ -60,7 +60,7 @@ double RMSE::df(double predicted, double correct)
 //-------------------------
 double CrossEntropy::f(double predicted, double correct)
 {
-	return correct * std::log(predicted);
+	return - correct * std::log(predicted);
 }
 
 double CrossEntropy::df(double predicted, double correct)
@@ -69,5 +69,5 @@ double CrossEntropy::df(double predicted, double correct)
 	// asure that predict is neither 0 or 1
 	predicted = std::max(std::min(predicted, 1.0 - epsilon), epsilon);
 
-	return - (correct / predicted) + ( (1 - correct) / (1 - predicted) );
+	return - (correct + epsilon) / (predicted + epsilon);
 }

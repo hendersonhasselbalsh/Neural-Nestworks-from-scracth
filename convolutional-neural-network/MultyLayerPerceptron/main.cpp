@@ -9,6 +9,29 @@
 
 
 
+
+/*
+    //--- 0.98
+    CNN cnn  =  CNNbuilder()
+                    .InputSize(28,28)
+                    .ProcessingArchitecture({
+                        new ConvolutionCell(5,5, 0.001),
+                        new ActivationCell(new ReLU()),
+                        new MaxPool(2,2),
+                        new Normalize(),
+                    })
+                    .DenseArchitecture({
+                        DenseLayer(256, new ReLU(), 0.001),
+                        DenseLayer(10, new NormalizedTanh(), 0.001),
+                    })
+                    .LostFunction( new MSE() )
+                    .Build();
+
+
+*/
+
+
+
 std::vector<CNN_DATA> LoadData_CNN(const std::string& folderPath)
 {
     std::vector<CNN_DATA> set;
@@ -93,13 +116,14 @@ int main(int argc, const char** argv)
     CNN cnn  =  CNNbuilder()
                     .InputSize(28,28)
                     .ProcessingArchitecture({
-                        new ConvolutionCell(3,3, 0.01),
+                        new ConvolutionCell(Filter{3,3}, 0.001),
+                        new ActivationCell(new ReLU()),
+                        //new MaxPool(2,2),
                         new Normalize(),
-                        new ActivationCell(new ReLU()),    // <-- only changing parameter
                     })
                     .DenseArchitecture({
-                        DenseLayer(100, new NormalizedTanh(), 0.003),
-                        DenseLayer(10, new NormalizedTanh(), 0.003),
+                        DenseLayer(256, new Tanh(), 0.001),
+                        DenseLayer(10, new Tanh(), 0.001),
                     })
                     .LostFunction( new MSE() )
                     .Build();

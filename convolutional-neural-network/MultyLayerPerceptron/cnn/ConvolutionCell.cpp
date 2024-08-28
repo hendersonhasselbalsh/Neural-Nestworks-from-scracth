@@ -2,25 +2,61 @@
 
 
 
-//ConvolutionCell::ConvolutionCell(size_t filterSize, double learnRate)
-//{
-//    _learningRate = learnRate;
-//	_filter  =  Eigen::MatrixXd::Ones(filterSize, filterSize);
-//
-//    for (size_t i = 0; i < _filter.rows(); i++) {
-//        for (size_t j = 0; j < _filter.cols(); j++) {
-//            _filter(i,j)  =  Utils::RandomUniformDistribution(-1.0, 1.0);
-//        }
-//    }
-//}
-
 ConvolutionCell::ConvolutionCell(size_t filterRow, size_t filterCol, double learnRate)
 {
+    _paddingSize = Padding{ 0, 0 };
+
     _learningRate = learnRate;
     _filter  =  Eigen::MatrixXd::Ones(filterRow, filterCol);
 
-    //double range = (double)std::max(filterRow, filterCol);
-    double range = 1.0 / (double)std::max(filterRow, filterCol);
+    //double range = 1.0 / (double)std::max(filterRow, filterCol);
+    double range = 1.0 / (double)(filterRow * filterCol);
+
+
+
+    for (size_t i = 0; i < _filter.rows(); i++) {
+        for (size_t j = 0; j < _filter.cols(); j++) {
+            //_filter(i, j)  =  (1.0 / (double)(filterRow*filterCol));
+            _filter(i, j)  =  Utils::RandomUniformDistribution(-range, range);
+        }
+    }
+
+    //--- DEBUG
+    std::cout << "\n\nFILTER:\n" << _filter << "\n\n";
+    //--- END DEBUG
+}
+
+ConvolutionCell::ConvolutionCell(Filter filterSize, double learnRate)
+{
+    _paddingSize = Padding{ 0, 0 };
+
+    _learningRate = learnRate;
+    _filter  =  Eigen::MatrixXd::Ones(filterSize._row, filterSize._col);
+
+    double range = 1.0 / (double)(filterSize._row * filterSize._col);
+
+
+    for (size_t i = 0; i < _filter.rows(); i++) {
+        for (size_t j = 0; j < _filter.cols(); j++) {
+            //_filter(i, j)  =  (1.0 / (double)(filterRow*filterCol));
+            _filter(i, j)  =  Utils::RandomUniformDistribution(-range, range);
+        }
+    }
+
+    //--- DEBUG
+    std::cout << "\n\nFILTER:\n" << _filter << "\n\n";
+    //--- END DEBUG
+}
+
+ConvolutionCell::ConvolutionCell(Filter filterSize, Padding padding, double learnRate)
+{
+    _paddingSize = padding;
+
+    _learningRate = learnRate;
+    _filter  =  Eigen::MatrixXd::Ones(filterSize._row, filterSize._col);
+
+    double range = 1.0 / (double)(filterSize._row * filterSize._col);
+
 
     for (size_t i = 0; i < _filter.rows(); i++) {
         for (size_t j = 0; j < _filter.cols(); j++) {
@@ -121,6 +157,12 @@ Eigen::MatrixXd ConvolutionCell::Convolute(Eigen::MatrixXd& input, Eigen::Matrix
 
 Eigen::MatrixXd ConvolutionCell::Forward(Eigen::MatrixXd& input)
 {
+    if (_paddingSize._col!=0  ||  _paddingSize._row!=0) {
+        Eigen::MatrixXd padded = Eigen::MatrixXd::Zero(input.rows() + 2*_paddingSize._row, input.cols() + 2*_paddingSize._col);
+        padded.block(_paddingSize._row, _paddingSize._col, input.rows(), input.cols()) = input;
+        input = padded;
+    }
+
     _receivedInput = input;
     Eigen::MatrixXd convolvedInput = Convolute(input, _filter);
     return convolvedInput;

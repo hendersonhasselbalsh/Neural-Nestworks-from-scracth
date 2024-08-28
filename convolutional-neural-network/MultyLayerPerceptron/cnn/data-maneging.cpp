@@ -98,5 +98,7 @@ double Normalize::StandartDeviation(Eigen::MatrixXd& matrix)
 	Eigen::MatrixXd diff = matrix.array() - m;
 	double variance = (diff.array().square().sum()) / (matrix.size() - 1);
 
-	return std::sqrt(variance);
+	double epson  =  1e-10;
+
+	return std::sqrt(variance + epson);
 }

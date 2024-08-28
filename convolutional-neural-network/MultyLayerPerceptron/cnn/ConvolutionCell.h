@@ -5,6 +5,23 @@
 #include "ProcessingUnity.h"
 
 
+struct Filter {
+	size_t _row;
+	size_t _col;
+
+	Filter(size_t row, size_t col) : _row(row), _col(col) { }
+};
+
+struct Padding {
+	size_t _row;
+	size_t _col;
+
+	Padding(size_t row = 0, size_t col = 0) : _row(row), _col(col) { }
+};
+
+
+
+
 class ConvolutionCell : public IProcessingUnit {
 	
 	private:
@@ -13,9 +30,14 @@ class ConvolutionCell : public IProcessingUnit {
 		Eigen::MatrixXd _filter;
 		Eigen::MatrixXd _receivedInput;
 
+		Padding _paddingSize;
+
+
 	public:
 		//ConvolutionCell(size_t filterSize, double learnRate = 0.01);
-		ConvolutionCell(size_t filterRow, size_t filterCol, double learnRate = 0.01);
+		ConvolutionCell(size_t filterRow, size_t filterCol, double learnRate = 0.001);
+		ConvolutionCell(Filter filterSize, double learnRate = 0.001);
+		ConvolutionCell(Filter filterSize, Padding padding, double learnRate = 0.001);
 		~ConvolutionCell();
 
 		Eigen::MatrixXd Convolute(Eigen::MatrixXd& input, Eigen::MatrixXd& filter);
