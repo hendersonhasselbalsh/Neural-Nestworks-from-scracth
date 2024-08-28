@@ -42,8 +42,8 @@ class MlpBuilder {
 		MlpBuilder ParseLabelToVector( std::function<std::vector<double>(size_t)> CallBack );
 		MlpBuilder SaveOn(std::string outFile);
 		MlpBuilder LoadArchitectureFromJson(std::string file);
-		MlpBuilder WhenToUpdateLearningRate(std::function<bool(size_t, double)> Conddition);
-		MlpBuilder HowToUpdateLearningRate(std::function<double(size_t, double, double)> func);
+		//MlpBuilder WhenToUpdateLearningRate(std::function<bool(size_t, double)> Conddition);
+		MlpBuilder UpdateLearningRate(std::function<double(size_t, double, double&)> func);   // epoch, error, learnrate
 
 };
 

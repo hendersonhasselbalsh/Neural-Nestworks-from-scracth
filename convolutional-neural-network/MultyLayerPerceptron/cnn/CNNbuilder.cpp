@@ -30,6 +30,8 @@ CNN CNNbuilder::Build()
 		.LostFunction( _lossFunction )
 		.Build();
 
+	_cnn._mlp.UpdateLeraningRate = _cnn._UpdateLeraningRate;
+
 	return _cnn;
 }
 
@@ -78,6 +80,14 @@ CNNbuilder CNNbuilder::MaxEpochs(size_t epochs)
 {
 	_cnn._maxEpochs = epochs;
 
+	return (*this);
+}
+
+
+
+CNNbuilder CNNbuilder::ChangeLerningRate(std::function<void(size_t, double, double&)> func)
+{
+	_cnn._UpdateLeraningRate = func;
 	return (*this);
 }
 

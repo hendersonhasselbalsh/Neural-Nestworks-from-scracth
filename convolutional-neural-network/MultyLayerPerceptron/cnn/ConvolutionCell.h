@@ -48,6 +48,6 @@ class ConvolutionCell : public IProcessingUnit {
 		// Inherited via IProcessingUnit
 		Eigen::MatrixXd Forward(Eigen::MatrixXd& input) override;
 		Eigen::MatrixXd Backward(Eigen::MatrixXd& dLoss_dOutput) override;
-
+		void UpdateLearningRate(size_t epoch, double error, std::function<void(size_t, double, double&)> UpdateRule) override;
 };
 

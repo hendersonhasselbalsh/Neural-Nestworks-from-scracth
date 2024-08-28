@@ -18,8 +18,11 @@ class CNN {
 		std::vector<IProcessingUnit*> _processingUnits;
 		MLP _mlp;
 
+		std::function<void(size_t, double, double&)> _UpdateLeraningRate;                      //  double f(size_t epoch, double accuracy, double currentLearningRate)
+
 		size_t _reshapeRows;
 		size_t _reshapeCols;
+
 		size_t _maxEpochs;
 
 		CNN();
@@ -28,6 +31,11 @@ class CNN {
 		
 		std::vector<double> Forward(Eigen::MatrixXd& input);
 		std::vector<double> Backward(std::vector<double>& predictedValues, std::vector<double>& correctValues);
+
+		void Training(std::vector<CNN_DATA> trainingDataSet, std::function<void(void)> callback = [](){ });
+
+		void UpdateLearningRate(size_t epoch, double error);
+
 
 	friend class CNNbuilder;
 };

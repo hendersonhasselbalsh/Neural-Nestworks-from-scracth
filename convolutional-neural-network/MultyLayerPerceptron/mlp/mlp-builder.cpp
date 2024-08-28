@@ -5,8 +5,8 @@ MlpBuilder::MlpBuilder()
 	inputSize = 0;
 	_mlp = MLP();
 	_mlp._outFile = "";
-	_mlp.HowToUpdateLeraningRate  =  [](size_t e, double a, double currentRate){ return currentRate; };
-	_mlp.WhenToUpdateLeraningRate = [](size_t e, double a){ return false; };
+	_mlp.UpdateLeraningRate  =  [](size_t e, double a, double currentRate){ };
+	//_mlp.WhenToUpdateLeraningRate = [](size_t e, double a){ return false; };
 }
 
 
@@ -17,6 +17,8 @@ MLP MlpBuilder::Build()
 	auto& lastLayer  =  _mlp._layers[_mlp._layers.size()-1];
 	size_t neuronsInLastLayer = lastLayer.Get<Layer::Attribute::NUMBER_OF_NEURONS>();
 	_mlp._accumulatedGradients  =  std::vector<double>(neuronsInLastLayer, 0.0);
+
+	_mlp._lostFunction = lastLayer._lostFunction;
 
 	return _mlp;
 }
@@ -76,12 +78,6 @@ MlpBuilder MlpBuilder::LostFunction(ILostFunction* lostFunction)
 	auto& lastLayer  =  _mlp._layers[lastLayerIndex];
 	lastLayer.Set<Layer::Attribute::LOSS_FUNC, ILostFunction*>(lostFunction);
 
-	//size_t neuronSize = lastLayer.Get<Layer::Attribute::NUMBER_OF_NEURONS>();
-	//for (size_t i = 0; i < neuronSize; i++) {
-	//	//lastLayer[i].SetLostFunction( lostFunction );
-	//	lastLayer[i].Set<Neuron::Attribute::LOST_FUNC, ILostFunction*>( lostFunction );
-	//}
-
 	return (*this);
 }
 
@@ -138,15 +134,10 @@ MlpBuilder MlpBuilder::LoadArchitectureFromJson(std::string file)
 	return (*this);
 }
 
-MlpBuilder MlpBuilder::WhenToUpdateLearningRate(std::function<bool(size_t, double)> Conddition)
-{
-	_mlp.WhenToUpdateLeraningRate  =  Conddition;
-	return (*this);
-}
 
-MlpBuilder MlpBuilder::HowToUpdateLearningRate(std::function<double(size_t, double, double)> func)
+MlpBuilder MlpBuilder::UpdateLearningRate(std::function<double(size_t, double, double&)> func)
 {
-	_mlp.HowToUpdateLeraningRate  =  func;
+	_mlp.UpdateLeraningRate  =  func;
 	return (*this);
 }
 

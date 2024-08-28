@@ -26,6 +26,6 @@ class CNNbuilder {
 		CNNbuilder DenseArchitecture(std::vector<DenseLayer> layerSignature);
 		CNNbuilder LostFunction(ILostFunction* lossFunction);
 		CNNbuilder MaxEpochs(size_t epochs);
-		CNNbuilder ChangeLerningRate( std::function<bool(size_t, double)> Conddition );
+		CNNbuilder ChangeLerningRate(std::function<void(size_t, double, double&)> func);    // epoch, error, learnrate
 
 };

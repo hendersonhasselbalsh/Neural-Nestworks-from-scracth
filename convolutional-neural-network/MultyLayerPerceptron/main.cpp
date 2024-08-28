@@ -93,6 +93,13 @@ Eigen::MatrixXd TestingModelAccuracy(CNN* cnn, std::vector<CNN_DATA> testSet, do
     return confusionMatrix;
 }
 
+void DecreaseLearningRate(size_t epoch, double error, double& learnRate)
+{
+    if (epoch > 20  ||  error <= 1.0 - 0.095) {
+        learnRate  =  learnRate - 0.05*learnRate;
+    }
+}
+
 
 int main(int argc, const char** argv)
 {
@@ -116,9 +123,9 @@ int main(int argc, const char** argv)
     CNN cnn  =  CNNbuilder()
                     .InputSize(28,28)
                     .ProcessingArchitecture({
-                        new ConvolutionCell(Filter{3,3}, 0.001),
+                        new ConvolutionCell(Filter{5,5}, 0.001),
                         new ActivationCell(new ReLU()),
-                        //new MaxPool(2,2),
+                        new MaxPool(2,2),
                         new Normalize(),
                     })
                     .DenseArchitecture({
@@ -126,35 +133,22 @@ int main(int argc, const char** argv)
                         DenseLayer(10, new Tanh(), 0.001),
                     })
                     .LostFunction( new MSE() )
+                    .MaxEpochs(60)
+                    .ChangeLerningRate( DecreaseLearningRate )
                     .Build();
 
 
     //--- training 
     double bestAccuracy = 0.0;
     size_t epoch = 0;
-    while (epoch < 80) {
 
-        for (auto& data : trainigDataSet) {
-
-            auto input = data.input;
-            auto correctOutput = data.label;
-
-            std::vector<double> predictedOutput = cnn.Forward( input );
-            cnn.Backward(predictedOutput, correctOutput);
-        }
-
-        //-- shuffle
-        std::random_device rd;
-        std::mt19937 g(rd());
-        std::shuffle(trainigDataSet.begin(), trainigDataSet.end(), g);
-
-
+    cnn.Training(trainigDataSet, [&]() {
         double trainingAccuracy = 0.0;
         double testAccuracy = 0.0;
         Eigen::MatrixXd trainingConfusionMatrix  =  TestingModelAccuracy(&cnn, trainigDataSet, &trainingAccuracy);
         Eigen::MatrixXd testConfusionMatrix  =  TestingModelAccuracy(&cnn, testDataSet, &testAccuracy);
 
-        if (testAccuracy > bestAccuracy) { bestAccuracy = testAccuracy;}
+        if (testAccuracy > bestAccuracy) { bestAccuracy = testAccuracy; }
 
         std::cout << "------------ Training Epoch: " << epoch << " ------------\n";
         std::cout << "Training Accuracy: " << trainingAccuracy << "\n\n";
@@ -165,8 +159,7 @@ int main(int argc, const char** argv)
         gnuplot.out << epoch << " " << trainingAccuracy << " " << testAccuracy << "\n";
 
         epoch++;
-    }
-
+    });
 
 
     //--- plot chart

@@ -187,3 +187,8 @@ Eigen::MatrixXd ConvolutionCell::Backward(Eigen::MatrixXd& dLoss_dOutput)
     return dLoss_dInput;
 }
 
+void ConvolutionCell::UpdateLearningRate(size_t epoch, double error, std::function<void(size_t, double, double&)> UpdateRule)
+{
+    UpdateRule(epoch, error, _learningRate);
+}
+

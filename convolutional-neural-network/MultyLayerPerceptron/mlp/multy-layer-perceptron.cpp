@@ -29,6 +29,8 @@ std::vector<double> MLP::Foward(std::vector<double> input)
 
 std::vector<double> MLP::Backward(std::vector<double> predictedValues, std::vector<double> correctValues)
 {
+	CalculateError(predictedValues, correctValues);
+
 	int layerIndex  =  _layers.size() - 1;
 	Eigen::MatrixXd dLoss_dInput;
 
@@ -92,7 +94,11 @@ void MLP::Training(std::vector<MLPTrainigData> trainigSet, std::function<void(vo
 		std::mt19937 g(rd());
 		std::shuffle(trainigSet.begin(), trainigSet.end(), g);
 		
-		ChangeLearningRate(epoch, 0.0);
+
+		_error = _error / (double)trainingSetSize;
+		ChangeLearningRate(epoch, _error);
+		_error = 0.0;
+
 
 		epoch++;
 		if (epoch > _maxEpochs) {  keepGoing = false;  }
@@ -152,14 +158,24 @@ void MLP::Classify(std::vector<MLP_DATA> inputSet, std::function<void(std::vecto
 
 
 
-void MLP::ChangeLearningRate(size_t epoch, double accuracy)
+void MLP::ChangeLearningRate(size_t epoch, double error)
 {
-	if (WhenToUpdateLeraningRate(epoch, accuracy)) {
-		for (auto& layer : _layers) {
-			double newRate  =  HowToUpdateLeraningRate(epoch, accuracy, layer._learningRate);
-			layer.Set<Layer::Attribute::LEARNING_RATE, double>(newRate);
-		}
+	for (auto& layer : _layers) {
+		UpdateLeraningRate(epoch, error, layer._learningRate);
+		//layer.Set<Layer::Attribute::LEARNING_RATE, double>(layer._learningRate);
 	}
+}
+
+
+void MLP::CalculateError(std::vector<double> predictedValues, std::vector<double> correctValues)
+{
+	double meanError = 0.0;
+
+	for (size_t i = 0; i < predictedValues.size(); i++) {
+		meanError  +=  _lostFunction->f(predictedValues[i],correctValues[i]);
+	}
+
+	_error += meanError;
 }
 
 
