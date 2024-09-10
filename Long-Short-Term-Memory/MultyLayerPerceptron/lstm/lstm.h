@@ -48,7 +48,7 @@ class LSTM {
 
 
 
-		std::vector<double> Foward( std::vector<double> input );
+		std::vector<double> Forward( std::vector<double> input );
 		void Backward(std::vector<double> predictedY, std::vector<double> correctY);
 		
 

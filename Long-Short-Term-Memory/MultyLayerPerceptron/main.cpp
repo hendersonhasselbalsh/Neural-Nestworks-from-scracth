@@ -43,35 +43,28 @@ std::vector<TrainigData> LoadDataLSTM(const std::string& folderPath)
     return set;
 };
 
-Eigen::MatrixXd TestingModelAccuracyLSTM(LSTM* lstm, std::string path, double* accuracy)  // "..\\..\\.resources\\test"
+Eigen::MatrixXd TestingModelAccuracyLSTM(LSTM* lstm, std::vector<TrainigData> testSet, double* accuracy)  // "..\\..\\.resources\\test"
 {
     Eigen::MatrixXd confusionMatrix = Eigen::MatrixXd::Zero(10, 10);
     int totalData = 0;
     int errors = 0;
 
-    for (const auto& entry : std::filesystem::directory_iterator(path.c_str())) {
-        if (std::filesystem::is_regular_file(entry.path())) {
+    for (auto& testData : testSet) {
 
-            std::string fileName = entry.path().filename().string();
-            std::string labelStr = Utils::SplitString(fileName, "_")[0];
-            int label = std::stoi(labelStr);
+        std::vector<double> givenOutput = lstm->Forward(testData.INPUT);  
 
-            std::string fullPathName = entry.path().string();
-            Eigen::MatrixXd input = Utils::ImageToMatrix(cv::imread(fullPathName));
+        auto it = std::max_element(givenOutput.begin(), givenOutput.end());
+        size_t givenLabel = std::distance(givenOutput.begin(), it);
 
-            std::vector<double> inputs = Utils::FlatMatrix(input);
+        auto it2 = std::max_element(testData.LABEL.begin(), testData.LABEL.end());
+        size_t labelIndex = std::distance(testData.LABEL.begin(), it2);
 
-            std::vector<double> givenOutput = lstm->Foward(inputs);
+        confusionMatrix(givenLabel, labelIndex) += 1.0;
 
-            auto it = std::max_element(givenOutput.begin(), givenOutput.end());
-            int givenLabel = std::distance(givenOutput.begin(), it);
+        totalData++;
 
-            confusionMatrix(givenLabel, label) += 1.0;
+        if (givenLabel != labelIndex) { errors++; }
 
-            totalData++;
-
-            if (givenLabel != label) { errors++; }
-        }
     }
 
     (*accuracy) = 1.0 - ((double)errors/totalData);
@@ -81,20 +74,23 @@ Eigen::MatrixXd TestingModelAccuracyLSTM(LSTM* lstm, std::string path, double* a
 
 
 
-int ___main___LSTM(int argc, const char** argv)
+int main(int argc, const char** argv)
 {
     //--- initialize gnuplot to plot chart
     Gnuplot gnuplot;
     gnuplot.OutFile("..\\..\\.resources\\gnuplot-output\\res.dat");
     gnuplot.xRange("0", "");
     gnuplot.yRange("-0.01", "1.05");
-    gnuplot.Grid("10", "0.1");
-
+    gnuplot.Grid("1 ", "0.1");
 
 
     //--- load MNIST training set
-    std::vector<TrainigData> trainigDataSet  =  LoadDataLSTM("..\\..\\.resources\\train-debug-8x8");
+    std::cout << "LOATING TRAINING SET:\n";
+    std::vector<TrainigData> trainigDataSet  =  LoadDataLSTM("..\\..\\.resources\\train");
 
+    //--- load MNIST test set
+    std::cout << "\n\nLOATING TEST SET:\n";
+    std::vector<TrainigData> testDataSet  =  LoadDataLSTM("..\\..\\.resources\\test");
 
 
     //--- build LSTM
@@ -112,7 +108,7 @@ int ___main___LSTM(int argc, const char** argv)
                         .OutputArchitecture({
                             LayerSignature(30, new Sigmoid(), 0.001)
                         })
-                        //.LearningRate(0.001)     // Linear MLP learning rate
+                        .LearningRate(0.001)     // Linear MLP learning rate
                         .LossFunction(new MSE())
                         .OutputClasses(10)
                         .Build();
@@ -121,58 +117,51 @@ int ___main___LSTM(int argc, const char** argv)
 
     //--- train
     size_t epoch = 0;
-    while (epoch < 300) {
+    double bestAccuracy = 0.0;
+
+    while (epoch < 30) {
 
         //--- train for this epoch
         for (size_t i = 0; i < trainigDataSet.size(); i++) {
             std::vector<double> input  =  trainigDataSet[i].INPUT;
             std::vector<double> label  =  trainigDataSet[i].LABEL;
 
-            std::vector<double> predictedOutput  =  lstm.Foward(input);
+            std::vector<double> predictedOutput  =  lstm.Forward(input);
             lstm.Backward(predictedOutput, label);
         }
 
 
-        //--- shuffle
-        std::random_device rd;
-        std::mt19937 g(rd());
-        std::shuffle(trainigDataSet.begin(), trainigDataSet.end(), g);
-
-
         //--- epoch training avaliation
-        double accuracy = 0.0;
+        double trainingAccuracy = 0.0;
+        double testAccuracy = 0.0;
+        Eigen::MatrixXd trainingConfusionMatrix  =  TestingModelAccuracyLSTM(&lstm, trainigDataSet, &trainingAccuracy);
+        Eigen::MatrixXd testConfusionMatrix  =  TestingModelAccuracyLSTM(&lstm, testDataSet, &testAccuracy);
 
-        Eigen::MatrixXd confusionMatrix  =  TestingModelAccuracyLSTM(&lstm, "..\\..\\.resources\\train-debug-8x8", &accuracy);
+        if (testAccuracy > bestAccuracy) { bestAccuracy = testAccuracy; }
 
-        std::cout << "Training Epoch: " << epoch << "\n";
-        std::cout << "Training Accuracy: " << accuracy << "\n\n";
-        std::cout << confusionMatrix << "\n\n\n\n";
+        std::cout << "------------ Training Epoch: " << epoch << " ------------\n";
+        std::cout << "Training Accuracy: " << trainingAccuracy << "\n\n";
+        std::cout << trainingConfusionMatrix << "\n\n\n";
+        std::cout << "Test Accuracy: " << testAccuracy << "\n\n";
+        std::cout << testConfusionMatrix << "\n\n\n\n";
 
-        gnuplot.out << epoch << " " << accuracy << "\n";
+        gnuplot.out << epoch << " " << trainingAccuracy << " " << testAccuracy << "\n";
 
         epoch++;
     }
 
 
 
-    //--- evaluating training on MNIST test set
-    /*std::cout << "training concluded!!!\n\n\n";
-
-    double accuracy = 0.0;
-    Eigen::MatrixXd confusionMatrix  =  TestingModelAccuracyLSTM(&lstm, "..\\..\\.resources\\test", &accuracy);
-    std::cout << "Testing Accuracy: " << accuracy << "\n\n";
-    std::cout << confusionMatrix << "\n\n\n\n";*/
-
-
     //--- plot chart
     gnuplot.out.close();
-    gnuplot << "plot \'..\\..\\.resources\\gnuplot-output\\res.dat\' using 1:2 w l title \"Training Accuracy\" \n";
+    gnuplot << "plot \'..\\..\\.resources\\gnuplot-output\\res.dat\' using 1:2 w l title \"Training Accuracy\", ";
+    gnuplot << "\'..\\..\\.resources\\gnuplot-output\\res.dat\' using 1:3 w l title \"Test Accuracy\" \n";
     gnuplot << "set terminal pngcairo enhanced \n set output \'..\\..\\.resources\\gnuplot-output\\accuracy.png\' \n";
     gnuplot << " \n";
 
 
-    std::cout << "[SUCESSO]!!!\n";
-
+    std::cout << "BEST ACCURACY: " << bestAccuracy << "\n";
+    std::cout << "[SUCESSO!!!!!]\n";
     return 0;
 }
 
@@ -268,7 +257,7 @@ std::vector<double> ParseLabelToEspectedOutput(size_t l)
 
 
 
-int main(int argc, const char** argv)
+int _____main(int argc, const char** argv)
 {
     //--- initialize gnuplot to plot chart
     Gnuplot gnuplot;

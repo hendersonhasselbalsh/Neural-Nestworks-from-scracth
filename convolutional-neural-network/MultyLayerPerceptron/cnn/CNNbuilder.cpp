@@ -7,6 +7,8 @@ CNNbuilder::CNNbuilder()
 	_inputCol = 0;
 
 	_cnn = CNN();
+
+	_cnn._UpdateLeraningRate = [](size_t epoch, double error, double& learnRate) { };
 }
 
 

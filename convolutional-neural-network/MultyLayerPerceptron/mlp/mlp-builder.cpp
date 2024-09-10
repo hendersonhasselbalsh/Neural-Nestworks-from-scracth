@@ -78,6 +78,8 @@ MlpBuilder MlpBuilder::LostFunction(ILostFunction* lostFunction)
 	auto& lastLayer  =  _mlp._layers[lastLayerIndex];
 	lastLayer.Set<Layer::Attribute::LOSS_FUNC, ILostFunction*>(lostFunction);
 
+	_mlp._lostFunction = lostFunction;
+
 	return (*this);
 }
 

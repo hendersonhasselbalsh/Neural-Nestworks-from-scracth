@@ -4,7 +4,7 @@
 
 LSTMbuilder::LSTMbuilder()
 {
-	_learningRate  =  0.01;
+	_learningRate  =  0.001;
 	_lstm  =  LSTM();
 }
 
@@ -146,7 +146,7 @@ LSTMbuilder LSTMbuilder::OutputArchitecture(std::vector<LayerSignature> architec
 
 LSTMbuilder LSTMbuilder::ForgetArchitecture(std::vector<size_t> architect, double learningRate)
 {
-	if (learningRate == 0.0) { learningRate = 0.01; }
+	if (learningRate == 0.0) { learningRate = 0.001; }
 
 	for (auto& neuronQtd : architect) {
 		_forgetArchitecture.push_back( LayerSignature(neuronQtd, new Sigmoid(), learningRate));
@@ -157,7 +157,7 @@ LSTMbuilder LSTMbuilder::ForgetArchitecture(std::vector<size_t> architect, doubl
 
 LSTMbuilder LSTMbuilder::InputArchitecture(std::vector<size_t> architect, double learningRate)
 {
-	if (learningRate == 0.0) { learningRate = 0.01; }
+	if (learningRate == 0.0) { learningRate = 0.001; }
 
 	for (auto& neuronQtd : architect) {
 		_inputArchitecture.push_back( LayerSignature(neuronQtd, new Sigmoid(), learningRate) );
@@ -168,7 +168,7 @@ LSTMbuilder LSTMbuilder::InputArchitecture(std::vector<size_t> architect, double
 
 LSTMbuilder LSTMbuilder::CandidateArchitecture(std::vector<size_t> architect, double learningRate)
 {
-	if (learningRate == 0.0) { learningRate = 0.01; }
+	if (learningRate == 0.0) { learningRate = 0.001; }
 
 	for (auto& neuronQtd : architect) {
 		_candidateArchitecture.push_back( LayerSignature(neuronQtd, new Tanh(), learningRate));
@@ -179,7 +179,7 @@ LSTMbuilder LSTMbuilder::CandidateArchitecture(std::vector<size_t> architect, do
 
 LSTMbuilder LSTMbuilder::OutputArchitecture(std::vector<size_t> architect, double learningRate)
 {
-	if (learningRate == 0.0) { learningRate = 0.01; }
+	if (learningRate == 0.0) { learningRate = 0.001; }
 
 	for (auto& neuronQtd : architect) {
 		_outputArchitecture.push_back( LayerSignature(neuronQtd, new Sigmoid(), learningRate) );

@@ -53,7 +53,7 @@ double Sigmoid::f(double x)
 double Sigmoid::df(double x)
 {
     double sig_x = f(x);
-    return sig_x * (1.0 - sig_x);
+    return _a * sig_x * (1.0 - sig_x);
 }
 
 const char* Sigmoid::ToString()

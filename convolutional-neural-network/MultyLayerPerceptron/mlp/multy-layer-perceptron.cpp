@@ -6,6 +6,7 @@
 
 MLP::MLP()
 {
+	UpdateLeraningRate = [](size_t epoch, double error, double& learnRate){ };
 }
 
 MLP::~MLP()

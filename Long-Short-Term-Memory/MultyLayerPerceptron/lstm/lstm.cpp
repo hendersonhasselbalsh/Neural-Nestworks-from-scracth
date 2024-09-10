@@ -13,7 +13,7 @@ LSTM::~LSTM()
 
 
 
-std::vector<double> LSTM::Foward(std::vector<double> input)
+std::vector<double> LSTM::Forward(std::vector<double> input)
 {
 	_previousCellState  =  _cellState;
 
@@ -50,10 +50,10 @@ std::vector<double> LSTM::Foward(std::vector<double> input)
 
 	std::vector<double> predicted_y;
 
-	//_linearOutput  =  _linearMLP.Foward( hiddenState );  // use softmax
-	//predicted_y  =  Softmax( _linearOutput );            // use softmax
+	_linearOutput  =  _linearMLP.Foward( hiddenState );  // use softmax
+	predicted_y  =  Softmax( _linearOutput );            // use softmax
 
-	predicted_y  =  _linearMLP.Foward(hiddenState);  // don't use softmax
+	//predicted_y  =  _linearMLP.Foward(hiddenState);  // don't use softmax
 
 
 	return predicted_y;
@@ -106,8 +106,8 @@ std::vector<double> LSTM::LossPartialWithRespectToLinearOutput(std::vector<doubl
 
 	for (size_t i = 0; i < dLoss_dLinearOutput.size(); i++) {
 		double dLoss_dy  =  _lossFunc->df(predictedY[i], correctY[i]);
-		//dLoss_dLinearOutput[i]  =  dLoss_dy * dSoftmax[i];     // <-- use softmax
-		dLoss_dLinearOutput[i]  =  dLoss_dy;                     // <-- don't use softmax
+		dLoss_dLinearOutput[i]  =  dLoss_dy * dSoftmax[i];     // <-- use softmax
+		//dLoss_dLinearOutput[i]  =  dLoss_dy;                     // <-- don't use softmax
 	}
 
 	return dLoss_dLinearOutput;
@@ -124,8 +124,8 @@ std::vector<double> LSTM::LossPartialWithRespectToHiddenState(std::vector<double
 		double sum  =  0.0;
 
 		for (size_t j = 0; j < predictedY.size(); j++) {
-			//sum  +=  _lossFunc->df(predictedY[j],correctY[j])  *  dSoftmax[j]  *  linearWeights(j,i);    // <-- use softmax
-			sum  +=  _lossFunc->df(predictedY[j], correctY[j])  *  linearWeights(j,i);                 // <-- don't use softmax
+			sum  +=  _lossFunc->df(predictedY[j],correctY[j])  *  dSoftmax[j]  *  linearWeights(j,i);    // <-- use softmax
+			//sum  +=  _lossFunc->df(predictedY[j], correctY[j])  *  linearWeights(j,i);                 // <-- don't use softmax
 		}
 
 		dLoss_dHiddenState[i]  =  sum;

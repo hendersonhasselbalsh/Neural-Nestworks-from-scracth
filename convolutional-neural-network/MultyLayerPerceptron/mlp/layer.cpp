@@ -23,8 +23,7 @@ Layer::Layer(size_t inputSize, size_t neuronQuantity, IActivationFunction* actFu
 {
 	_weights  =  Eigen::MatrixXd::Zero(neuronQuantity, _inputSize+1);
 
-	//XavierWeightInitialization(inputSize, neuronQuantity);
-	XavierWeightInitialization(inputSize, nextLayerNeuronQnt);
+	XavierWeightInitialization(inputSize, neuronQuantity);
 
 	size_t layerOutputSize = neuronQuantity + 1;
 	_outputs  =  Eigen::MatrixXd::Ones(layerOutputSize, 1);
@@ -109,7 +108,8 @@ Eigen::MatrixXd Layer::LossPartialWithRespectToActivation(std::vector<double> pr
 	Eigen::MatrixXd dLoss_dActivation  =  Eigen::MatrixXd(predictedValues.size(), 1);
 
 	for (size_t i = 0; i < predictedValues.size(); i++) {
-		dLoss_dActivation(i,0)  =  _lostFunction->df( predictedValues[i], correctValues[i] );
+		double value  =  _lostFunction->df( predictedValues[i], correctValues[i] );
+		dLoss_dActivation(i, 0) = value;
 	}
 
 	return dLoss_dActivation;
