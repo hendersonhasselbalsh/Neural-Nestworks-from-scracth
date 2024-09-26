@@ -86,11 +86,11 @@ int main(int argc, const char** argv)
 
     //--- load MNIST training set
     std::cout << "LOATING TRAINING SET:\n";
-    std::vector<TrainigData> trainigDataSet  =  LoadDataLSTM("..\\..\\.resources\\train");
+    std::vector<TrainigData> trainigDataSet  =  LoadDataLSTM("C:\\Users\\openh\\w\\IC-TCC\\GITHUB - debbug\\.resources\\train");
 
     //--- load MNIST test set
     std::cout << "\n\nLOATING TEST SET:\n";
-    std::vector<TrainigData> testDataSet  =  LoadDataLSTM("..\\..\\.resources\\test");
+    std::vector<TrainigData> testDataSet  =  LoadDataLSTM("C:\\Users\\openh\\w\\IC-TCC\\GITHUB - debbug\\.resources\\test");
 
 
     //--- build LSTM

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <Eigen/Core>
+#include <Eigen/Dense>
+#include <unsupported/Eigen/CXX11/Tensor>
 #include "../utils/basic-includes.h"
 #include "../utils/utils.h"
 #include "ProcessingUnity.h"
@@ -24,23 +27,20 @@ struct Padding {
 
 class ConvolutionCell : public IProcessingUnit {
 	
-	public:
-		Eigen::MatrixXd _filter; // for DEBUG ONLY, must be private
-
 	private:
+		Eigen::Tensor<double, 3> _filter;
+		Padding _paddingSize;
 		double _learningRate;
 		double _bias;
-		//Eigen::MatrixXd _filter;
-		Eigen::MatrixXd _receivedInput;
 
-		Padding _paddingSize;
+		Eigen::Tensor<double, 3> _receivedInput;
+
+		size_t _filterQnt;
 
 
 	public:
-		//ConvolutionCell(size_t filterSize, double learnRate = 0.01);
-		ConvolutionCell(size_t filterRow, size_t filterCol, double learnRate = 0.001);
-		ConvolutionCell(Filter filterSize, double learnRate = 0.001);
-		ConvolutionCell(Filter filterSize, Padding padding, double learnRate = 0.001);
+		ConvolutionCell(size_t filterQnt, Filter filterSize, double learnRate = 0.001);
+		ConvolutionCell(size_t filterQnt, Filter filterSize, Padding padding, double learnRate = 0.001);
 		~ConvolutionCell();
 
 		static Eigen::MatrixXd Convolute(Eigen::MatrixXd& input, Eigen::MatrixXd& filter);
@@ -49,8 +49,8 @@ class ConvolutionCell : public IProcessingUnit {
 
 
 		// Inherited via IProcessingUnit
-		Eigen::MatrixXd Forward(Eigen::MatrixXd& input) override;
-		Eigen::MatrixXd Backward(Eigen::MatrixXd& dLoss_dOutput) override;
+		Eigen::Tensor<double, 3> Forward(Eigen::Tensor<double, 3>& input) override;
+		Eigen::Tensor<double, 3> Backward(Eigen::Tensor<double, 3>& dLoss_dOutput) override;
 		void UpdateLearningRate(size_t epoch, double error, std::function<void(size_t, double, double&)> UpdateRule) override;
 };
 

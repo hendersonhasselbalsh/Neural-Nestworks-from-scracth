@@ -6,7 +6,7 @@
 
 
 //--------------
-// MAX POOLING
+// SCALE
 //--------------
 
 class Scale : public IProcessingUnit {
@@ -32,6 +32,11 @@ class Scale : public IProcessingUnit {
 
 
 
+
+//--------------
+// NORMALIZE
+//--------------
+
 class Normalize : public IProcessingUnit {
 
 	private:
@@ -53,5 +58,47 @@ class Normalize : public IProcessingUnit {
 		static double StandartDeviation(Eigen::MatrixXd& matrix);
 
 };
+
+
+
+//--------------
+// NORMALIZATION
+//--------------
+
+class Normalization : public IProcessingUnit {
+
+	private:
+		double _layerMeans;
+		double _layerStddev;
+
+		double _betas;    // layer shift
+		double _gammas;   // layer scala
+
+		double _learningRate;
+
+		Eigen::MatrixXd _receivecInput;
+
+
+	public:
+		Normalization(double learningRate = 0.001);
+		~Normalization();
+
+
+		Eigen::MatrixXd LayerNorm(Eigen::MatrixXd& input);
+
+		Eigen::MatrixXd DLoss_DstdDev(Eigen::MatrixXd& dLoss_dy);
+		Eigen::MatrixXd DLoss_DVar(Eigen::MatrixXd& dLoss_dStdDev);
+		Eigen::MatrixXd DLoss_DNii(Eigen::MatrixXd& dLoss_dVar);
+		Eigen::MatrixXd DLoss_Dx(Eigen::MatrixXd& dLoss_dNii);
+
+		Eigen::MatrixXd DLoss_DInput(Eigen::MatrixXd& dLoss_dy);
+
+
+		// Inherited via IProcessingUnit
+		Eigen::MatrixXd Forward(Eigen::MatrixXd& input) override;
+		Eigen::MatrixXd Backward(Eigen::MatrixXd& dL_dNormalized) override;
+
+};
+
 
 
