@@ -106,6 +106,18 @@ class ReLU : public IActivationFunction {
 
 
 
+class ClipedReLU : public IActivationFunction {
+	public:
+		double _limit;
+		ClipedReLU(double limit);
+		virtual double f(double x) override;
+		virtual double df(double x) override;
+		virtual const char* ToString() override;
+};
+
+
+
+
 class LeakyReLU : public IActivationFunction {
 	private:
 		

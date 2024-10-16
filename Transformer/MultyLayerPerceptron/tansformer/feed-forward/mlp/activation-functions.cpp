@@ -434,3 +434,55 @@ double Mish::dSoftplus(double x)
 {
     return 1.0 / (1.0 + std::exp(-x));
 }
+
+
+
+
+
+
+///-------------
+///  ClipedReLU
+///-------------
+
+ClipedReLU::ClipedReLU(double limit)
+{
+    _limit = limit;
+}
+
+double ClipedReLU::f(double x)
+{
+    if (x < 0.0) { return 0.0; } 
+    else if (x > _limit) { return _limit; } 
+    else { return x; }
+}
+
+double ClipedReLU::df(double x)
+{
+    if (x < 0.0) { return 0.0; } 
+    else if (x > _limit) { return 0.0; } 
+    else { return 1.0; }
+}
+
+const char* ClipedReLU::ToString()
+{
+    return nullptr;
+}
+
+/*
+
+double ReLU::f(double x)
+{
+    return std::max(0.0, x);
+}
+
+double ReLU::df(double x)
+{
+    if (x < 0) { return 0.0; } else { return 1.0; };
+}
+
+const char* ReLU::ToString()
+{
+    return "ReLU";
+}
+
+*/

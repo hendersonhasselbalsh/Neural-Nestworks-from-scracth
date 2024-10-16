@@ -44,18 +44,10 @@ Eigen::MatrixXd AddNorm::Backward(Eigen::MatrixXd& dL_dNormalized)
             double x  =  _receivecInput(row,col);
             double nii = x - _layerMeans[col];
             dL_dGamma +=  dL_dNormalized(row, col) * (nii / _layerStddev[col]);
-            
-            //--- DEBUG
-            int DEGUG = 0;
-            //--- END DEBUG
         }
 
         _betas[col]  =  _betas[col]  -  _learningRate * dL_dBeta;
         _gammas[col]  =  _gammas[col]  -  _learningRate * dL_dGamma;
-
-        //--- DEBUG
-        int DEGUG = 0;
-        //--- END DEBUG
     }
 
 

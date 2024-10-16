@@ -18,7 +18,7 @@ Embedding::Embedding(size_t embededWordSize ,size_t dictionarySize)
 	_linearEmbedding._mlp  =  MlpBuilder()
 		.InputSize(dictionarySize)									// tamanho do dicionario;
 		.Architecture({
-			DenseLayer(embededWordSize, new Linear(), 0.001),        // world embedded vector
+			DenseLayer(embededWordSize, new ClipedLinear(-1.0,1.0), 0.001),        // world embedded vector
 		})
 		.Build();
 }

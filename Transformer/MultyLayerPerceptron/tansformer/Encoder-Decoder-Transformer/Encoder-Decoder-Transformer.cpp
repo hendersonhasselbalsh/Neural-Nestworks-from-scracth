@@ -17,7 +17,7 @@ EncodeDecodeTransformer::EncodeDecodeTransformer(size_t embededWordSize, size_t 
 	_linear._mlp  =  MlpBuilder()
 		.InputSize(embededWordSize)
 		.Architecture({
-			DenseLayer(dictionarySize, new Sigmoid(2.0), 0.001),
+			DenseLayer(dictionarySize, new ClipedLinear(-1.0,1.0), 0.001),
 		})
 		.Build();
 }

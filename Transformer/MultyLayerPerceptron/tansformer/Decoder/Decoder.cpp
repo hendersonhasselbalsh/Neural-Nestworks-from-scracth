@@ -20,8 +20,8 @@ Decoder::Decoder(size_t inputMatrixCols, size_t h)
 	_feedForward._mlp = MlpBuilder()
 		.InputSize(inputMatrixCols)
 		.Architecture({
-			DenseLayer(inputMatrixCols, new ReLU(), 0.001),
-			DenseLayer(inputMatrixCols, new Sigmoid(2.0), 0.001),
+			DenseLayer(inputMatrixCols, new ClipedReLU(1.0), 0.001),
+			DenseLayer(inputMatrixCols, new ClipedLinear(-1.0,1.0), 0.001),
 		})
 		.Build();
 

@@ -21,17 +21,7 @@ Eigen::MatrixXd ConcatMatrix(const Eigen::MatrixXd& A, const Eigen::MatrixXd& B)
     return result;
 }
 
-//Eigen::MatrixXd ConcatMatrix(const Eigen::MatrixXd& A, const Eigen::MatrixXd& B)
-//{
-//    assert(A.cols() == B.cols());
-//
-//    Eigen::MatrixXd result(A.rows() + B.rows(), A.cols());
-//
-//    result.block(0, 0, A.rows(), A.cols()) = A;
-//    result.block(A.rows(), 0, B.rows(), B.cols()) = B;
-//
-//    return result;
-//}
+
 
 
 
@@ -51,9 +41,9 @@ int main(int argc, const char** argv)
 
     Eigen::MatrixXd CORRECT_OUTPUT = Eigen::MatrixXd(3, 20);
     CORRECT_OUTPUT <<
-        0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1;
+        0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1; 
 
 
 
@@ -90,9 +80,33 @@ int main(int argc, const char** argv)
         transformer.Backward(predictionMatrix, CORRECT_OUTPUT);
 
 
+        //-----------------------------------------------------------------------------------------------
+
+        Eigen::MatrixXd CORRECT_INDICIES = Eigen::MatrixXd(1, CORRECT_OUTPUT.rows());
+        for (size_t row = 0; row < CORRECT_OUTPUT.rows(); row++) {
+
+            size_t maXIndice = 0;
+            CORRECT_OUTPUT.row(row).maxCoeff(&maXIndice);
+            CORRECT_INDICIES(0, row)  =  maXIndice;
+
+        }
+
+
+        Eigen::MatrixXd PREDICTED_INDICIES = Eigen::MatrixXd(1, predictionMatrix.rows());
+        for (size_t row = 0; row < predictionMatrix.rows(); row++) {
+
+            size_t maXIndice = 0;
+            predictionMatrix.row(row).maxCoeff(&maXIndice);
+            PREDICTED_INDICIES(0,row)  =  maXIndice;
+
+        }
+
+
 
         std::cout << "--------------------------- epoch: " << epoch << " ---------------------------\n\n";
-        std::cout << "PREDICTION:\n" << predictionMatrix << "\n\n\n\n\n\n";
+        std::cout << "CORRET:       " << CORRECT_INDICIES << "\n";
+        std::cout << "PREDICTION:   " << PREDICTED_INDICIES << "\n\n\n";
+        //std::cout << "Prediction Matrix:\n" << predictionMatrix << "\n\n\n\n\n\n";
 
         
         epoch++;
