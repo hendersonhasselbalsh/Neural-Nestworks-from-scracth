@@ -4,7 +4,7 @@
 #include "ProcessingUnity.h"
 
 
-class LayerNormalization /*: public IProcessingUnit*/ {
+class LayerNormalization : public IProcessingUnit {
 
 	private:
 		std::vector<double> _layerMeans;
@@ -32,8 +32,8 @@ class LayerNormalization /*: public IProcessingUnit*/ {
 
 
 		// Inherited via IProcessingUnit
-		Eigen::MatrixXd Forward(Eigen::MatrixXd& input) ;
-		Eigen::MatrixXd Backward(Eigen::MatrixXd& dL_dNormalized) ;
+		Eigen::MatrixXd Forward(Eigen::MatrixXd& input) override;
+		Eigen::MatrixXd Backward(Eigen::MatrixXd& dL_dNormalized) override;
 
 };
 

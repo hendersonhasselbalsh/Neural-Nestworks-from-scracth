@@ -253,11 +253,11 @@ Eigen::MatrixXd Normalization::Backward(Eigen::MatrixXd& dL_dNormalized)
 	//	}
 	//}
 	//
- //   _betas  =  _betas  -  _learningRate * dL_dBeta;
+    //_betas  =  _betas  -  _learningRate * dL_dBeta;
 	//_gammas  =  _gammas  -  _learningRate * dL_dGamma;
 
 
-	//--- dL_dX
+	////--- dL_dX
 
 	auto dL_dInputMatrix  =  DLoss_DInput(dL_dNormalized);
 	return dL_dInputMatrix;

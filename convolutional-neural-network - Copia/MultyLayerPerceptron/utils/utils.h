@@ -4,7 +4,6 @@
 #include <opencv2/opencv.hpp>
 #include <Eigen/Core>
 #include <Eigen/Dense>
-#include <unsupported/Eigen/CXX11/Tensor>
 #include "basic-includes.h"
 #include "../mlp/activation-functions.h"
 
@@ -30,12 +29,12 @@ struct MLP_DATA {
 
 
 struct CNN_DATA {
-	Eigen::Tensor<double, 3> input;
+	Eigen::MatrixXd input;
 	std::vector<double> label;
 	size_t labelIndex;
 
 	CNN_DATA() { }
-	CNN_DATA(Eigen::Tensor<double, 3> i, size_t l) : input(i), labelIndex(l) { }
+	CNN_DATA(Eigen::MatrixXd i, size_t l) : input(i), labelIndex(l) { }
 };
 
 
@@ -87,13 +86,9 @@ namespace Utils {
 }
 
 namespace Utils {
+
 	Eigen::MatrixXd Rotate_180Degree(Eigen::MatrixXd& matrix);
-}
 
-
-namespace Utils {
-
-	Eigen::MatrixXd TensorSlice(Eigen::Tensor<double, 3>& tensor, size_t sliceIndex, size_t dimension = 0);
 }
 
 

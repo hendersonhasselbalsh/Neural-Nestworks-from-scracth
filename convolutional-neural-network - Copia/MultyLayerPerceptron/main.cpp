@@ -28,6 +28,8 @@
                     .MaxEpochs(80)
                     //.ChangeLerningRate( DecreaseLearningRate )
                     .Build();
+
+
 */
 
 
@@ -125,15 +127,16 @@ int main(int argc, const char** argv)
                     .InputSize(28, 28)
                     .ProcessingArchitecture({
                         new ConvolutionCell(Filter{3,3}, 0.001),
-                        new ActivationCell(new ParametricReLU(0.1)),
-                        new AveragePool(2,2), 
-                        new Normalize(),
+                        new ActivationCell(new ClipedLinear(0.0,1.0)),
+
+                        //new ConvolutionCell(Filter{3,3}, 0.001),
+                        //new ActivationCell(new ClipedLinear(0,1)),
                     })
                     .DenseArchitecture({
-                        DenseLayer(256, new ReLU(), 0.001), 
-                        DenseLayer(10, new Sigmoid(2.0), 0.001),
+                        //DenseLayer(256, new ClipedLinear(0,1), 0.001),
+                        DenseLayer(10, new ClipedLinear(-1.0,1.0), 0.001),
                     })
-                    .LostFunction(new MSE(10))
+                    .LostFunction(new MSE())
                     .MaxEpochs(80)
                     .Build();
 

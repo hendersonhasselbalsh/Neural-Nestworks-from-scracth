@@ -160,7 +160,6 @@
     <ClCompile Include="cnn\CNNbuilder.cpp" />
     <ClCompile Include="cnn\ConvolutionCell.cpp" />
     <ClCompile Include="cnn\data-maneging.cpp" />
-    <ClCompile Include="cnn\Flat.cpp" />
     <ClCompile Include="cnn\layer-normalization.cpp" />
     <ClCompile Include="cnn\pooling.cpp" />
     <ClCompile Include="main.cpp" />
@@ -177,7 +176,6 @@
     <ClInclude Include="cnn\CNNbuilder.h" />
     <ClInclude Include="cnn\ConvolutionCell.h" />
     <ClInclude Include="cnn\data-maneging.h" />
-    <ClInclude Include="cnn\Flat.h" />
     <ClInclude Include="cnn\layer-normalization.h" />
     <ClInclude Include="cnn\pooling.h" />
     <ClInclude Include="cnn\ProcessingUnity.h" />

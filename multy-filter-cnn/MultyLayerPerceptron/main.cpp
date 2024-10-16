@@ -52,9 +52,11 @@ std::vector<CNN_DATA> LoadData_CNN(const std::string& folderPath)
             label[labelIndex] = 1.0;
 
             std::string fullPathName = entry.path().string();
-            Eigen::MatrixXd input = Utils::ImageToMatrix(cv::imread(fullPathName));
+            Eigen::MatrixXd inputMat = Utils::ImageToMatrix(cv::imread(fullPathName));
 
-            CNN_DATA cnnData {input, labelIndex};
+            Eigen::TensorMap<Eigen::Tensor<double, 3>> input(inputMat.data(), 1, 28, 28);
+
+            CNN_DATA cnnData = {input, labelIndex};   
             cnnData.label = label;
 
             set.push_back(cnnData);
@@ -106,95 +108,6 @@ void DecreaseLearningRate(size_t epoch, double error, double& learnRate)
 
 int main(int argc, const char** argv)
 {
-    // Define um tensor de 3 dimensões com 2 matrizes de 3x3
-    Eigen::Tensor<double, 3> tensor = Eigen::Tensor<double, 3>(2, 3, 3);
-
-    // Inicializa o tensor com valores manualmente
-    tensor.setValues({
-        {
-            {1.0, 2.0, 3.0}, 
-            {4.0, 5.0, 6.0}, 
-            {7.0, 8.0, 9.0}
-        },  // Primeira matriz 3x3
-        {
-            {10.0, 11.0, 12.0}, 
-            {13.0, 14.0, 15.0}, 
-            {16.0, 17.0, 18.0}
-        }  // Segunda matriz 3x3
-    });
-
-    // Converte Eigen::MatrixXd para Eigen::Tensor<double, 2>
-    //Eigen::Tensor<double, 2> tensor(matrix.rows(), matrix.cols());
-    //tensor = Eigen::TensorMap<Eigen::Tensor<double, 2>>(matrix.data(), matrix.rows(), matrix.cols());
-
-
-    
-    Eigen::MatrixXd matrix  =  Utils::TensorSlice(tensor, 0, 1);
-    std::cout << "Primeira matriz extraída:\n" << matrix << "\n\n\n\n";
-
-    Eigen::MatrixXd matrix1  =  Utils::TensorSlice(tensor, 1, 1);
-    std::cout << "Segunda matriz extraída:\n" << matrix1 << "\n\n\n\n";
-
-
-
-    return 0;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-int main(int argc, const char** argv)
-{
-    // Criando dois tensores para a operação de convolução
-    Eigen::Tensor<float, 3> input(5, 5, 1);  // Exemplo de entrada 5x5 com 1 canal
-    Eigen::Tensor<float, 3> kernel(3, 3, 1); // Filtro de convolução 3x3 com 1 canal
-
-    // Inicializando os tensores (valores aleatórios para o exemplo)
-    input.setRandom();
-    kernel.setRandom();
-
-    // Exibindo o tensor de entrada
-    std::cout << "Input tensor:\n" << input << "\n" << std::endl;
-
-    // Exibindo o kernel
-    std::cout << "Kernel tensor:\n" << kernel << "\n" << std::endl;
-
-    // Definindo a convolução
-    Eigen::array<Eigen::IndexPair<int>, 1> convolution_dims ={ Eigen::IndexPair<int>(1, 0) }; // Dimensões da convolução
-
-    // Realizando a convolução
-    Eigen::Tensor<float, 3> output = input.contract(kernel, convolution_dims);
-
-    // Exibindo o resultado da convolução
-    std::cout << "Output tensor:\n" << output << std::endl;
-
-    return 0;
-}
-
-*/
-
-
-
-
-
-int _________main(int argc, const char** argv)
-{
     //--- initialize gnuplot to plot chart
     Gnuplot gnuplot;
     gnuplot.OutFile("..\\..\\.resources\\gnuplot-output\\res.dat");
@@ -215,10 +128,10 @@ int _________main(int argc, const char** argv)
     CNN cnn  =  CNNbuilder()
                     .InputSize(28, 28)
                     .ProcessingArchitecture({
-                        new ConvolutionCell(Filter{3,3}, 0.001),
+                        new ConvolutionCell(4, Filter{3,3}, 0.001),
                         new ActivationCell(new LeakyReLU()),
-                        new AveragePool(2,2),
-                        new Normalize(),
+                        //new AveragePool(2,2),
+                        //new Normalization(),
                     })
                     .DenseArchitecture({
                         DenseLayer(256, new ReLU(), 0.001),

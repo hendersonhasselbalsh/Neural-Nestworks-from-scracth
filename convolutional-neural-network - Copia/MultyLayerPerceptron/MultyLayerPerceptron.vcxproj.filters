@@ -41,9 +41,6 @@
     <ClCompile Include="cnn\layer-normalization.cpp">
       <Filter>cnn\Sources</Filter>
     </ClCompile>
-    <ClCompile Include="cnn\Flat.cpp">
-      <Filter>cnn\Sources</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="mlp">
@@ -118,9 +115,6 @@
       <Filter>cnn\Headers</Filter>
     </ClInclude>
     <ClInclude Include="cnn\layer-normalization.h">
-      <Filter>cnn\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="cnn\Flat.h">
       <Filter>cnn\Headers</Filter>
     </ClInclude>
   </ItemGroup>

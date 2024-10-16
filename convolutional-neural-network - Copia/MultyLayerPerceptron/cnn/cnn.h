@@ -7,7 +7,6 @@
 #include "layer-normalization.h"
 #include "../mlp/multy-layer-perceptron.h"
 #include "../utils/basic-includes.h"
-#include "Flat.h"
 
 
 class CNNbuilder;
@@ -22,7 +21,8 @@ class CNN {
 
 		std::function<void(size_t, double, double&)> _UpdateLeraningRate;                      //  double f(size_t epoch, double accuracy, double currentLearningRate)
 
-		FlatMatrix _flat;		
+		size_t _reshapeRows;
+		size_t _reshapeCols;
 
 		size_t _maxEpochs;
 
@@ -30,8 +30,8 @@ class CNN {
 
 	public:
 		
-		std::vector<double> Forward(Eigen::Tensor<double, 3>& input);
-		Eigen::Tensor<double, 3> Backward(std::vector<double>& predictedValues, std::vector<double>& correctValues);
+		std::vector<double> Forward(Eigen::MatrixXd& input);
+		std::vector<double> Backward(std::vector<double>& predictedValues, std::vector<double>& correctValues);
 
 		void Training(std::vector<CNN_DATA> trainingDataSet, std::function<void(void)> callback = [](){ });
 

@@ -53,8 +53,8 @@ Eigen::MatrixXd LayerNormalization::Backward(Eigen::MatrixXd& dL_dNormalized)
             dL_dGamma +=  dL_dNormalized(row, col) * (nii / _layerStddev[col]);
         }
 
-        //_betas[col]  =  _betas[col]  -  _learningRate * dL_dBeta;
-        //_gammas[col]  =  _gammas[col]  -  _learningRate * dL_dGamma;
+        _betas[col]  =  _betas[col]  -  _learningRate * dL_dBeta;
+        _gammas[col]  =  _gammas[col]  -  _learningRate * dL_dGamma;
     }
 
 

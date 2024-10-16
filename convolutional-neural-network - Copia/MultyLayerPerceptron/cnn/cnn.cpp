@@ -3,19 +3,22 @@
 CNN::CNN()
 {
 	//_mlp = MLP();
-	_flat = FlatMatrix();
 }
 
 
-std::vector<double> CNN::Forward(Eigen::Tensor<double, 3>& input)
+std::vector<double> CNN::Forward(Eigen::MatrixXd& input)
 {
-	Eigen::Tensor<double, 3> processedOutput = input;
+	Eigen::MatrixXd processedOutput = input;
 	for (auto& processUnit: _processingUnits) {
 		processedOutput = processUnit->Forward( processedOutput );
 	}
 
 
-	std::vector<double> flatedOutput = _flat.FlatMatrix(processedOutput);
+	_reshapeRows  =  processedOutput.rows();
+	_reshapeCols  =  processedOutput.cols();
+
+
+	std::vector<double> flatedOutput = Utils::FlatMatrix( processedOutput );
 	flatedOutput.insert(flatedOutput.begin(), 1.0);
 
 
@@ -26,19 +29,22 @@ std::vector<double> CNN::Forward(Eigen::Tensor<double, 3>& input)
 
 
 
-Eigen::Tensor<double, 3> CNN::Backward(std::vector<double>& predictedValues, std::vector<double>& correctValues)
+std::vector<double> CNN::Backward(std::vector<double>& predictedValues, std::vector<double>& correctValues)
 {
+
+
 	std::vector<double> dLoss_dProcessedOutput  =  _mlp.Backward(predictedValues, correctValues);
 
-	Eigen::Tensor<double, 3> dLoss_dOutput = _flat.Reshape(dLoss_dProcessedOutput);
+	Eigen::MatrixXd dLoss_dOutput = Utils::ReshapeMatrix(dLoss_dProcessedOutput, _reshapeRows, _reshapeCols);
 
-	for (size_t i = _processingUnits.size()-1; i > 0; i--) { 
+	for (size_t i = _processingUnits.size()-1; i > 0; i--) {
 		dLoss_dOutput  =  _processingUnits[i]->Backward( dLoss_dOutput );
 	}
 
+
 	dLoss_dOutput  =  _processingUnits[0]->Backward(dLoss_dOutput);
 
-	return dLoss_dOutput;
+	return Utils::FlatMatrix(dLoss_dOutput);
 }
 
 

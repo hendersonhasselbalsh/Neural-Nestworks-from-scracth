@@ -37,27 +37,31 @@
 // NORMALIZE
 //--------------
 
-class Normalize : public IProcessingUnit {
-
-	private:
-		double _mean;
-		double _std_dev;
-
-	public:
-		//ConvolutionCell(size_t poolSize, double learnRate = 0.01);
-		Normalize();
-		~Normalize();
-
-
-		// Inherited via IProcessingUnit
-		Eigen::MatrixXd Forward(Eigen::MatrixXd& input) override;
-		Eigen::MatrixXd Backward(Eigen::MatrixXd& dLoss_dOutput) override;
-
-
-		static double Mean(Eigen::MatrixXd& matrix);
-		static double StandartDeviation(Eigen::MatrixXd& matrix);
-
-};
+//class Normalize : public IProcessingUnit {
+//
+//	private:
+//		double _mean;
+//		double _std_dev;
+//
+//	public:
+//		Normalize();
+//		~Normalize();
+//
+//
+//		// Inherited via IProcessingUnit
+//		/*Eigen::MatrixXd Forward(Eigen::MatrixXd& input) override;
+//		Eigen::MatrixXd Backward(Eigen::MatrixXd& dLoss_dOutput) override;*/
+//
+//
+//		static double Mean(Eigen::MatrixXd& matrix);
+//		static double StandartDeviation(Eigen::MatrixXd& matrix);
+//
+//
+//		// Inherited via IProcessingUnit
+//		Eigen::Tensor<double, 3> Forward(Eigen::Tensor<double, 3>& input) override;
+//		Eigen::Tensor<double, 3> Backward(Eigen::Tensor<double, 3>& dLoss_dOutput) override;
+//
+//};
 
 
 
@@ -68,33 +72,36 @@ class Normalize : public IProcessingUnit {
 class Normalization : public IProcessingUnit {
 
 	private:
-	double _layerMeans;
-	double _layerStddev;
+		std::vector<double> _layerStddev;
+		std::vector<double> _layerMeans;
 
-	double _betas;    // layer shift
-	double _gammas;   // layer scala
+		double _betas;    // layer shift
+		double _gammas;   // layer scala
 
-	double _learningRate;
+		double _learningRate;
 
-	Eigen::MatrixXd _receivecInput;
+		Eigen::Tensor<double,3> _receivecInput;
 
 
 	public:
-	Normalization(double learningRate = 0.001);
-	~Normalization();
+		Normalization(double learningRate = 0.001);
+		~Normalization();
 
 
-	Eigen::MatrixXd LayerNorm(Eigen::MatrixXd& input);
+		Eigen::MatrixXd LayerNorm(Eigen::MatrixXd& input, size_t inputIndex);
 
-	double DL_DVariance(Eigen::MatrixXd& dL_dNormalized);                               // horizontal vector
-	Eigen::MatrixXd DL_DNii(double& dL_dVariance, Eigen::MatrixXd& dL_dNormalized);     // matrix, same dimention as input
-	double DL_DMeans(Eigen::MatrixXd& dL_dNormalized);                                  // horizontal vector
-	Eigen::MatrixXd DL_DInput(double& dL_dMean, Eigen::MatrixXd& dL_dNii);              // matrix, same dimention as input 
+		// Inherited via IProcessingUnit
+		Eigen::Tensor<double, 3> Forward(Eigen::Tensor<double, 3>& input) override;
+		Eigen::Tensor<double, 3> Backward(Eigen::Tensor<double, 3>& dLoss_dOutput) override;
 
 
-	// Inherited via IProcessingUnit
-	Eigen::MatrixXd Forward(Eigen::MatrixXd& input) override;
-	Eigen::MatrixXd Backward(Eigen::MatrixXd& dL_dNormalized) override;
+
+		Eigen::MatrixXd DLoss_DstdDev(Eigen::MatrixXd& dLoss_dy, size_t index);
+		Eigen::MatrixXd DLoss_DVar(Eigen::MatrixXd& dLoss_dStdDev, size_t index);
+		Eigen::MatrixXd DLoss_DNii(Eigen::MatrixXd& dLoss_dVar, size_t index);
+		Eigen::MatrixXd DLoss_Dx(Eigen::MatrixXd& dLoss_dNii);
+
+		Eigen::MatrixXd DLoss_DInput(Eigen::MatrixXd& dLoss_dy, size_t index);
 
 };
 

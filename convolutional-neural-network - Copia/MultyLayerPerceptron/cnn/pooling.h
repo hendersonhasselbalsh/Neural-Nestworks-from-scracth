@@ -9,7 +9,7 @@
 // MAX POOLING
 //--------------
 
-class MaxPool /*: public IProcessingUnit*/ {
+class MaxPool : public IProcessingUnit {
 
 	private:
 		Eigen::MatrixXd _dLoss_dPool;
@@ -23,8 +23,8 @@ class MaxPool /*: public IProcessingUnit*/ {
 
 
 		// Inherited via IProcessingUnit
-		Eigen::MatrixXd Forward(Eigen::MatrixXd& input) ;
-		Eigen::MatrixXd Backward(Eigen::MatrixXd& dLoss_dOutput) ;
+		Eigen::MatrixXd Forward(Eigen::MatrixXd& input) override;
+		Eigen::MatrixXd Backward(Eigen::MatrixXd& dLoss_dOutput) override;
 
 };
 
@@ -35,7 +35,7 @@ class MaxPool /*: public IProcessingUnit*/ {
 // MIN POOLING
 //--------------
 
-class MinPool  /*: public IProcessingUnit*/ {
+class MinPool : public IProcessingUnit {
 
 	private:
 	Eigen::MatrixXd _dLoss_dPool;
@@ -49,8 +49,8 @@ class MinPool  /*: public IProcessingUnit*/ {
 
 
 	// Inherited via IProcessingUnit
-	Eigen::MatrixXd Forward(Eigen::MatrixXd& input) ;
-	Eigen::MatrixXd Backward(Eigen::MatrixXd& dLoss_dOutput) ;
+	Eigen::MatrixXd Forward(Eigen::MatrixXd& input) override;
+	Eigen::MatrixXd Backward(Eigen::MatrixXd& dLoss_dOutput) override;
 
 };
 
@@ -61,7 +61,7 @@ class MinPool  /*: public IProcessingUnit*/ {
 // AVERAGE POOLING
 //--------------
 
-class AveragePool /*: public IProcessingUnit*/ {
+class AveragePool : public IProcessingUnit {
 
 	private:
 		size_t _poolRow;
@@ -79,8 +79,8 @@ class AveragePool /*: public IProcessingUnit*/ {
 
 
 		// Inherited via IProcessingUnit
-		Eigen::MatrixXd Forward(Eigen::MatrixXd& input) ;
-		Eigen::MatrixXd Backward(Eigen::MatrixXd& dLoss_dOutput) ;
+		Eigen::MatrixXd Forward(Eigen::MatrixXd& input) override;
+		Eigen::MatrixXd Backward(Eigen::MatrixXd& dLoss_dOutput) override;
 
 };
 
