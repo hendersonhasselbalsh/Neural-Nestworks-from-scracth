@@ -133,7 +133,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
@@ -155,22 +155,33 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="cnn\ActivationCell.cpp" />
+    <ClCompile Include="cnn\cnn.cpp" />
+    <ClCompile Include="cnn\CNNbuilder.cpp" />
+    <ClCompile Include="cnn\ConvolutionCell.cpp" />
+    <ClCompile Include="cnn\data-maneging.cpp" />
+    <ClCompile Include="cnn\pooling.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mlp\activation-functions.cpp" />
     <ClCompile Include="mlp\layer.cpp" />
     <ClCompile Include="mlp\lost-function.cpp" />
     <ClCompile Include="mlp\mlp-builder.cpp" />
     <ClCompile Include="mlp\multy-layer-perceptron.cpp" />
-    <ClCompile Include="mlp\neuron.cpp" />
     <ClCompile Include="utils\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cnn\ActivationCell.h" />
+    <ClInclude Include="cnn\cnn.h" />
+    <ClInclude Include="cnn\CNNbuilder.h" />
+    <ClInclude Include="cnn\ConvolutionCell.h" />
+    <ClInclude Include="cnn\data-maneging.h" />
+    <ClInclude Include="cnn\pooling.h" />
+    <ClInclude Include="cnn\ProcessingUnity.h" />
     <ClInclude Include="mlp\activation-functions.h" />
     <ClInclude Include="mlp\layer.h" />
     <ClInclude Include="mlp\lost-function.h" />
     <ClInclude Include="mlp\mlp-builder.h" />
     <ClInclude Include="mlp\multy-layer-perceptron.h" />
-    <ClInclude Include="mlp\neuron.h" />
     <ClInclude Include="utils\basic-includes.h" />
     <ClInclude Include="utils\utils.h" />
   </ItemGroup>

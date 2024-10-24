@@ -17,11 +17,26 @@
     <ClCompile Include="mlp\multy-layer-perceptron.cpp">
       <Filter>mlp\Sources</Filter>
     </ClCompile>
-    <ClCompile Include="mlp\neuron.cpp">
-      <Filter>mlp\Sources</Filter>
-    </ClCompile>
     <ClCompile Include="utils\utils.cpp">
       <Filter>utils\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="cnn\ConvolutionCell.cpp">
+      <Filter>cnn\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="cnn\cnn.cpp">
+      <Filter>cnn\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="cnn\CNNbuilder.cpp">
+      <Filter>cnn\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="cnn\ActivationCell.cpp">
+      <Filter>cnn\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="cnn\pooling.cpp">
+      <Filter>cnn\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="cnn\data-maneging.cpp">
+      <Filter>cnn\Sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -43,6 +58,15 @@
     <Filter Include="utils\Sources">
       <UniqueIdentifier>{4155b60f-50d0-4066-a346-9ffb6367049a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="cnn">
+      <UniqueIdentifier>{2c772534-0905-45c4-beeb-a461c7c43e64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cnn\Headers">
+      <UniqueIdentifier>{0c260d20-ed35-44cd-8be0-9d0ce5e115d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cnn\Sources">
+      <UniqueIdentifier>{07426247-4574-4769-8c2c-fb83ce6ba2f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mlp\activation-functions.h">
@@ -60,14 +84,32 @@
     <ClInclude Include="mlp\multy-layer-perceptron.h">
       <Filter>mlp\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="mlp\neuron.h">
-      <Filter>mlp\Headers</Filter>
-    </ClInclude>
     <ClInclude Include="utils\basic-includes.h">
       <Filter>utils\Headers</Filter>
     </ClInclude>
     <ClInclude Include="utils\utils.h">
       <Filter>utils\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="cnn\ProcessingUnity.h">
+      <Filter>cnn\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="cnn\ConvolutionCell.h">
+      <Filter>cnn\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="cnn\cnn.h">
+      <Filter>cnn\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="cnn\CNNbuilder.h">
+      <Filter>cnn\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="cnn\ActivationCell.h">
+      <Filter>cnn\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="cnn\pooling.h">
+      <Filter>cnn\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="cnn\data-maneging.h">
+      <Filter>cnn\Headers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

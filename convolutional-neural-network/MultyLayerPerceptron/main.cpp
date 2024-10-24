@@ -111,7 +111,7 @@ int main(int argc, const char** argv)
     gnuplot.OutFile("..\\..\\.resources\\gnuplot-output\\res.dat");
     gnuplot.xRange("0", "");
     gnuplot.yRange("-0.01", "1.05");
-    gnuplot.Grid("2", "0.1");
+    gnuplot.Grid("5", "0.1");
 
     //--- load MNIST training set
     std::cout << "LOATING TRAINING SET:\n";
@@ -127,16 +127,16 @@ int main(int argc, const char** argv)
                     .InputSize(28, 28)
                     .ProcessingArchitecture({
                         new ConvolutionCell(Filter{3,3}, 0.001),
-                        new ActivationCell(new LeakyReLU()),
-                        new AveragePool(2,2),
-                        new Normalize(),
+                        new ActivationCell(new ReLU()),
+                        new Scale(0,1),
+                        new MaxPool(2,2),
                     })
                     .DenseArchitecture({
                         DenseLayer(256, new ReLU(), 0.001),
                         DenseLayer(10, new Sigmoid(2.0), 0.001),
                     })
                     .LostFunction(new MSE())
-                    .MaxEpochs(200)
+                    .MaxEpochs(100)
                     //.ChangeLerningRate( DecreaseLearningRate )
                     .Build();
 

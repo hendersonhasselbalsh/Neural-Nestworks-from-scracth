@@ -6,10 +6,12 @@
 
 #define INPUT first
 #define LABEL second
-using TrainigData = std::pair<std::vector<double>, std::vector<double>>;
+using MLPTrainigData = std::pair<std::vector<double>, std::vector<double>>;
 
 
 class MlpBuilder;
+class CNNbuilder;
+class CNN;
 
 
 
@@ -21,13 +23,13 @@ class MLP {
 		ILostFunction* _lostFunction;
 
 		std::function<std::vector<double>(size_t)> ParseLabelToVector;
-		std::function<bool(size_t, double)> WhenToUpdateLeraningRate;                           //  bool f(size_t epoch, double accuracy);
-		std::function<double(size_t, double, double)> HowToUpdateLeraningRate;                 //  double f(size_t epoch, double accuracy, double currentLearningRate)
+		std::function<void(size_t, double, double&)> UpdateLeraningRate;                      //  double f(size_t epoch, double accuracy, double currentLearningRate)
 		std::string _outFile;
 
 		size_t _inputSize;
 		size_t _maxEpochs;
 		double _acceptableAccuracy;
+		double _error;
 		std::vector<double> _accumulatedGradients;
 
 
@@ -43,13 +45,14 @@ class MLP {
 		void BuildJson();
 		Json ToJson() const;
 
-		void ChangeLearningRate(size_t epoch, double accuracy);
+		void ChangeLearningRate(size_t epoch, double error);
+		void CalculateError(std::vector<double> predictedValues, std::vector<double> correctValues);
 		
 
 	public:
 		~MLP();
 
-		void Training(std::vector<TrainigData> trainigSet, std::function<void(void)> callback = [](){} );
+		void Training(std::vector<MLPTrainigData> trainigSet, std::function<void(void)> callback = [](){} );
 		void Training(std::vector<MLP_DATA> trainigSet, std::function<void(void)> callback = [](){} );
 
 
@@ -64,8 +67,9 @@ class MLP {
 
 
 		friend class MlpBuilder;
-		friend class LSTM;
-		friend class LstmBuilder;
+		friend class CNNbuilder;
+		friend class CNN;
+
 };
 
 

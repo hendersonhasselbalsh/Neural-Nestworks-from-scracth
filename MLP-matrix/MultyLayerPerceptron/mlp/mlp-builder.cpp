@@ -5,8 +5,8 @@ MlpBuilder::MlpBuilder()
 	inputSize = 0;
 	_mlp = MLP();
 	_mlp._outFile = "";
-	_mlp.HowToUpdateLeraningRate  =  [](size_t e, double a, double currentRate){ return currentRate; };
-	_mlp.WhenToUpdateLeraningRate = [](size_t e, double a){ return false; };
+	_mlp.UpdateLeraningRate  =  [](size_t e, double a, double currentRate){ };
+	//_mlp.WhenToUpdateLeraningRate = [](size_t e, double a){ return false; };
 }
 
 
@@ -17,6 +17,8 @@ MLP MlpBuilder::Build()
 	auto& lastLayer  =  _mlp._layers[_mlp._layers.size()-1];
 	size_t neuronsInLastLayer = lastLayer.Get<Layer::Attribute::NUMBER_OF_NEURONS>();
 	_mlp._accumulatedGradients  =  std::vector<double>(neuronsInLastLayer, 0.0);
+
+	_mlp._lostFunction = lastLayer._lostFunction;
 
 	return _mlp;
 }
@@ -45,7 +47,7 @@ MlpBuilder MlpBuilder::Architecture(std::vector<size_t> neuronsInLayer)
 }
 
 
-MlpBuilder MlpBuilder::Architecture(std::vector<LayerSignature> layerSignature) 
+MlpBuilder MlpBuilder::Architecture(std::vector<DenseLayer> layerSignature) 
 {
 	assert( inputSize > 0 && "DEFINE inputsize FISRT" );
 
@@ -76,11 +78,7 @@ MlpBuilder MlpBuilder::LostFunction(ILostFunction* lostFunction)
 	auto& lastLayer  =  _mlp._layers[lastLayerIndex];
 	lastLayer.Set<Layer::Attribute::LOSS_FUNC, ILostFunction*>(lostFunction);
 
-	//size_t neuronSize = lastLayer.Get<Layer::Attribute::NUMBER_OF_NEURONS>();
-	//for (size_t i = 0; i < neuronSize; i++) {
-	//	//lastLayer[i].SetLostFunction( lostFunction );
-	//	lastLayer[i].Set<Neuron::Attribute::LOST_FUNC, ILostFunction*>( lostFunction );
-	//}
+	_mlp._lostFunction = lostFunction;
 
 	return (*this);
 }
@@ -126,30 +124,22 @@ MlpBuilder MlpBuilder::LoadArchitectureFromJson(std::string file)
 	jsonFile >> json;
 	jsonFile.close();
 
-	_mlp._inputSize  =  json.at("inputSize").get<size_t>();
-
-
-	for (const auto& layerJson : json.at("layers")) {
-		size_t numberOfNeurons  =  layerJson.at("layer").at("neurons").size();
-		Layer layer = Layer(0, numberOfNeurons);
-		layer.LoadWeightsFromJson( layerJson );
-
+	for (const auto& layerJson : json.at("MLP")) {
+		Layer layer = Layer(0, 1);
+		layer.LoadWeightsFromJson(layerJson);
+		
 		_mlp._layers.push_back( layer );
 	}
 
+	_mlp._inputSize  =  _mlp._layers[0]._weights.cols();
 
 	return (*this);
 }
 
-MlpBuilder MlpBuilder::WhenToUpdateLearningRate(std::function<bool(size_t, double)> Conddition)
-{
-	_mlp.WhenToUpdateLeraningRate  =  Conddition;
-	return (*this);
-}
 
-MlpBuilder MlpBuilder::HowToUpdateLearningRate(std::function<double(size_t, double, double)> func)
+MlpBuilder MlpBuilder::UpdateLearningRate(std::function<double(size_t, double, double&)> func)
 {
-	_mlp.HowToUpdateLeraningRate  =  func;
+	_mlp.UpdateLeraningRate  =  func;
 	return (*this);
 }
 

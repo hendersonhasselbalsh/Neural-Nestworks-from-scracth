@@ -92,21 +92,28 @@ int main(int argc, const char** argv)
     std::cout << "\n\nLOATING TEST SET:\n";
     std::vector<TrainigData> testDataSet  =  LoadDataLSTM("..\\..\\.resources\\test");
 
+    //--- DEBUG
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(trainigDataSet.begin(), trainigDataSet.end(), g);
+    std::shuffle(testDataSet.begin(), testDataSet.end(), g);
+    //--- DEBUG END
+
 
     //--- build LSTM
     LSTM lstm  =  LSTMbuilder()
                         .InputSize(28*28)
                         .ForgetArchitecture({
-                            LayerSignature(30, new Sigmoid(), 0.001)
+                            LayerSignature(128, new Sigmoid(), 0.001)
                         })
                         .InputArchitecture({
-                            LayerSignature(30, new Sigmoid(), 0.001)
+                            LayerSignature(128, new Sigmoid(), 0.001)
                         })
                         .CandidateArchitecture({
-                            LayerSignature(30, new Tanh(), 0.001)
+                            LayerSignature(128, new Tanh(), 0.001)
                         })
                         .OutputArchitecture({
-                            LayerSignature(30, new Sigmoid(), 0.001)
+                            LayerSignature(128, new Sigmoid(), 0.001)
                         })
                         .LearningRate(0.001)     // Linear MLP learning rate
                         .LossFunction(new MSE())

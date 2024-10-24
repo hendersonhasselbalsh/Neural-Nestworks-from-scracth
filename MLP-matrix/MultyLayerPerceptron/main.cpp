@@ -1,14 +1,26 @@
 #include <opencv2/opencv.hpp>
 #include <Eigen/Core>
 #include <Eigen/Dense>
+#include <unsupported/Eigen/CXX11/Tensor>
 #include "gnuplot-include.h"
 #include "utils/basic-includes.h"
 #include "mlp/multy-layer-perceptron.h"
-// // D:\w\.debugger\LSTM\.resources
-//"..\\..\\.resources\\train"
+#include "cnn/cnn.h"
 
 
-std::vector<MLP_DATA> LoadData(const std::string& folderPath) {
+
+//        _____ ______   ___       ________
+//        |\   _ \  _   \|\  \     |\   __  \
+//        \ \  \\\__\ \  \ \  \    \ \  \|\  \
+//        \ \  \\|__| \  \ \  \    \ \   ____\
+//        \ \  \    \ \  \ \  \____\ \  \___|
+//        \ \__\    \ \__\ \_______\ \__\
+//        \|__|     \|__|\|_______|\|__|
+
+
+
+std::vector<MLP_DATA> LoadData(const std::string& folderPath)
+{
     std::vector<MLP_DATA> set;
 
     int l = -1;
@@ -23,12 +35,12 @@ std::vector<MLP_DATA> LoadData(const std::string& folderPath) {
             std::string fullPathName = entry.path().string();
             Eigen::MatrixXd imgMat = Utils::ImageToMatrix(cv::imread(fullPathName));
 
-            std::vector<double> input  =  Utils::FlatMatrix( imgMat );
+            std::vector<double> input  =  Utils::FlatMatrix(imgMat);
 
             set.push_back({ input, label });
 
-            if (label != l) { 
-                l = label; 
+            if (label != l) {
+                l = label;
                 std::cout << "load data: [" << (label+1)*10 << "%]\n";
             }
         }
@@ -37,35 +49,25 @@ std::vector<MLP_DATA> LoadData(const std::string& folderPath) {
     return set;
 };
 
-Eigen::MatrixXd TestingModelAccuracy(MLP* mlp, std::string path, double* accuracy)  // "..\\..\\.resources\\test"
+Eigen::MatrixXd TestingModelAccuracy(MLP* mlp, std::vector<MLP_DATA> testSet, double* accuracy)  // "..\\..\\.resources\\test"
 {
     Eigen::MatrixXd confusionMatrix = Eigen::MatrixXd::Zero(10, 10);
     int totalData = 0;
     int errors = 0;
 
-    for (const auto& entry : std::filesystem::directory_iterator(path.c_str())) {
-        if (std::filesystem::is_regular_file(entry.path())) {
+    for (auto& testData : testSet) {
 
-            std::string fileName = entry.path().filename().string();
-            std::string labelStr = Utils::SplitString(fileName, "_")[0];
-            int label = std::stoi(labelStr);
+        std::vector<double> givenOutput = mlp->Classify(testData.input);
 
-            std::string fullPathName = entry.path().string();
-            Eigen::MatrixXd input = Utils::ImageToMatrix(cv::imread(fullPathName));
+        auto it = std::max_element(givenOutput.begin(), givenOutput.end());
+        size_t givenLabel = std::distance(givenOutput.begin(), it);
 
-            std::vector<double> inputs = Utils::FlatMatrix(input);
+        confusionMatrix(givenLabel, testData.labelIndex) += 1.0;
 
-            std::vector<double> givenOutput = mlp->Classify(inputs);
+        totalData++;
 
-            auto it = std::max_element(givenOutput.begin(), givenOutput.end());
-            int givenLabel = std::distance(givenOutput.begin(), it);
+        if (givenLabel != testData.labelIndex) { errors++; }
 
-            confusionMatrix(givenLabel, label) += 1.0;
-
-            totalData++;
-
-            if (givenLabel != label) { errors++; }
-        }
     }
 
     (*accuracy) = 1.0 - ((double)errors/totalData);
@@ -73,8 +75,9 @@ Eigen::MatrixXd TestingModelAccuracy(MLP* mlp, std::string path, double* accurac
     return confusionMatrix;
 }
 
-std::vector<double> ParseLabelToEspectedOutput(size_t l){ 
-    auto label = std::vector<double>((size_t)10, 0.0 );
+std::vector<double> ParseLabelToEspectedOutput(size_t l)
+{
+    auto label = std::vector<double>((size_t)10, 0.0);
     label[l] = 1.0;
     return label;
 }
@@ -85,63 +88,69 @@ int main(int argc, const char** argv)
 {
     //--- initialize gnuplot to plot chart
     Gnuplot gnuplot;
-    gnuplot.OutFile("..\\..\\.resources\\gnuplot-output\\res.dat");
+    gnuplot.OutFile("..\\..\\.resources\\gnuplot-output\\res_1.dat");
     gnuplot.xRange("0", "");
     gnuplot.yRange("-0.01","1.05");
-    gnuplot.Grid("1", "0.1");
+    gnuplot.Grid("5", "0.1");
 
 
     //--- load MNIST training set
-    std::vector<MLP_DATA> trainigDataSet  =  LoadData( "..\\..\\.resources\\train-debug-8x8" );
+    std::cout << "LOATING TRAINING SET:\n";
+    std::vector<MLP_DATA> trainigDataSet  =  LoadData("C:\\Users\\openh\\w\\IC-TCC\\GITHUB - debbug\\.resources\\train");
+
+    ////--- load MNIST test set
+    std::cout << "\n\nLOATING TEST SET:\n";
+    std::vector<MLP_DATA> testDataSet  =  LoadData("C:\\Users\\openh\\w\\IC-TCC\\GITHUB - debbug\\.resources\\test");
 
 
     //--- build mlp architecture and hiperparam
     MLP mlp  =  MlpBuilder()
                     .InputSize(28*28)
                     .Architecture({
-                        LayerSignature(100, new Sigmoid(), 0.01),
-                        LayerSignature(10, new Sigmoid(), 0.01, new CrossEntropy())
+                        DenseLayer(256, new ReLU(), 0.001),
+                        DenseLayer(10, new NormalizedTanh(), 0.001),
                     })
+                    .LostFunction(new MSE())
                     .MaxEpochs(100)
                     .ParseLabelToVector( ParseLabelToEspectedOutput )
-                    .SaveOn("..\\..\\.resources\\gnuplot-output\\mlp\\mlp.json")
+                    //.SaveOn("..\\..\\.resources\\gnuplot-output\\mlp\\mlp.json")
                     .Build();
 
 
     //--- training model, and do a callback on each epoch
-    int ephocCounter = -1;
+    double bestAccuracy = 0.0;
+    int epoch = 0;
 
-    mlp.Training(trainigDataSet, [&mlp, &trainigDataSet, &ephocCounter, &gnuplot](){
-        ephocCounter++;
-        double accuracy = 0.0;
+    mlp.Training(trainigDataSet, [&](){
+        double trainingAccuracy = 0.0;
+        double testAccuracy = 0.0;
+        Eigen::MatrixXd trainingConfusionMatrix  =  TestingModelAccuracy(&mlp, trainigDataSet, &trainingAccuracy);
+        Eigen::MatrixXd testConfusionMatrix  =  TestingModelAccuracy(&mlp, testDataSet, &testAccuracy);
 
-        Eigen::MatrixXd confusionMatrix  =  TestingModelAccuracy(&mlp, "..\\..\\.resources\\train-debug-8x8", &accuracy);
+        if (testAccuracy > bestAccuracy) { bestAccuracy = testAccuracy; }
 
-        std::cout << "Training Epoch: " << ephocCounter << "\n";
-        std::cout << "Training Accuracy: " << accuracy << "\n\n";
-        std::cout << confusionMatrix << "\n\n\n\n";
-        
-        gnuplot.out << ephocCounter << " " << accuracy << "\n";
+        std::cout << "------------ Training Epoch: " << epoch << " ------------\n";
+        std::cout << "Training Accuracy: " << trainingAccuracy << "\n\n";
+        std::cout << trainingConfusionMatrix << "\n\n\n";
+        std::cout << "Test Accuracy: " << testAccuracy << "\n\n";
+        std::cout << testConfusionMatrix << "\n\n\n\n";
+
+        gnuplot.out << epoch << " " << trainingAccuracy << " " << testAccuracy << "\n";
+
+        epoch++;
     });
-
-
-    //--- evaluating training on MNIST test set
-    double accuracy = 0.0;
-    Eigen::MatrixXd confusionMatrix  =  TestingModelAccuracy(&mlp, "..\\..\\.resources\\train-debug-8x8", &accuracy);
-    std::cout << "Testing Accuracy: " << accuracy << "\n\n";
-    std::cout << confusionMatrix << "\n\n\n\n";
 
 
     //--- plot chart
     gnuplot.out.close();
-    gnuplot << "plot \'..\\..\\.resources\\gnuplot-output\\res.dat\' using 1:2 w l title \"Training Accuracy\" \n";
+    gnuplot << "plot \'..\\..\\.resources\\gnuplot-output\\res.dat\' using 1:2 w l title \"Training Accuracy\", ";
+    gnuplot << "\'..\\..\\.resources\\gnuplot-output\\res.dat\' using 1:3 w l title \"Test Accuracy\" \n";
     gnuplot << "set terminal pngcairo enhanced \n set output \'..\\..\\.resources\\gnuplot-output\\accuracy.png\' \n";
     gnuplot << " \n";
 
 
-    std::cout << "\n\n[SUCESSO]";
-
-
+    std::cout << "BEST ACCURACY: " << bestAccuracy << "\n";
+    std::cout << "[SUCESSO!!!!!]\n";
 
     return 0;
 }

@@ -21,4 +21,5 @@
 #include <ranges>
 #include <cfloat>
 #include <chrono>
+#include <corecrt_math_defines.h>
 

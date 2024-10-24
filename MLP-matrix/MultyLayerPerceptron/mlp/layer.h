@@ -7,11 +7,12 @@
 #include "activation-functions.h"
 #include "lost-function.h"
 #include "../utils/utils.h"
-//#include "neuron.h"
+
 using Json = nlohmann::json;
 
 class MLP;
-class LSTM;
+class CNNbuilder;
+class MlpBuilder;
 
 
 class Layer {
@@ -64,6 +65,8 @@ class Layer {
 	//--- metodos de acesso (get e set)
 		void XavierWeightInitialization(size_t inputSize, size_t outputSize);
 
+		const double operator()(size_t neuronIndex, size_t weightIndex);
+
 		 Json ToJson() const;
 		 Layer LoadWeightsFromJson(const Json& j);
 
@@ -79,7 +82,8 @@ class Layer {
 
 
 	friend class MLP;
-	friend class LSTM;
+	friend class CNNbuilder;
+	friend class MlpBuilder;
 };
 
 
@@ -96,19 +100,10 @@ inline const auto Layer::Get() const
 	}
 	else if constexpr (attrib == Layer::Attribute::NUMBER_OF_NEURONS) {
 		return (size_t)_weights.rows();
-		//return _neurons.size();
 	}
-	/*else if constexpr (attrib == Layer::Attribute::ALL_NEURONS) {
-		return _neurons;
-	}*/
 	else if constexpr (attrib == Layer::Attribute::LAYER_OUTPUTS) {
 		return _outputs;
 	}
-	/*else if constexpr (attrib == Layer::Attribute::LAYER_ERRORS) {
-		std::vector<double> errors;
-		for (auto& neuron : _neurons) { errors.push_back( neuron.Get<Neuron::Attribute::ERROR>() ); }
-		return errors;
-	}*/
 	else if constexpr (attrib == Layer::Attribute::RECEIVED_INPUT) {
 		return _receivedInput;
 	}
@@ -125,13 +120,6 @@ inline void Layer::Set(T value)
 		static_assert( std::is_same_v<T, double>  &&  "[ERROR]: wrong type");
 		_learningRate  =  value;
 	}
-	/*else if constexpr (attrib == Layer::Attribute::ALL_NEURONS_GRADIENTS) {
-		static_assert( std::is_same_v<T, std::vector<double>>  &&  "[ERROR]: wrong type");
-		size_t index = 0;
-		for (auto& neuron : _neurons) {
-			neuron.Set<Neuron::Attribute::GRADIENT_DL_DU, double>(value[index++]);
-		}
-	}*/
 	else if constexpr (attrib == Layer::Attribute::LOSS_FUNC) {
 		static_assert(std::is_same_v<T, ILostFunction*>  &&  "wrong type");
 		_lostFunction  =  value;
