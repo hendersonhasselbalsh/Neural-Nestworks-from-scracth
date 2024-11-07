@@ -1,14 +1,20 @@
 #include "Add-Norm.h"
+#include "../../utils/utils.h"
 
-AddNorm::AddNorm()
+AddNorm::AddNorm(size_t embeddingSize)
 {
-    size_t embeddingSize = 16;
+    //size_t embeddingSize = 16;
 
     _learningRate  =  0.01;
 
 
     _gammas  =  std::vector<double>(embeddingSize, 0.09);
     _betas  =  std::vector<double>(embeddingSize, 0.00001);
+}
+
+AddNorm::AddNorm()
+{
+
 }
 
 AddNorm::~AddNorm()
@@ -60,7 +66,7 @@ Eigen::MatrixXd AddNorm::Backward(Eigen::MatrixXd& dL_dNormalized)
 
 
     //--- DEBUG
-    //std::cout << "dL_dInputMatrix:\n" << dL_dInputMatrix << "\n\n\n";
+    //auto debug_vec =  Utils::FlatMatrix( dL_dInputMatrix );
     //--- END DEBUG
 
 
@@ -91,7 +97,7 @@ Eigen::MatrixXd AddNorm::LayerNormalization(Eigen::MatrixXd& addedMatrix)
         normalized.col(col) = (normalized.col(col).array() * _gammas[col] ) + _betas[col];
     }
 
-    normalized = normalized;   // DEBUG not official
+    //normalized = normalized;   // DEBUG not official
 
     return normalized;
 }

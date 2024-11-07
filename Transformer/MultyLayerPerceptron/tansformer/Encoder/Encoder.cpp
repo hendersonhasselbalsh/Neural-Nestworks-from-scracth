@@ -9,8 +9,8 @@ Encoder::Encoder(size_t inputMatrixCols, size_t h, SDPAttention::Attrib attrib)
 
 
 	//--- ADD NORMs
-	_feedForward_AddNorm = AddNorm();
-	_attention_AddNorm = AddNorm();
+	_feedForward_AddNorm = AddNorm( inputMatrixCols );
+	_attention_AddNorm = AddNorm( inputMatrixCols );
 
 
 	//--- FEED FORWARD
@@ -18,8 +18,8 @@ Encoder::Encoder(size_t inputMatrixCols, size_t h, SDPAttention::Attrib attrib)
 	_feedForward._mlp  =  MlpBuilder()
 		.InputSize(inputMatrixCols)
 		.Architecture({
-			DenseLayer(inputMatrixCols, new ClipedReLU(1.0), 0.001),
-			DenseLayer(inputMatrixCols, new ClipedLinear(-1.0,1.0), 0.001),
+			DenseLayer(inputMatrixCols, new ReLU(), 0.001),
+			DenseLayer(inputMatrixCols, new Linear(), 0.001),
 		})
 		.Build();
 

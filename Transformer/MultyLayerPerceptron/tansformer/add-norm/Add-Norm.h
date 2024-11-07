@@ -23,6 +23,7 @@ class AddNorm {
 
 	public:
 		AddNorm();
+		AddNorm(size_t embeddingSize);
 		~AddNorm();
 
 		Eigen::MatrixXd Forward(Eigen::MatrixXd& inputMatrix, Eigen::MatrixXd& addMatrix);

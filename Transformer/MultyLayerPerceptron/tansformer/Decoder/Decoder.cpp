@@ -10,9 +10,9 @@ Decoder::Decoder(size_t inputMatrixCols, size_t h)
 
 
 	//--- ADD & NORMs
-	_addNorm_1 = AddNorm();
-	_addNorm_2 = AddNorm();
-	_addNorm_3 = AddNorm();
+	_addNorm_1 = AddNorm( inputMatrixCols );
+	_addNorm_2 = AddNorm( inputMatrixCols );
+	_addNorm_3 = AddNorm( inputMatrixCols );
 
 
 	//--- FEED FORWARD
@@ -20,8 +20,8 @@ Decoder::Decoder(size_t inputMatrixCols, size_t h)
 	_feedForward._mlp = MlpBuilder()
 		.InputSize(inputMatrixCols)
 		.Architecture({
-			DenseLayer(inputMatrixCols, new ClipedReLU(1.0), 0.001),
-			DenseLayer(inputMatrixCols, new ClipedLinear(-1.0,1.0), 0.001),
+			DenseLayer(inputMatrixCols, new ReLU(), 0.001),
+			DenseLayer(inputMatrixCols, new Linear(), 0.001),
 		})
 		.Build();
 
