@@ -27,25 +27,28 @@ Eigen::MatrixXd ConcatMatrix(const Eigen::MatrixXd& A, const Eigen::MatrixXd& B)
 
 int main(int argc, const char** argv)  
 {
-    EncodeDecodeTransformer transformer  =  EncodeDecodeTransformer(16, 20, 1);    // EncodeDecodeTransformer(16, 20, 4);
+    EncodeDecodeTransformer transformer  =  EncodeDecodeTransformer(32, 20, 4);    // EncodeDecodeTransformer(16, 20, 1);
 
 
 
-    Eigen::MatrixXd INPUT_WORDS = Eigen::MatrixXd(5, 20);
+    Eigen::MatrixXd INPUT_WORDS = Eigen::MatrixXd(6, 20);
     INPUT_WORDS <<
         1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
 
 
 
-    Eigen::MatrixXd CORRECT_OUTPUT = Eigen::MatrixXd(4, 20);
+    Eigen::MatrixXd CORRECT_OUTPUT = Eigen::MatrixXd(5, 20);
     CORRECT_OUTPUT <<
         1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0; 
 
 

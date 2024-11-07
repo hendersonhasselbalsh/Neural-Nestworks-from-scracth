@@ -42,7 +42,7 @@ class ScaledDotProductAttention {
 		SDPAttentionBackwardResult Backward(Eigen::MatrixXd& dL_dAttentionHead);
 
 
-		Eigen::MatrixXd BuildMask(size_t rows, size_t cols);
+		Eigen::MatrixXd BuildMask(size_t rows, size_t cols); 
 
 };
 
