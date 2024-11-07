@@ -88,7 +88,7 @@ int main(int argc, const char** argv)
 {
     //--- initialize gnuplot to plot chart
     Gnuplot gnuplot;
-    gnuplot.OutFile("..\\..\\.resources\\gnuplot-output\\res_1.dat");
+    gnuplot.OutFile("C:\\Users\\openh\\w\\IC-TCC\\GITHUB - debbug\\.resources\\gnuplot-output\\res_1.dat");
     gnuplot.xRange("0", "");
     gnuplot.yRange("-0.01","1.05");
     gnuplot.Grid("5", "0.1");
@@ -108,7 +108,7 @@ int main(int argc, const char** argv)
                     .InputSize(28*28)
                     .Architecture({
                         DenseLayer(256, new ReLU(), 0.001),
-                        DenseLayer(10, new NormalizedTanh(), 0.001),
+                        DenseLayer(10, new Sigmoid(2.0), 0.001),
                     })
                     .LostFunction(new MSE())
                     .MaxEpochs(100)

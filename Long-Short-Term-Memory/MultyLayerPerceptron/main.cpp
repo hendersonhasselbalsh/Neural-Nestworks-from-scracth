@@ -104,16 +104,24 @@ int main(int argc, const char** argv)
     LSTM lstm  =  LSTMbuilder()
                         .InputSize(28*28)
                         .ForgetArchitecture({
-                            LayerSignature(128, new Sigmoid(), 0.001)
+                            LayerSignature(32, new Linear(), 0.001),
+                            LayerSignature(32, new ReLU(), 0.001),
+                            LayerSignature(64, new Sigmoid(2.0), 0.001)
                         })
                         .InputArchitecture({
-                            LayerSignature(128, new Sigmoid(), 0.001)
+                            LayerSignature(32, new Linear(), 0.001),
+                            LayerSignature(32, new ReLU(), 0.001),
+                            LayerSignature(64, new Sigmoid(2.0), 0.001)
                         })
                         .CandidateArchitecture({
-                            LayerSignature(128, new Tanh(), 0.001)
+                            LayerSignature(32, new Linear(), 0.001),
+                            LayerSignature(32, new ReLU(), 0.001),
+                            LayerSignature(64, new Tanh(), 0.001)
                         })
                         .OutputArchitecture({
-                            LayerSignature(128, new Sigmoid(), 0.001)
+                            LayerSignature(32, new Linear(), 0.001),
+                            LayerSignature(32, new ReLU(), 0.001),
+                            LayerSignature(64, new Sigmoid(2.0), 0.001)
                         })
                         .LearningRate(0.001)     // Linear MLP learning rate
                         .LossFunction(new MSE())
