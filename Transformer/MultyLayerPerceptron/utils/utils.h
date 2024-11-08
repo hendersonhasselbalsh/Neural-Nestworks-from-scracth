@@ -91,5 +91,8 @@ namespace Utils {
 
 }
 
+namespace Utils{
+	Eigen::MatrixXd ScalateMatrix(Eigen::MatrixXd& mat, double a, double b);
+}
 
 

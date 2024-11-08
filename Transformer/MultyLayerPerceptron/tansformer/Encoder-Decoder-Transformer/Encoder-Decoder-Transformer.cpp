@@ -17,7 +17,7 @@ EncodeDecodeTransformer::EncodeDecodeTransformer(size_t embededWordSize, size_t 
 	_linear._mlp  =  MlpBuilder()
 		.InputSize(embededWordSize)
 		.Architecture({
-			DenseLayer(dictionarySize, new ClipedLinear(-1.0,1.0), 0.001),
+			DenseLayer(dictionarySize, new ClipedLinear(-0.9,0.9), 0.001),
 		})
 		.Build();
 }
@@ -49,7 +49,10 @@ Eigen::MatrixXd EncodeDecodeTransformer::Forward(Eigen::MatrixXd& encoderInput, 
 	Eigen::MatrixXd outputProbabilityMatriXd  =  _softmax.Forward( wordPredictionMatrix );
 
 
-	return outputProbabilityMatriXd;    // the predicted word is only the last line
+	// return outputProbabilityMatriXd;    // the predicted word is only the last line
+	size_t lastRow  =  outputProbabilityMatriXd.rows() - 1;
+	Eigen::MatrixXd predictedToken  =   outputProbabilityMatriXd.row( lastRow );
+	return predictedToken;
 }
 
 

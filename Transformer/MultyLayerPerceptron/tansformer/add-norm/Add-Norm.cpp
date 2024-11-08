@@ -3,13 +3,12 @@
 
 AddNorm::AddNorm(size_t embeddingSize)
 {
-    //size_t embeddingSize = 16;
 
-    _learningRate  =  0.01;
+    _learningRate  =  0.001;
 
 
-    _gammas  =  std::vector<double>(embeddingSize, 0.09);
-    _betas  =  std::vector<double>(embeddingSize, 0.00001);
+    _gammas  =  std::vector<double>(embeddingSize, 0.9);
+    _betas  =  std::vector<double>(embeddingSize, 0.0);
 }
 
 AddNorm::AddNorm()
@@ -36,6 +35,7 @@ Eigen::MatrixXd AddNorm::Forward(Eigen::MatrixXd& inputMatrix, Eigen::MatrixXd& 
 
 Eigen::MatrixXd AddNorm::Backward(Eigen::MatrixXd& dL_dNormalized)
 {
+    
     // --- dL_dBetta and dL_dGamma
     for (size_t col = 0; col < _gammas.size(); col++) {
 
@@ -55,7 +55,7 @@ Eigen::MatrixXd AddNorm::Backward(Eigen::MatrixXd& dL_dNormalized)
         _betas[col]  =  _betas[col]  -  _learningRate * dL_dBeta;
         _gammas[col]  =  _gammas[col]  -  _learningRate * dL_dGamma;
     }
-
+    
 
 
     //--- dL_dX
@@ -63,11 +63,6 @@ Eigen::MatrixXd AddNorm::Backward(Eigen::MatrixXd& dL_dNormalized)
     Eigen::MatrixXd dL_dNii  =  DL_DNii(dL_dVariance, dL_dNormalized);
     Eigen::MatrixXd dL_dMeans  =  DL_DMeans(dL_dNormalized);
     Eigen::MatrixXd dL_dInputMatrix  =  DL_DInput(dL_dMeans, dL_dNii);
-
-
-    //--- DEBUG
-    //auto debug_vec =  Utils::FlatMatrix( dL_dInputMatrix );
-    //--- END DEBUG
 
 
     return dL_dInputMatrix;
@@ -94,10 +89,8 @@ Eigen::MatrixXd AddNorm::LayerNormalization(Eigen::MatrixXd& addedMatrix)
         _layerStddev[col] = std::sqrt(variance + epson);
 
         normalized.col(col) = (column.array() - _layerMeans[col]) / (_layerStddev[col]);
-        normalized.col(col) = (normalized.col(col).array() * _gammas[col] ) + _betas[col];
+        normalized.col(col) = (normalized.col(col).array() * _gammas[col] ) + _betas[col];   // DISCOMENT TO USE BETA AND GAMMA
     }
-
-    //normalized = normalized;   // DEBUG not official
 
     return normalized;
 }

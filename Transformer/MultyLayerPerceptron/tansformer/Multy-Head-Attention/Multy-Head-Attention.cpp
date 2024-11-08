@@ -19,7 +19,7 @@ MultyHeadAttention::MultyHeadAttention(size_t inputMatrixCols, size_t h, SDPAtte
     _linear._mlp  =  MlpBuilder()
         .InputSize( inputMatrixCols )
         .Architecture({
-            DenseLayer(inputMatrixCols, new ClipedLinear(-1.0,1.0), 0.001),
+            DenseLayer(inputMatrixCols, new ClipedLinear(-0.9,0.9), 0.001),
         })
         .Build();
 

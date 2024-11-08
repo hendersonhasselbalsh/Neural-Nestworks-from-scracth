@@ -9,17 +9,40 @@
 
 
 
+
 Eigen::MatrixXd ConcatMatrix(const Eigen::MatrixXd& A, const Eigen::MatrixXd& B)
 {
-    assert(A.cols() == B.cols());
+    //assert(A.cols() == B.cols());
+    Eigen::MatrixXd result;
 
-    Eigen::MatrixXd result(A.rows() + B.rows(), A.cols());
+    if (A.size() == 0) {
+        result = B;
+    }
+    else {
+        result  =  Eigen::MatrixXd(A.rows() + B.rows(), A.cols());
 
-    result.block(0, 0, A.rows(), A.cols()) = A;
-    result.block(A.rows(), 0, B.rows(), B.cols()) = B;
+        result.block(0, 0, A.rows(), A.cols()) = A;
+        result.block(A.rows(), 0, B.rows(), B.cols()) = B;
+    }
 
     return result;
 }
+
+
+Eigen::MatrixXd GaneratedSentence(const Eigen::MatrixXd& sentence, const Eigen::MatrixXd& predictedToken)
+{
+    size_t maXIndice = 1000;
+    Eigen::MatrixXd token  =  Eigen::MatrixXd::Zero(1, predictedToken.cols());
+    predictedToken.row(0).maxCoeff(&maXIndice); 
+    token(0, maXIndice) = 1.0;
+
+
+    Eigen::MatrixXd newSentence = ConcatMatrix(sentence, token);
+
+    return newSentence;
+}
+
+
 
 
 
@@ -27,14 +50,15 @@ Eigen::MatrixXd ConcatMatrix(const Eigen::MatrixXd& A, const Eigen::MatrixXd& B)
 
 int main(int argc, const char** argv)  
 {
-    EncodeDecodeTransformer transformer  =  EncodeDecodeTransformer(32, 20, 4);    // EncodeDecodeTransformer(16, 20, 1);
+    EncodeDecodeTransformer transformer  =  EncodeDecodeTransformer(512, 20, 8);    // EncodeDecodeTransformer(16, 20, 1);
 
 
 
-    Eigen::MatrixXd INPUT_WORDS = Eigen::MatrixXd(6, 20);
+    Eigen::MatrixXd INPUT_WORDS = Eigen::MatrixXd(8, 20);
     INPUT_WORDS <<
         1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
@@ -43,84 +67,86 @@ int main(int argc, const char** argv)
 
 
 
-    Eigen::MatrixXd CORRECT_OUTPUT = Eigen::MatrixXd(5, 20);
+    Eigen::MatrixXd CORRECT_OUTPUT = Eigen::MatrixXd(7, 20);
     CORRECT_OUTPUT <<
         1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
+        0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0; 
 
 
 
+    Eigen::MatrixXd PREVIOUS_INDICIES = Eigen::MatrixXd::Zero(1, CORRECT_OUTPUT.rows()-1);
 
     size_t epoch = 0;
+    bool correctPredictionNotFount = true;
 
-    while (epoch < 10'000) {
+    while (correctPredictionNotFount && epoch < 50'000) {
 
-
-        Eigen::MatrixXd OUTPUT_WORDS = Eigen::MatrixXd(1, 20);
-        OUTPUT_WORDS <<
+        Eigen::MatrixXd encoderInput  =  INPUT_WORDS;
+        Eigen::MatrixXd decoderInput  = Eigen::MatrixXd(1, 20);
+        decoderInput <<
             1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
 
 
+        Eigen::MatrixXd predictedSentence;
 
-        Eigen::MatrixXd predictionMatrix = Eigen::MatrixXd(1,1);
+        for (size_t predictedWords = 0; predictedWords < CORRECT_OUTPUT.rows()-1; predictedWords++) {
 
-        for (size_t predictedWords = 0; predictedWords < CORRECT_OUTPUT.rows(); predictedWords++) {
+            Eigen::MatrixXd predictedToken  =  transformer.Forward(encoderInput, decoderInput);
 
-            Eigen::MatrixXd outputMatrix  =  transformer.Forward(INPUT_WORDS, OUTPUT_WORDS);
-
-            if (predictedWords == 0) {
-                predictionMatrix  =  outputMatrix;
-                OUTPUT_WORDS  =  ConcatMatrix(OUTPUT_WORDS, predictionMatrix);
-            }
-            else {
-                Eigen::MatrixXd newPredictedWorld  =  outputMatrix.row( outputMatrix.rows()-1 );
-                predictionMatrix  =  ConcatMatrix(predictionMatrix, newPredictedWorld);
-                OUTPUT_WORDS  =  ConcatMatrix(OUTPUT_WORDS, newPredictedWorld);
-            }
-
+            predictedSentence  =  ConcatMatrix(predictedSentence, predictedToken);
+            decoderInput  =  GaneratedSentence(decoderInput, predictedToken);
         }
 
-
-        transformer.Backward(predictionMatrix, CORRECT_OUTPUT);
+        Eigen::MatrixXd expedtedSentence  =  CORRECT_OUTPUT.block(1, 0, CORRECT_OUTPUT.rows()-1, CORRECT_OUTPUT.cols());
+        transformer.Backward(predictedSentence, expedtedSentence);
 
 
         //-----------------------------------------------------------------------------------------------
+        //                  PRINT SENTENCE
+        //-----------------------------------------------------------------------------------------------
 
-        Eigen::MatrixXd CORRECT_INDICIES = Eigen::MatrixXd(1, CORRECT_OUTPUT.rows());
-        for (size_t row = 0; row < CORRECT_OUTPUT.rows(); row++) {
+        
 
+        Eigen::MatrixXd CORRECT_INDICIES = Eigen::MatrixXd(1, CORRECT_OUTPUT.rows()-1);
+        for (size_t row = 1; row < CORRECT_OUTPUT.rows(); row++) {
             size_t maXIndice = 0;
             CORRECT_OUTPUT.row(row).maxCoeff(&maXIndice);
-            CORRECT_INDICIES(0, row)  =  maXIndice;
-
+            CORRECT_INDICIES(0, row-1)  =  maXIndice;
         }
 
 
-        Eigen::MatrixXd PREDICTED_INDICIES = Eigen::MatrixXd(1, predictionMatrix.rows());
-        for (size_t row = 0; row < predictionMatrix.rows(); row++) {
-
+        Eigen::MatrixXd PREDICTED_INDICIES = Eigen::MatrixXd(1, predictedSentence.rows());
+        for (size_t row = 0; row < predictedSentence.rows(); row++) {
             size_t maXIndice = 0;
-            predictionMatrix.row(row).maxCoeff(&maXIndice);
-            PREDICTED_INDICIES(0,row)  =  maXIndice;
-
+            predictedSentence.row(row).maxCoeff(&maXIndice);
+            PREDICTED_INDICIES(0, row)  =  maXIndice;
         }
 
+        if ( PREVIOUS_INDICIES!=PREDICTED_INDICIES ) {
+            std::cout << "--------------------------- epoch: " << epoch << " ---------------------------\n\n";
+            std::cout << "CORRET:     " << CORRECT_INDICIES << "\n";
+            std::cout << "PREDICTION: " << PREDICTED_INDICIES << "\n\n\n";
 
-
-        std::cout << "--------------------------- epoch: " << epoch << " ---------------------------\n\n";
-        std::cout << "CORRET:     " << CORRECT_INDICIES << "\n";
-        std::cout << "PREDICTION: " << PREDICTED_INDICIES << "\n";
-        /*std::cout << "Prediction Matrix: ";
-        for (size_t row = 0; row < predictionMatrix.rows(); row++) {
-            size_t token;
-            predictionMatrix.row( row ).maxCoeff( &token );
-            std::cout << token << ", ";
+            PREVIOUS_INDICIES = PREDICTED_INDICIES;
         }
-        std::cout << "\n\n\n";*/
+
         
+        //-----------------------------------------------------------------------------------------------
+        
+        if (CORRECT_INDICIES == PREDICTED_INDICIES) { 
+            std::cout << "--------------------------- epoch: " << epoch << " ---------------------------\n\n";
+            std::cout << "CORRET:     " << CORRECT_INDICIES << "\n";
+            std::cout << "PREDICTION: " << PREDICTED_INDICIES << "\n\n\n";
+
+            correctPredictionNotFount = false; 
+            std::cout <<  "\n\n\n\n0v0 CONGRATULATIONS CORRECT TRANSLATION\n\n\n\n";
+        }
+
         epoch++;
     }
 

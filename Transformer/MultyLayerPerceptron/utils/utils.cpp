@@ -426,3 +426,27 @@ Eigen::MatrixXd Utils::Rotate_180Degree(Eigen::MatrixXd& matrix)
     Eigen::MatrixXd flippedMatrix = matrix.colwise().reverse().rowwise().reverse();
     return flippedMatrix;
 }
+
+
+
+Eigen::MatrixXd Utils::ScalateMatrix(Eigen::MatrixXd& mat, double a, double b) 
+{
+    Eigen::MatrixXd scaledMat = mat;  // Cria uma cópia para armazenar os valores escalados
+
+    for (int i = 0; i < mat.rows(); ++i) {
+        double minVal = mat.row(i).minCoeff();  // Valor mínimo da linha
+        double maxVal = mat.row(i).maxCoeff();  // Valor máximo da linha
+
+        // Verifica se maxVal e minVal são iguais para evitar divisão por zero
+        if (maxVal == minVal) {
+            // Caso especial onde todos os elementos da linha são iguais
+            scaledMat.row(i).setConstant((a + b) / 2);
+        } else {
+            // Escala a linha para o intervalo [a, b]
+            scaledMat.row(i) = (b - a) * (mat.row(i).array() - minVal) / (maxVal - minVal) + a;
+        }
+    }
+
+    return scaledMat;
+}
+
