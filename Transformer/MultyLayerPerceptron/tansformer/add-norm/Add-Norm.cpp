@@ -7,7 +7,7 @@ AddNorm::AddNorm(size_t embeddingSize)
     _learningRate  =  0.001;
 
 
-    _gammas  =  std::vector<double>(embeddingSize, 0.9);
+    _gammas  =  std::vector<double>(embeddingSize, 1.0);
     _betas  =  std::vector<double>(embeddingSize, 0.0);
 }
 

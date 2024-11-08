@@ -19,7 +19,7 @@ Encoder::Encoder(size_t inputMatrixCols, size_t h, SDPAttention::Attrib attrib)
 		.InputSize(inputMatrixCols)
 		.Architecture({
 			DenseLayer(inputMatrixCols, new ReLU(), 0.001),
-			DenseLayer(inputMatrixCols, new ClipedLinear(-0.9,0.9), 0.001),    //DenseLayer(inputMatrixCols, new Linear(), 0.001),
+			DenseLayer(inputMatrixCols, new ClipedLinear(-1,1), 0.001),    //DenseLayer(inputMatrixCols, new Linear(), 0.001),
 		})
 		.Build();
 

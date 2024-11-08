@@ -50,7 +50,10 @@ Eigen::MatrixXd GaneratedSentence(const Eigen::MatrixXd& sentence, const Eigen::
 
 int main(int argc, const char** argv)  
 {
-    EncodeDecodeTransformer transformer  =  EncodeDecodeTransformer(512, 20, 8);    // EncodeDecodeTransformer(16, 20, 1);
+    std::ofstream outputFile("..\\..\\.resources\\gnuplot-output\\transformer-output.txt"); 
+
+
+    EncodeDecodeTransformer transformer  =  EncodeDecodeTransformer(64, 20, 1*2*2);       //EncodeDecodeTransformer(64, 20, 1*2*2); 
 
 
 
@@ -70,12 +73,12 @@ int main(int argc, const char** argv)
     Eigen::MatrixXd CORRECT_OUTPUT = Eigen::MatrixXd(7, 20);
     CORRECT_OUTPUT <<
         1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0; 
+        0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
 
 
 
@@ -127,22 +130,21 @@ int main(int argc, const char** argv)
             PREDICTED_INDICIES(0, row)  =  maXIndice;
         }
 
-        if ( PREVIOUS_INDICIES!=PREDICTED_INDICIES ) {
-            std::cout << "--------------------------- epoch: " << epoch << " ---------------------------\n\n";
-            std::cout << "CORRET:     " << CORRECT_INDICIES << "\n";
-            std::cout << "PREDICTION: " << PREDICTED_INDICIES << "\n\n\n";
+        std::cout << "--------------------------- epoch: " << epoch << " ---------------------------\n\n";
+        std::cout << "CORRET:     " << CORRECT_INDICIES << "\n";
+        std::cout << "PREDICTION: " << PREDICTED_INDICIES << "\n\n\n";
+        
 
+        // write output
+        if ( PREVIOUS_INDICIES!=PREDICTED_INDICIES  &&  outputFile.is_open() ) {
+            outputFile << "--------------------------- epoch: " << epoch << " ---------------------------\n\n";
+            outputFile << "CORRET:     " << CORRECT_INDICIES << "\n";
+            outputFile << "PREDICTION: " << PREDICTED_INDICIES << "\n\n\n";
             PREVIOUS_INDICIES = PREDICTED_INDICIES;
         }
-
-        
         //-----------------------------------------------------------------------------------------------
         
         if (CORRECT_INDICIES == PREDICTED_INDICIES) { 
-            std::cout << "--------------------------- epoch: " << epoch << " ---------------------------\n\n";
-            std::cout << "CORRET:     " << CORRECT_INDICIES << "\n";
-            std::cout << "PREDICTION: " << PREDICTED_INDICIES << "\n\n\n";
-
             correctPredictionNotFount = false; 
             std::cout <<  "\n\n\n\n0v0 CONGRATULATIONS CORRECT TRANSLATION\n\n\n\n";
         }
@@ -153,7 +155,7 @@ int main(int argc, const char** argv)
 
 
 
-
+    outputFile.close();
     std::cout << "\n\n\n[DEBBUGED - SUCESSO!!!!]\n\n\n";
     return 0;
 }

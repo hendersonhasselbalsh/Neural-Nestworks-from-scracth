@@ -23,7 +23,7 @@ Layer::Layer(size_t inputSize, size_t neuronQuantity, IActivationFunction* actFu
 {
 	_weights  =  Eigen::MatrixXd::Zero(neuronQuantity, _inputSize+1);
 
-	XavierWeightInitialization(inputSize, nextLayerNeuronQnt);
+	XavierWeightInitialization(inputSize, neuronQuantity);
 
 	size_t layerOutputSize = neuronQuantity + 1;
 	//_outputs  =  Eigen::MatrixXd::Ones(layerOutputSize, 1);
@@ -177,12 +177,12 @@ void Layer::XavierWeightInitialization(size_t inputSize, size_t outputSize)
 	std::random_device rd;
 	std::mt19937 gen(rd());
 
-	double range = std::sqrt(6.0 / (n_i + n_o));
+	double range = std::sqrt(2.0 / (n_i + n_o));
 
 	for (size_t neuronIndex = 0; neuronIndex < _weights.rows(); neuronIndex++) {
 		for (size_t weightIndex = 1; weightIndex < _weights.cols(); weightIndex++) {
-			double weight  =  Utils::RandomUniformDistribution(-range, range);                     // XAVIER
-			//double weight  =  Utils::RandomUniformDistribution(-1.0, 1.0);                       // UNIFORM
+			//double weight  =  Utils::RandomUniformDistribution(-1.0, 1.0) * range;                    // XAVIER
+			double weight  =  Utils::RandomNormalDistributionValue(-1.0, 1.0) * range;                 // XAVIER 2
 			_weights(neuronIndex, weightIndex) = weight;
 		}
 	}
