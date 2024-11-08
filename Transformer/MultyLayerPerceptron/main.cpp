@@ -1,10 +1,11 @@
-#include <opencv2/opencv.hpp>
+﻿#include <opencv2/opencv.hpp>
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include <unsupported/Eigen/CXX11/Tensor>
 #include "gnuplot-include.h"
 #include "utils/basic-includes.h"
 #include "tansformer/Encoder-Decoder-Transformer/Encoder-Decoder-Transformer.h"
+#include "TransformerBuilder.h"
 
 
 
@@ -52,9 +53,14 @@ int main(int argc, const char** argv)
 {
     std::ofstream outputFile("..\\..\\.resources\\gnuplot-output\\transformer-output.txt"); 
 
-
-    EncodeDecodeTransformer transformer  =  EncodeDecodeTransformer(64, 20, 1*2*2);       //EncodeDecodeTransformer(64, 20, 1*2*2); 
-
+    std::cout << "teste 1\n";
+    // EncodeDecodeTransformer(64*2, 20, 20, 1*2*2);   // EncodeDecodeTransformer(64, 20, 1*2*2); 
+    EncodeDecodeTransformer transformer  =  TransformerBuilder()
+                                                .EmbeddingSize(64*2*2)
+                                                .InputDictionarySize(20)
+                                                .OutputDictionarySize(20)
+                                                .Heads(1*2*2*2)
+                                                .Build();
 
 
     Eigen::MatrixXd INPUT_WORDS = Eigen::MatrixXd(8, 20);
@@ -146,7 +152,7 @@ int main(int argc, const char** argv)
         
         if (CORRECT_INDICIES == PREDICTED_INDICIES) { 
             correctPredictionNotFount = false; 
-            std::cout <<  "\n\n\n\n0v0 CONGRATULATIONS CORRECT TRANSLATION\n\n\n\n";
+            std::cout <<  "\n\n\n\n\t\t (˶ᵔ ᵕ ᵔ˶) CONGRATULATIONS CORRECT TRANSLATION (˶ᵔ ᵕ ᵔ˶)\n\n\n\n";
         }
 
         epoch++;

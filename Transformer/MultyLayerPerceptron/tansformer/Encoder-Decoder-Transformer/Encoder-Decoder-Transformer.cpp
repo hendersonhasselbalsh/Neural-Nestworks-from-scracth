@@ -2,11 +2,11 @@
 
 
 
-EncodeDecodeTransformer::EncodeDecodeTransformer(size_t embededWordSize, size_t dictionarySize, size_t h, ILostFunction* lossFunc)
+EncodeDecodeTransformer::EncodeDecodeTransformer(size_t embededWordSize, size_t dictionaryInput, size_t dictionaryOutput, size_t h, ILostFunction* lossFunc)
 	: _encoder(embededWordSize, h), _decoder(embededWordSize, h)
 {
-	_encodeEmbedding  =  Embedding(embededWordSize, dictionarySize);
-	_decodeEmbedding  =  Embedding(embededWordSize, dictionarySize);
+	_encodeEmbedding  =  Embedding(embededWordSize, dictionaryInput);
+	_decodeEmbedding  =  Embedding(embededWordSize, dictionaryInput);
 
 
 	_lossFunc  =  lossFunc;
@@ -17,7 +17,7 @@ EncodeDecodeTransformer::EncodeDecodeTransformer(size_t embededWordSize, size_t 
 	_linear._mlp  =  MlpBuilder()
 		.InputSize(embededWordSize)
 		.Architecture({
-			DenseLayer(dictionarySize, new ClipedLinear(-1,1), 0.001),
+			DenseLayer(dictionaryOutput, new ClipedLinear(-1,1), 0.001),
 		})
 		.Build();
 }

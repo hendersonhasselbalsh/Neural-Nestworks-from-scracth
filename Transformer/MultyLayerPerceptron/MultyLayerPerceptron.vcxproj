@@ -173,6 +173,7 @@
     <ClCompile Include="tansformer\Scalled-Dot-Product-Attention\Scale.cpp" />
     <ClCompile Include="tansformer\Scalled-Dot-Product-Attention\Scaled-Dot-Product-Attention.cpp" />
     <ClCompile Include="tansformer\Scalled-Dot-Product-Attention\Softmax.cpp" />
+    <ClCompile Include="TransformerBuilder.cpp" />
     <ClCompile Include="utils\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +194,7 @@
     <ClInclude Include="tansformer\Scalled-Dot-Product-Attention\Scale.h" />
     <ClInclude Include="tansformer\Scalled-Dot-Product-Attention\Scaled-Dot-Product-Attention.h" />
     <ClInclude Include="tansformer\Scalled-Dot-Product-Attention\Softmax.h" />
+    <ClInclude Include="TransformerBuilder.h" />
     <ClInclude Include="utils\basic-includes.h" />
     <ClInclude Include="utils\utils.h" />
   </ItemGroup>

@@ -56,6 +56,9 @@
     <ClCompile Include="tansformer\Encoder-Decoder-Transformer\Encoder-Decoder-Transformer.cpp">
       <Filter>07-Encoder-Decoder-Transformer</Filter>
     </ClCompile>
+    <ClCompile Include="TransformerBuilder.cpp">
+      <Filter>07-Encoder-Decoder-Transformer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00-utils">
@@ -169,6 +172,9 @@
       <Filter>06-Decoder</Filter>
     </ClInclude>
     <ClInclude Include="tansformer\Encoder-Decoder-Transformer\Encoder-Decoder-Transformer.h">
+      <Filter>07-Encoder-Decoder-Transformer</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformerBuilder.h">
       <Filter>07-Encoder-Decoder-Transformer</Filter>
     </ClInclude>
   </ItemGroup>
