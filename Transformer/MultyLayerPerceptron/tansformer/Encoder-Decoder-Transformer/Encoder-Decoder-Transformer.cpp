@@ -6,7 +6,7 @@ EncodeDecodeTransformer::EncodeDecodeTransformer(size_t embededWordSize, size_t 
 	: _encoder(embededWordSize, h), _decoder(embededWordSize, h)
 {
 	_encodeEmbedding  =  Embedding(embededWordSize, dictionaryInput);
-	_decodeEmbedding  =  Embedding(embededWordSize, dictionaryInput);
+	_decodeEmbedding  =  Embedding(embededWordSize, dictionaryOutput);
 
 
 	_lossFunc  =  lossFunc;
