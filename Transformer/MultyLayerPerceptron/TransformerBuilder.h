@@ -13,6 +13,7 @@ class TransformerBuilder {
 		size_t _inputDictionarySize;
 		size_t _outputDictionarySize;
 		size_t _heads;
+		double _learningRate;
 
 	public:
 		TransformerBuilder();
@@ -21,6 +22,7 @@ class TransformerBuilder {
 		TransformerBuilder InputDictionarySize(size_t size);
 		TransformerBuilder OutputDictionarySize(size_t size);
 		TransformerBuilder Heads(size_t size);
+		TransformerBuilder LearningRate(double rate);
 
 		EncodeDecodeTransformer Build();
 

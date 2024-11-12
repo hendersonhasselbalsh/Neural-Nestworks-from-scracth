@@ -1,10 +1,10 @@
 #include "Add-Norm.h"
 #include "../../utils/utils.h"
 
-AddNorm::AddNorm(size_t embeddingSize)
+AddNorm::AddNorm(size_t embeddingSize, double learningRate)
 {
 
-    _learningRate  =  0.001;
+    _learningRate  =  learningRate;
 
 
     _gammas  =  std::vector<double>(embeddingSize, 1.0);

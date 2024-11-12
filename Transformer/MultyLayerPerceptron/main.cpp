@@ -39,7 +39,7 @@ std::vector<std::string> EN_DICTIONARY = {
     "on",
     "one",
     "ring",
-    "ring",
+    "rings",
     "rule",
     "seven",
     "shadows",
@@ -76,15 +76,19 @@ std::vector<std::string> PT_DICTIONARY = {
     "fadados",
     "governar",
     "homens",
+    "o",
+    "os",
     "onde",
     "onde",
     "para",
     "reis",
     "elfos",
     "rochosos",
+    "saloes",
     "senhores",
     "seus",
     "se",
+    "sob",
     "sombras",
     "trazer",
     "todos",
@@ -93,6 +97,19 @@ std::vector<std::string> PT_DICTIONARY = {
 }; 
 
 
+std::vector<std::string> EN_SENTENCES = {
+    "<sos> three rings for the Elven kings under the sky <eos>",
+    "<sos> seven for the Dwarf lords in their halls of stone <eos>",
+    "<sos> Nine for Mortal Men doomed to die <eos>",
+    "<sos> One for the Dark Lord on his dark throne <eos>",
+};
+
+std::vector<std::string> PT_SENTENCES ={
+    "<sos> tres aneis para os elfos reis sob o ceu <eos>",
+    "<sos> sete aneis para os senhores anoes em seus saloes rochosos <eos>",
+    "<sos> nove para os homens mortais condenados a morrer <eos>",
+    "<sos> um para o senhor sombrio em seu trono sombrio <eos>",
+};
 
 
 std::string ORIGINAL_SENTENCE = "<sos> one ring to rule them all <eos>";
@@ -176,6 +193,7 @@ std::string MatrixToSentence(Eigen::MatrixXd& mat, std::vector<std::string>& dic
     return sentence;
 }
 
+/*
 std::string PredictedSentence(Eigen::MatrixXd& predictedSentence, std::vector<std::string>& dictionary)
 {
     Eigen::MatrixXd sos_token  =  Eigen::MatrixXd::Zero(1, predictedSentence.cols()); 
@@ -186,7 +204,7 @@ std::string PredictedSentence(Eigen::MatrixXd& predictedSentence, std::vector<st
 
     return sentence;
 }
-
+*/
 
 
 
@@ -196,10 +214,11 @@ int main(int argc, const char** argv)
 
 
     EncodeDecodeTransformer transformer  =  TransformerBuilder()
-                                                .EmbeddingSize(64*2*2*2)
+                                                .EmbeddingSize(64*2*2)
                                                 .InputDictionarySize(EN_DICTIONARY.size())
                                                 .OutputDictionarySize(PT_DICTIONARY.size())
                                                 .Heads(1*2*2*2)
+                                                .LearningRate(0.001)
                                                 .Build();
 
 
@@ -218,7 +237,7 @@ int main(int argc, const char** argv)
 
         Eigen::MatrixXd encoderInput  =  INPUT_WORDS;
         Eigen::MatrixXd decoderInput  = Eigen::MatrixXd::Zero(1, PT_DICTIONARY.size());
-        decoderInput(0,1) = 1.0;
+        decoderInput(0,0) = 1.0;
 
 
         Eigen::MatrixXd predictedSentence;
@@ -237,7 +256,8 @@ int main(int argc, const char** argv)
         //-----------------------------------------------------------------------------------------------
         //                  PRINT SENTENCE
         //-----------------------------------------------------------------------------------------------
-        std::string PREDICTED_TRANSLATION = PredictedSentence(predictedSentence, PT_DICTIONARY);
+        //std::string PREDICTED_TRANSLATION = PredictedSentence(predictedSentence, PT_DICTIONARY);
+        std::string PREDICTED_TRANSLATION = MatrixToSentence(decoderInput, PT_DICTIONARY);
 
         std::cout << "--------------------------- iteration: " << epoch << " ---------------------------\n\n";
         std::cout << "ORIGINAL SENTENCE:    " << ORIGINAL_SENTENCE << "\n";

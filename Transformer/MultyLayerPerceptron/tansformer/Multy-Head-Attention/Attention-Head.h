@@ -37,7 +37,7 @@ class AttentionHead {
 		ScaledDotProductAttention _scaledDotProductAttention;
 
 	public:
-		AttentionHead(size_t linearSize, SDPAttention::Attrib attrib = SDPAttention::Attrib::DONT_USE_MASK);
+		AttentionHead(size_t linearSize, SDPAttention::Attrib attrib = SDPAttention::Attrib::DONT_USE_MASK, double learningRate = 0.001);
 		~AttentionHead();
 
 

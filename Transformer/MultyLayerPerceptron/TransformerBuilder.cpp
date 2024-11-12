@@ -30,8 +30,15 @@ TransformerBuilder TransformerBuilder::Heads(size_t size)
 	return (*this);
 }
 
+TransformerBuilder TransformerBuilder::LearningRate(double rate)
+{
+	_learningRate = rate;
+	return (*this);
+}
+
+
 EncodeDecodeTransformer TransformerBuilder::Build()
 {
-	EncodeDecodeTransformer _transformer = EncodeDecodeTransformer(_embeddingSize, _inputDictionarySize, _outputDictionarySize, _heads, new MSE());
+	EncodeDecodeTransformer _transformer = EncodeDecodeTransformer(_embeddingSize, _inputDictionarySize, _outputDictionarySize, _heads, new MSE(), _learningRate);
 	return _transformer;
 }

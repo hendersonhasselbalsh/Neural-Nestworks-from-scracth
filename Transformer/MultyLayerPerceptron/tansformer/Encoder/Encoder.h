@@ -27,7 +27,7 @@ class Encoder {
 
 
 	public:
-		Encoder(size_t inputMatrixCols, size_t h, SDPAttention::Attrib attrib = SDPAttention::Attrib::DONT_USE_MASK);
+		Encoder(size_t inputMatrixCols, size_t h, SDPAttention::Attrib attrib = SDPAttention::Attrib::DONT_USE_MASK, double learningRate = 0.001);
 		~Encoder();
 
 		Eigen::MatrixXd Forward(Eigen::MatrixXd& positionedInput);

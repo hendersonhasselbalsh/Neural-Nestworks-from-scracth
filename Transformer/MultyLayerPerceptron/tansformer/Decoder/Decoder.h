@@ -35,7 +35,7 @@ class Decoder {
 
 
 	public:
-		Decoder(size_t inputMatrixCols, size_t h);
+		Decoder(size_t inputMatrixCols, size_t h, double learningRate = 0.001);
 		~Decoder();
 
 		Eigen::MatrixXd Forward(Eigen::MatrixXd& shiftedOutput, Eigen::MatrixXd& encoderStates);

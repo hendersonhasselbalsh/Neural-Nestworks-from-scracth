@@ -38,7 +38,7 @@ class MultyHeadAttention {
 
 	public:
 		MultyHeadAttention();
-		MultyHeadAttention(size_t inputMatrixCols, size_t h, SDPAttention::Attrib attrib = SDPAttention::Attrib::DONT_USE_MASK);
+		MultyHeadAttention(size_t inputMatrixCols, size_t h, SDPAttention::Attrib attrib = SDPAttention::Attrib::DONT_USE_MASK, double learningRate = 0.001);
 		~MultyHeadAttention();
 
 

@@ -2,15 +2,15 @@
 
 
 
-Encoder::Encoder(size_t inputMatrixCols, size_t h, SDPAttention::Attrib attrib)
+Encoder::Encoder(size_t inputMatrixCols, size_t h, SDPAttention::Attrib attrib, double learningRate)
 {
 	//--- MULTY HEAD ATTENTION
-	_multyHeadSelfAttention = MultyHeadAttention(inputMatrixCols, h, attrib);
+	_multyHeadSelfAttention = MultyHeadAttention(inputMatrixCols, h, attrib, learningRate);
 
 
 	//--- ADD NORMs
-	_feedForward_AddNorm = AddNorm( inputMatrixCols );
-	_attention_AddNorm = AddNorm( inputMatrixCols );
+	_feedForward_AddNorm = AddNorm( inputMatrixCols, learningRate);
+	_attention_AddNorm = AddNorm( inputMatrixCols, learningRate);
 
 
 	//--- FEED FORWARD
@@ -18,8 +18,8 @@ Encoder::Encoder(size_t inputMatrixCols, size_t h, SDPAttention::Attrib attrib)
 	_feedForward._mlp  =  MlpBuilder()
 		.InputSize(inputMatrixCols)
 		.Architecture({
-			DenseLayer(inputMatrixCols, new ReLU(), 0.001),
-			DenseLayer(inputMatrixCols, new ClipedLinear(-1,1), 0.001),    //DenseLayer(inputMatrixCols, new Linear(), 0.001),
+			DenseLayer(inputMatrixCols, new ReLU(), learningRate),
+			DenseLayer(inputMatrixCols, new Linear(), learningRate),//DenseLayer(inputMatrixCols, new ClipedLinear(-1,1), 0.001),
 		})
 		.Build();
 

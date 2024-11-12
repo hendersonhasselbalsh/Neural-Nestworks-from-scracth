@@ -17,7 +17,7 @@ class Embedding {
 
 	public:
 		Embedding();
-		Embedding(size_t embededWordSize, size_t dictionarySize);
+		Embedding(size_t embededWordSize, size_t dictionarySize, double learningRate = 0.001);
 		~Embedding();
 
 		Eigen::MatrixXd Forward(Eigen::MatrixXd& inputWords);

@@ -12,13 +12,13 @@ Embedding::Embedding()
 }
 
 
-Embedding::Embedding(size_t embededWordSize ,size_t dictionarySize)
+Embedding::Embedding(size_t embededWordSize ,size_t dictionarySize, double learningRate)
 {
 	_linearEmbedding  =  FeedForward();
 	_linearEmbedding._mlp  =  MlpBuilder()
 		.InputSize(dictionarySize)									// tamanho do dicionario;
 		.Architecture({
-			DenseLayer(embededWordSize, new ClipedLinear(-1,1), 0.001),        // world embedded vector
+			DenseLayer(embededWordSize, new Linear(), learningRate),//DenseLayer(embededWordSize, new ClipedLinear(-1,1), 0.001),        // world embedded vector
 		})
 		.Build();
 }

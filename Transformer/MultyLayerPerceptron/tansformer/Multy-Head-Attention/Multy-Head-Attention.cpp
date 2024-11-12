@@ -6,20 +6,20 @@ MultyHeadAttention::MultyHeadAttention()
 {
 }
 
-MultyHeadAttention::MultyHeadAttention(size_t inputMatrixCols, size_t h, SDPAttention::Attrib attrib)
+MultyHeadAttention::MultyHeadAttention(size_t inputMatrixCols, size_t h, SDPAttention::Attrib attrib, double learningRate)
 {
 	assert(inputMatrixCols % h == 0);
 
     _h = h;
 
 	size_t headsQnt  =  inputMatrixCols / h;
-	_attentionHeads  =  std::vector<AttentionHead>(headsQnt, AttentionHead(h, attrib) );
+	_attentionHeads  =  std::vector<AttentionHead>(headsQnt, AttentionHead(h, attrib, learningRate) );
 
     _linear  =  FeedForward();
     _linear._mlp  =  MlpBuilder()
         .InputSize( inputMatrixCols )
         .Architecture({
-            DenseLayer(inputMatrixCols, new ClipedLinear(-1,1), 0.001),
+            DenseLayer(inputMatrixCols, new Linear(), learningRate),//DenseLayer(inputMatrixCols, new ClipedLinear(-1,1), 0.001),
         })
         .Build();
 

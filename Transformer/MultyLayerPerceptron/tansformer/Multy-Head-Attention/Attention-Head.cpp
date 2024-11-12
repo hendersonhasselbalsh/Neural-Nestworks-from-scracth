@@ -1,12 +1,12 @@
 #include "Attention-Head.h"
 
-AttentionHead::AttentionHead(size_t linearSize, SDPAttention::Attrib attrib )
+AttentionHead::AttentionHead(size_t linearSize, SDPAttention::Attrib attrib, double learningRate )
 {
 	_linearQ  =  FeedForward();
 	_linearQ._mlp  =  MlpBuilder()
 		.InputSize(linearSize)
 		.Architecture({
-			DenseLayer(linearSize, new ClipedLinear(-1,1), 0.001),
+			DenseLayer(linearSize, new Linear(), learningRate),//DenseLayer(linearSize, new ClipedLinear(-1,1), 0.001),
 		})
 		.Build();
 
@@ -15,7 +15,7 @@ AttentionHead::AttentionHead(size_t linearSize, SDPAttention::Attrib attrib )
 	_linearK._mlp  =  MlpBuilder()
 		.InputSize(linearSize)
 		.Architecture({
-			DenseLayer(linearSize, new ClipedLinear(-1,1), 0.001),
+			DenseLayer(linearSize, new Linear(), learningRate),//DenseLayer(linearSize, new ClipedLinear(-1,1), 0.001),
 		})
 		.Build();
 
@@ -24,7 +24,7 @@ AttentionHead::AttentionHead(size_t linearSize, SDPAttention::Attrib attrib )
 	_linearV._mlp  =  MlpBuilder()
 		.InputSize(linearSize)
 		.Architecture({
-			DenseLayer(linearSize, new ClipedLinear(-1,1), 0.001),
+			DenseLayer(linearSize, new Linear(), learningRate),//DenseLayer(linearSize, new ClipedLinear(-1,1), 0.001),
 		})
 		.Build();
 

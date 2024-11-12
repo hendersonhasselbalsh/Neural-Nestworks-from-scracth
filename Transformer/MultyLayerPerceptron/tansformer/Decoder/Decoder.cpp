@@ -2,17 +2,17 @@
 
 
 
-Decoder::Decoder(size_t inputMatrixCols, size_t h)
+Decoder::Decoder(size_t inputMatrixCols, size_t h, double learningRate)
 {
 	//--- MULTI HEAD ATTENTIONs
-	_maskMultiHeadAttention = MultyHeadAttention(inputMatrixCols, h, SDPAttention::Attrib::USE_MASK);
-	_multiHeadCrossAttention = MultyHeadAttention(inputMatrixCols, h, SDPAttention::Attrib::DONT_USE_MASK);
+	_maskMultiHeadAttention = MultyHeadAttention(inputMatrixCols, h, SDPAttention::Attrib::USE_MASK, learningRate);
+	_multiHeadCrossAttention = MultyHeadAttention(inputMatrixCols, h, SDPAttention::Attrib::DONT_USE_MASK, learningRate);
 
 
 	//--- ADD & NORMs
-	_addNorm_1 = AddNorm( inputMatrixCols );
-	_addNorm_2 = AddNorm( inputMatrixCols );
-	_addNorm_3 = AddNorm( inputMatrixCols );
+	_addNorm_1 = AddNorm( inputMatrixCols, learningRate );
+	_addNorm_2 = AddNorm( inputMatrixCols, learningRate );
+	_addNorm_3 = AddNorm( inputMatrixCols, learningRate );
 
 
 	//--- FEED FORWARD
@@ -20,8 +20,8 @@ Decoder::Decoder(size_t inputMatrixCols, size_t h)
 	_feedForward._mlp = MlpBuilder()
 		.InputSize(inputMatrixCols)
 		.Architecture({
-			DenseLayer(inputMatrixCols, new ReLU(), 0.001),
-			DenseLayer(inputMatrixCols, new ClipedLinear(-1,1), 0.001),    //DenseLayer(inputMatrixCols, new Linear(), 0.001),
+			DenseLayer(inputMatrixCols, new ReLU(), learningRate),
+			DenseLayer(inputMatrixCols, new Linear(), learningRate),//DenseLayer(inputMatrixCols, new ClipedLinear(-1,1), 0.001),
 		})
 		.Build();
 

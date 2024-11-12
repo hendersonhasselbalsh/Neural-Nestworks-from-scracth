@@ -42,7 +42,7 @@ class EncodeDecodeTransformer {
 
 
 	public:
-		EncodeDecodeTransformer(size_t embededWordSize, size_t dictionaryInput, size_t dictionaryOutput, size_t h = 4, ILostFunction* lossFunc = new MSE());
+		EncodeDecodeTransformer(size_t embededWordSize, size_t dictionaryInput, size_t dictionaryOutput, size_t h = 4, ILostFunction* lossFunc = new MSE(), double learningRate = 0.001);
 		~EncodeDecodeTransformer();
 
 		Eigen::MatrixXd Forward(Eigen::MatrixXd& encoderInput, Eigen::MatrixXd& decoderInput);
