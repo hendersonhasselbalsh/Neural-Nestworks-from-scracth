@@ -15,6 +15,7 @@ std::vector<std::string> EN_DICTIONARY = {
     "all",
     "and",
     "bind",
+    "bring",
     "dark",
     "darkness",
     "die",
@@ -30,11 +31,12 @@ std::vector<std::string> EN_DICTIONARY = {
     "land",
     "and",
     "lie",
+    "lord",
     "lords",
     "men",
     "Mordor",
     "mortal",
-    "Nine",
+    "nine",
     "of",
     "on",
     "one",
@@ -62,15 +64,19 @@ std::vector<std::string> PT_DICTIONARY = {
     "anel",
     "aneis",
     "a",
+    "as",
     "aprisionar",
     "ceu",
+    "condenados",
     "de",
     "deitam",
     "do",
     "dominar",
     "dos",
+    "e",
     "em",
     "encontrar",
+    "encontra-los",
     "escuro",
     "escuridao",
     "fadados",
@@ -83,14 +89,27 @@ std::vector<std::string> PT_DICTIONARY = {
     "para",
     "reis",
     "elfos",
+    "Mordor",
+    "morrer",
+    "mortais",
+    "na",
+    "nas",
+    "nove",
     "rochosos",
+    "seu",
+    "sombrio",
+    "sete",
     "saloes",
+    "senhor",
     "senhores",
     "seus",
     "se",
     "sob",
     "sombras",
+    "traze-los",
+    "terras",
     "trazer",
+    "trono",
     "todos",
     "tres",
     "um",
@@ -100,8 +119,14 @@ std::vector<std::string> PT_DICTIONARY = {
 std::vector<std::string> EN_SENTENCES = {
     "<sos> three rings for the Elven kings under the sky <eos>",
     "<sos> seven for the Dwarf lords in their halls of stone <eos>",
-    "<sos> Nine for Mortal Men doomed to die <eos>",
-    "<sos> One for the Dark Lord on his dark throne <eos>",
+    "<sos> nine for mortal men doomed to die <eos>",
+    "<sos> one for the dark lord on his dark throne <eos>",
+    "<sos> in the land of Mordor where the shadows lie <eos>",
+    "<sos> one ring to rule them all <eos>",
+    "<sos> one ring to find them <eos>",
+    "<sos> one ring to bring them all <eos>",
+    "<sos> and in the darkness bind them <eos>",
+
 };
 
 std::vector<std::string> PT_SENTENCES ={
@@ -109,6 +134,11 @@ std::vector<std::string> PT_SENTENCES ={
     "<sos> sete aneis para os senhores anoes em seus saloes rochosos <eos>",
     "<sos> nove para os homens mortais condenados a morrer <eos>",
     "<sos> um para o senhor sombrio em seu trono sombrio <eos>",
+    "<sos> nas terras de Mordor onde as sombras deitam <eos>",
+    "<sos> um anel para todos governar <eos>",
+    "<sos> um anel para todos encontrar <eos>",
+    "<sos> um anel para todos trazer <eos>",
+    "<sos> e na escuridao aprisionar <eos>",
 };
 
 
@@ -156,9 +186,9 @@ Eigen::MatrixXd WordToToken(std::string& word, std::vector<std::string>& diction
     size_t dictionarySize = dictionary.size();
     Eigen::MatrixXd token  =  Eigen::MatrixXd::Zero(1, dictionarySize);
 
-    size_t index = 0;
+    size_t index = 100'000'000;
     for (size_t i = 0; i < dictionarySize; i++) {
-        if (word == dictionary[i]) { index = i; }
+        if (word.compare( dictionary[i]) == 0) { index = i; }
     }
 
     token(0,index) = 1.0;
@@ -193,18 +223,8 @@ std::string MatrixToSentence(Eigen::MatrixXd& mat, std::vector<std::string>& dic
     return sentence;
 }
 
-/*
-std::string PredictedSentence(Eigen::MatrixXd& predictedSentence, std::vector<std::string>& dictionary)
-{
-    Eigen::MatrixXd sos_token  =  Eigen::MatrixXd::Zero(1, predictedSentence.cols()); 
-    sos_token(0, 0) = 1.0;
 
-    Eigen::MatrixXd sentenceToken = ConcatMatrix(sos_token, predictedSentence);
-    std::string sentence  =  MatrixToSentence(sentenceToken, dictionary);
 
-    return sentence;
-}
-*/
 
 
 
@@ -214,10 +234,82 @@ int main(int argc, const char** argv)
 
 
     EncodeDecodeTransformer transformer  =  TransformerBuilder()
-                                                .EmbeddingSize(64*2*2)
+                                                .EmbeddingSize(64*2*2*2)
                                                 .InputDictionarySize(EN_DICTIONARY.size())
                                                 .OutputDictionarySize(PT_DICTIONARY.size())
                                                 .Heads(1*2*2*2)
+                                                .LearningRate(0.1)
+                                                .Build();
+
+
+
+    std::string PREVIOUS_TRANSLATION = "";
+
+
+    size_t epoch = 0;
+
+    while (epoch < 50'000) {
+
+        for (size_t i = 0; i < EN_SENTENCES.size(); i++) {
+            Eigen::MatrixXd CORRECT_OUTPUT = SentenceToMatrix(PT_SENTENCES[i], PT_DICTIONARY);
+            Eigen::MatrixXd encoderInput  =  SentenceToMatrix(EN_SENTENCES[i], EN_DICTIONARY);
+            Eigen::MatrixXd decoderInput  = Eigen::MatrixXd::Zero(1, PT_DICTIONARY.size());
+            decoderInput(0, 0) = 1.0;
+
+
+            Eigen::MatrixXd predictedSentence;
+            for (size_t predictedWords = 0; predictedWords < CORRECT_OUTPUT.rows()-1; predictedWords++) {
+
+                Eigen::MatrixXd predictedToken  =  transformer.Forward(encoderInput, decoderInput);
+
+                predictedSentence  =  ConcatMatrix(predictedSentence, predictedToken);
+                decoderInput  =  GaneratedSentence(decoderInput, predictedToken);
+            }
+
+            Eigen::MatrixXd expedtedSentence  =  CORRECT_OUTPUT.block(1, 0, CORRECT_OUTPUT.rows()-1, CORRECT_OUTPUT.cols());
+            transformer.Backward(predictedSentence, expedtedSentence);
+        }
+
+        //-----------------------------------------------------------------------------------------------
+        //                  PRINT SENTENCE
+        //-----------------------------------------------------------------------------------------------
+        Eigen::MatrixXd encoderInput  =  SentenceToMatrix(ORIGINAL_SENTENCE, EN_DICTIONARY);
+        Eigen::MatrixXd decoderInput  = Eigen::MatrixXd::Zero(1, PT_DICTIONARY.size());
+        decoderInput(0, 0) = 1.0;
+        for (size_t predictedWords = 0; predictedWords < 6/*6 predicted token*/; predictedWords++) {
+            Eigen::MatrixXd predictedToken  =  transformer.Forward(encoderInput, decoderInput);
+            decoderInput  =  GaneratedSentence(decoderInput, predictedToken);
+        }
+
+        std::cout << "\n\n\n------------------------------------------------------ epoch: " << epoch << " ------------------------------------------------------\n\n";
+        std::cout << "ORIGINAL SENTENCE:    " << ORIGINAL_SENTENCE << "\n";
+        std::cout << "TANSLATION:           " << MatrixToSentence(decoderInput, PT_DICTIONARY) << "\n";
+        //-----------------------------------------------------------------------------------------------
+
+        epoch++;
+    }
+
+
+
+
+    outputFile.close();
+    std::cout << "\n\n\n[DEBBUGED - SUCESSO!!!!]\n\n\n";
+    return 0;
+}
+
+
+
+
+int __main(int argc, const char** argv)
+{
+    std::ofstream outputFile("..\\..\\.resources\\gnuplot-output\\transformer-output.txt");
+
+
+    EncodeDecodeTransformer transformer  =  TransformerBuilder()
+                                                .EmbeddingSize(64)
+                                                .InputDictionarySize(EN_DICTIONARY.size())
+                                                .OutputDictionarySize(PT_DICTIONARY.size())
+                                                .Heads(1)
                                                 .LearningRate(0.001)
                                                 .Build();
 
@@ -277,129 +369,6 @@ int main(int argc, const char** argv)
 
         if (PREDICTED_TRANSLATION == CORRECT_TRANSLATION) {
             correctPredictionNotFount = false;
-            std::cout <<  "\n\n\n\n\t\t (˶ᵔ ᵕ ᵔ˶) CONGRATULATIONS CORRECT TRANSLATION (˶ᵔ ᵕ ᵔ˶)\n\n\n\n";
-        }
-
-        epoch++;
-    }
-
-
-
-
-    outputFile.close();
-    std::cout << "\n\n\n[DEBBUGED - SUCESSO!!!!]\n\n\n";
-    return 0;
-}
-
-
-
-
-
-
-
-int ____main(int argc, const char** argv)  
-{
-    std::ofstream outputFile("..\\..\\.resources\\gnuplot-output\\transformer-output.txt"); 
-
-    std::cout << "teste 1\n";
-    // EncodeDecodeTransformer(64*2, 20, 20, 1*2*2);   // EncodeDecodeTransformer(64, 20, 1*2*2); 
-    EncodeDecodeTransformer transformer  =  TransformerBuilder()
-                                                .EmbeddingSize(64*2*2*2)
-                                                .InputDictionarySize(20)
-                                                .OutputDictionarySize(20)
-                                                .Heads(1*2*2*2)
-                                                .Build();
-
-
-    Eigen::MatrixXd INPUT_WORDS = Eigen::MatrixXd(8, 20);
-    INPUT_WORDS <<
-        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
-
-
-
-    Eigen::MatrixXd CORRECT_OUTPUT = Eigen::MatrixXd(7, 20);
-    CORRECT_OUTPUT <<
-        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
-
-
-
-    Eigen::MatrixXd PREVIOUS_INDICIES = Eigen::MatrixXd::Zero(1, CORRECT_OUTPUT.rows()-1);
-
-    size_t epoch = 0;
-    bool correctPredictionNotFount = true;
-
-    while (correctPredictionNotFount && epoch < 50'000) {
-
-        Eigen::MatrixXd encoderInput  =  INPUT_WORDS;
-        Eigen::MatrixXd decoderInput  = Eigen::MatrixXd(1, 20);
-        decoderInput <<
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
-
-
-        Eigen::MatrixXd predictedSentence;
-
-        for (size_t predictedWords = 0; predictedWords < CORRECT_OUTPUT.rows()-1; predictedWords++) {
-
-            Eigen::MatrixXd predictedToken  =  transformer.Forward(encoderInput, decoderInput);
-
-            predictedSentence  =  ConcatMatrix(predictedSentence, predictedToken);
-            decoderInput  =  GaneratedSentence(decoderInput, predictedToken);
-        }
-
-        Eigen::MatrixXd expedtedSentence  =  CORRECT_OUTPUT.block(1, 0, CORRECT_OUTPUT.rows()-1, CORRECT_OUTPUT.cols());
-        transformer.Backward(predictedSentence, expedtedSentence);
-
-
-        //-----------------------------------------------------------------------------------------------
-        //                  PRINT SENTENCE
-        //-----------------------------------------------------------------------------------------------
-
-        
-
-        Eigen::MatrixXd CORRECT_INDICIES = Eigen::MatrixXd(1, CORRECT_OUTPUT.rows()-1);
-        for (size_t row = 1; row < CORRECT_OUTPUT.rows(); row++) {
-            size_t maXIndice = 0;
-            CORRECT_OUTPUT.row(row).maxCoeff(&maXIndice);
-            CORRECT_INDICIES(0, row-1)  =  maXIndice;
-        }
-
-
-        Eigen::MatrixXd PREDICTED_INDICIES = Eigen::MatrixXd(1, predictedSentence.rows());
-        for (size_t row = 0; row < predictedSentence.rows(); row++) {
-            size_t maXIndice = 0;
-            predictedSentence.row(row).maxCoeff(&maXIndice);
-            PREDICTED_INDICIES(0, row)  =  maXIndice;
-        }
-
-        std::cout << "--------------------------- epoch: " << epoch << " ---------------------------\n\n";
-        std::cout << "CORRET:     " << CORRECT_INDICIES << "\n";
-        std::cout << "PREDICTION: " << PREDICTED_INDICIES << "\n\n\n";
-        
-
-        // write output
-        if ( PREVIOUS_INDICIES!=PREDICTED_INDICIES  &&  outputFile.is_open() ) {
-            outputFile << "--------------------------- epoch: " << epoch << " ---------------------------\n\n";
-            outputFile << "CORRET:     " << CORRECT_INDICIES << "\n";
-            outputFile << "PREDICTION: " << PREDICTED_INDICIES << "\n\n\n";
-            PREVIOUS_INDICIES = PREDICTED_INDICIES;
-        }
-        //-----------------------------------------------------------------------------------------------
-        
-        if (CORRECT_INDICIES == PREDICTED_INDICIES) { 
-            correctPredictionNotFount = false; 
             std::cout <<  "\n\n\n\n\t\t (˶ᵔ ᵕ ᵔ˶) CONGRATULATIONS CORRECT TRANSLATION (˶ᵔ ᵕ ᵔ˶)\n\n\n\n";
         }
 
