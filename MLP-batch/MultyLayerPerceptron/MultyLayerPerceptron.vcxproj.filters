@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="main-project">
+      <UniqueIdentifier>{93858bce-a792-4c14-9c15-3444f8c52a42}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main-project\main.cpp">
+      <Filter>main-project</Filter>
+    </ClCompile>
+    <ClCompile Include="basic-includes.h" />
+  </ItemGroup>
+</Project>
