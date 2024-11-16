@@ -126,7 +126,6 @@ std::vector<std::string> EN_SENTENCES = {
     "<sos> one ring to find them <eos>",
     "<sos> one ring to bring them all <eos>",
     "<sos> and in the darkness bind them <eos>",
-
 };
 
 std::vector<std::string> PT_SENTENCES ={
@@ -142,8 +141,8 @@ std::vector<std::string> PT_SENTENCES ={
 };
 
 
-std::string ORIGINAL_SENTENCE = "<sos> one ring to rule them all <eos>";
-std::string CORRECT_TRANSLATION = "<sos> um anel para todos governar <eos>";
+std::string ORIGINAL_SENTENCE = "<sos> one ring to rule them all one ring to find them <eos>";
+std::string CORRECT_TRANSLATION = "<sos> um anel para todos governar um anel para encontra-los <eos>";
 
 
 
@@ -228,7 +227,7 @@ std::string MatrixToSentence(Eigen::MatrixXd& mat, std::vector<std::string>& dic
 
 
 
-int main(int argc, const char** argv)
+int ___main(int argc, const char** argv)
 {
     std::ofstream outputFile("..\\..\\.resources\\gnuplot-output\\transformer-output.txt");
 
@@ -238,7 +237,7 @@ int main(int argc, const char** argv)
                                                 .InputDictionarySize(EN_DICTIONARY.size())
                                                 .OutputDictionarySize(PT_DICTIONARY.size())
                                                 .Heads(1*2*2*2)
-                                                .LearningRate(0.1)
+                                                .LearningRate(0.001)
                                                 .Build();
 
 
@@ -249,6 +248,7 @@ int main(int argc, const char** argv)
     size_t epoch = 0;
 
     while (epoch < 50'000) {
+        //std::cout << "\n\n\n------------------------------------------------------ epoch: " << epoch << " ------------------------------------------------------\n\n";
 
         for (size_t i = 0; i < EN_SENTENCES.size(); i++) {
             Eigen::MatrixXd CORRECT_OUTPUT = SentenceToMatrix(PT_SENTENCES[i], PT_DICTIONARY);
@@ -263,27 +263,54 @@ int main(int argc, const char** argv)
                 Eigen::MatrixXd predictedToken  =  transformer.Forward(encoderInput, decoderInput);
 
                 predictedSentence  =  ConcatMatrix(predictedSentence, predictedToken);
-                decoderInput  =  GaneratedSentence(decoderInput, predictedToken);
+                Eigen::MatrixXd correctToken = CORRECT_OUTPUT.row(i+1);
+                decoderInput  =  GaneratedSentence(decoderInput, correctToken);
             }
 
             Eigen::MatrixXd expedtedSentence  =  CORRECT_OUTPUT.block(1, 0, CORRECT_OUTPUT.rows()-1, CORRECT_OUTPUT.cols());
             transformer.Backward(predictedSentence, expedtedSentence);
+
+            /*std::cout << "CORRECT SENTENCE:    " << MatrixToSentence(CORRECT_OUTPUT, PT_DICTIONARY) << "\n";
+            std::cout << "TANSLATION:          " << MatrixToSentence(decoderInput, PT_DICTIONARY) << "\n\n\n";*/
         }
 
         //-----------------------------------------------------------------------------------------------
         //                  PRINT SENTENCE
         //-----------------------------------------------------------------------------------------------
-        Eigen::MatrixXd encoderInput  =  SentenceToMatrix(ORIGINAL_SENTENCE, EN_DICTIONARY);
+        /*Eigen::MatrixXd encoderInput  =  SentenceToMatrix(ORIGINAL_SENTENCE, EN_DICTIONARY);
         Eigen::MatrixXd decoderInput  = Eigen::MatrixXd::Zero(1, PT_DICTIONARY.size());
         decoderInput(0, 0) = 1.0;
-        for (size_t predictedWords = 0; predictedWords < 6/*6 predicted token*/; predictedWords++) {
+        for (size_t predictedWords = 0; predictedWords < 6; predictedWords++) {
             Eigen::MatrixXd predictedToken  =  transformer.Forward(encoderInput, decoderInput);
             decoderInput  =  GaneratedSentence(decoderInput, predictedToken);
         }
 
         std::cout << "\n\n\n------------------------------------------------------ epoch: " << epoch << " ------------------------------------------------------\n\n";
         std::cout << "ORIGINAL SENTENCE:    " << ORIGINAL_SENTENCE << "\n";
-        std::cout << "TANSLATION:           " << MatrixToSentence(decoderInput, PT_DICTIONARY) << "\n";
+        std::cout << "TANSLATION:           " << MatrixToSentence(decoderInput, PT_DICTIONARY) << "\n";*/
+
+        if (epoch % 10 == 0) {
+            std::cout << "\n\n\n------------------------------------------------------ epoch: " << epoch << " ------------------------------------------------------\n\n";
+            for (size_t i = 0; i < EN_SENTENCES.size(); i++) {
+                Eigen::MatrixXd CORRECT_OUTPUT1 = SentenceToMatrix(PT_SENTENCES[i], PT_DICTIONARY);
+                Eigen::MatrixXd encoderInput1  =  SentenceToMatrix(EN_SENTENCES[i], EN_DICTIONARY);
+                Eigen::MatrixXd decoderInput1  = Eigen::MatrixXd::Zero(1, PT_DICTIONARY.size());
+                decoderInput1(0, 0) = 1.0;
+
+
+                Eigen::MatrixXd predictedSentence1;
+                for (size_t predictedWords = 0; predictedWords < CORRECT_OUTPUT1.rows()-1; predictedWords++) {
+
+                    Eigen::MatrixXd predictedToken1  =  transformer.Forward(encoderInput1, decoderInput1);
+
+                    predictedSentence1  =  ConcatMatrix(predictedSentence1, predictedToken1);
+                    decoderInput1  =  GaneratedSentence(decoderInput1, predictedToken1);
+                }
+
+                std::cout << "CORRECT SENTENCE:    " << MatrixToSentence(CORRECT_OUTPUT1, PT_DICTIONARY) << "\n";
+                std::cout << "TANSLATION:          " << MatrixToSentence(decoderInput1, PT_DICTIONARY) << "\n\n\n";
+            }
+        }
         //-----------------------------------------------------------------------------------------------
 
         epoch++;
@@ -300,17 +327,17 @@ int main(int argc, const char** argv)
 
 
 
-int __main(int argc, const char** argv)
+int main(int argc, const char** argv)
 {
     std::ofstream outputFile("..\\..\\.resources\\gnuplot-output\\transformer-output.txt");
 
 
     EncodeDecodeTransformer transformer  =  TransformerBuilder()
-                                                .EmbeddingSize(64)
+                                                .EmbeddingSize(64*2*2*2)
                                                 .InputDictionarySize(EN_DICTIONARY.size())
                                                 .OutputDictionarySize(PT_DICTIONARY.size())
-                                                .Heads(1)
-                                                .LearningRate(0.001)
+                                                .Heads(1*2*2*2)
+                                                .LearningRate(0.0001)
                                                 .Build();
 
 
@@ -358,7 +385,7 @@ int __main(int argc, const char** argv)
 
 
         // write output
-        if (PREVIOUS_TRANSLATION!=PREDICTED_TRANSLATION  &&  outputFile.is_open()) {
+        if (PREVIOUS_TRANSLATION.compare(PREDICTED_TRANSLATION)!=0  &&  outputFile.is_open()) {
             outputFile << "--------------------------- iteration: " << epoch << " ---------------------------\n\n";
             outputFile << "ORIGINAL SENTENCE:    " << ORIGINAL_SENTENCE << "\n";
             outputFile << "CORRET TANSLATION:    " << CORRECT_TRANSLATION << "\n";
@@ -367,7 +394,7 @@ int __main(int argc, const char** argv)
         }
         //-----------------------------------------------------------------------------------------------
 
-        if (PREDICTED_TRANSLATION == CORRECT_TRANSLATION) {
+        if (PREDICTED_TRANSLATION.compare(CORRECT_TRANSLATION) == 0) {
             correctPredictionNotFount = false;
             std::cout <<  "\n\n\n\n\t\t (˶ᵔ ᵕ ᵔ˶) CONGRATULATIONS CORRECT TRANSLATION (˶ᵔ ᵕ ᵔ˶)\n\n\n\n";
         }
