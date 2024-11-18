@@ -21,6 +21,7 @@
 #include <ranges>
 #include <cfloat>
 #include <chrono>
+#include <unordered_map>
 
 ////---------------------------------
 //// linear algebra libs
