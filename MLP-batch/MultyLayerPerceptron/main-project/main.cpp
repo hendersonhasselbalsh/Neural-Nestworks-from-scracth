@@ -85,6 +85,7 @@ int main(int argc, const char** argv)
 	std::cout << *l3._receivedInputBatch <<"\n\n\n";
 	/**/
 
+	/*
 	Eigen::MatrixXd inputBatch(4, 3);
 	inputBatch <<
 		0.3, 0.1, 0.5,
@@ -126,8 +127,79 @@ int main(int argc, const char** argv)
 
 		std::cout << "predicted:\n" << predicted << "\n\n";
 	}
+	/**/
+	
+	/*
+	Eigen::MatrixXd I1 = Eigen::MatrixXd(5,1);
+	I1 << 1, 2, 3, 4, 5;
+
+	Eigen::MatrixXd I2 = Eigen::MatrixXd(5, 1);
+	I2 << 6, 7, 8, 9, 10;
+
+	Eigen::MatrixXd I3 = Eigen::MatrixXd(5, 1);
+	I3 << 11, 12, 13, 14, 15;
+
+	Eigen::MatrixXd I4 = Eigen::MatrixXd(5, 1);
+	I4 << 16, 17, 18, 19, 20;
+
+	Eigen::MatrixXd I5 = Eigen::MatrixXd(5, 1);
+	I5 << 21, 22, 23, 24, 25;
+
+	Eigen::MatrixXd I6 = Eigen::MatrixXd(5, 1);
+	I6 << 26, 27, 28, 29, 30;
+
+
+	std::vector<std::pair<Eigen::MatrixXd, size_t>> data ={
+		{I1, 0},  
+		{I2, 1}, 
+		{I3, 2},
+		{I4, 3},
+		{I5, 4},
+		{I6, 5},
+	};
+
+
+	//auto batchs = DataManager::BuildBatch(data, 5, 6);
+
+	for (auto& [batchInput, correctYs] : DataManager::BuildBatch(data, 5, 6)) {
+		std::cout << "batchInput\n" << batchInput << "\n\n";
+		std::cout << "correctYs\n" << correctYs << "\n\n\n";
+		std::cout << "\n-----------------------------------------------\n\n\n";
+	}
+	/**/
 
 	
+	Eigen::MatrixXd I1 = Eigen::MatrixXd(5,1);
+	I1 << 0.1, 0.2, 0.3, 0.4, 0.5;
+
+	Eigen::MatrixXd I2 = Eigen::MatrixXd(5, 1);
+	I2 << 0.6, 0.7, 0.8, 0.9, 0.10;
+
+	Eigen::MatrixXd I3 = Eigen::MatrixXd(5, 1);
+	I3 << 0.11, 0.12, 0.13, 0.14, 0.15;
+
+	Eigen::MatrixXd I4 = Eigen::MatrixXd(5, 1);
+	I4 << 0.16, 0.17, 0.18, 0.19, 0.20;
+
+	Eigen::MatrixXd I5 = Eigen::MatrixXd(5, 1);
+	I5 << 0.21, 0.22, 0.23, 0.24, 0.25;
+
+	Eigen::MatrixXd I6 = Eigen::MatrixXd(5, 1);
+	I6 << 0.26, 0.27, 0.28, 0.29, 0.30;
+
+
+	std::vector<std::pair<Eigen::MatrixXd, size_t>> data ={
+		{I1, 0},
+		{I2, 1},
+		{I3, 2},
+		{I4, 3},
+		{I5, 4},
+		{I6, 5},
+	};
+
+
+	
+
 
 	std::cout << "\n\n\n[SUCCESS]!!!!!\n";
 	return 0;
