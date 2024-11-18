@@ -2,7 +2,7 @@
 
 #include "../basic-includes.h"
 #include "../01-interfaces/ILayer.h"
-#include "DataManager.h"
+#include "../06-Managers/DataManager.h"
 
 
 class DenseLayer : public ILayer {

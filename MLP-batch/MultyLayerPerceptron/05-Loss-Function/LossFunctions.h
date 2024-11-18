@@ -2,7 +2,7 @@
 
 #include "../basic-includes.h"
 #include "../01-interfaces/ILossFunction.h"
-#include "../02-Dense-Layer/DataManager.h"
+#include "../06-Managers/DataManager.h"
 
 
 //----------------------------

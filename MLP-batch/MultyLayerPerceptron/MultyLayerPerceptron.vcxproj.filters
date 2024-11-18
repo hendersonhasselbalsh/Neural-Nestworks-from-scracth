@@ -19,6 +19,9 @@
     <Filter Include="04-Loss-Function">
       <UniqueIdentifier>{f4572fc5-3d13-4843-8e5f-4d8d06d9b0c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06-Managers">
+      <UniqueIdentifier>{d89e858a-219b-48f1-a3be-562573b390cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main-project\main.cpp">
@@ -28,14 +31,24 @@
     <ClCompile Include="02-Dense-Layer\DenseLayer.cpp">
       <Filter>02-Dense-Layer</Filter>
     </ClCompile>
-    <ClCompile Include="02-Dense-Layer\DataManager.cpp">
-      <Filter>02-Dense-Layer</Filter>
-    </ClCompile>
     <ClCompile Include="03-Activation-Function\ActivationFunction.cpp">
       <Filter>03-Activation-Function</Filter>
     </ClCompile>
-    <ClCompile Include="05-Loss-Function\LossFunctions.cpp" />
-    <ClCompile Include="04-MLP\MLP.cpp" />
+    <ClCompile Include="05-Loss-Function\LossFunctions.cpp">
+      <Filter>04-Loss-Function</Filter>
+    </ClCompile>
+    <ClCompile Include="04-MLP\MLP.cpp">
+      <Filter>05-mlp</Filter>
+    </ClCompile>
+    <ClCompile Include="06-Managers\DataManager.cpp">
+      <Filter>06-Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="06-Managers\LayerManager.h">
+      <Filter>06-Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="06-Managers\LayerManager.cpp">
+      <Filter>06-Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="01-interfaces\ILayer.h">
@@ -50,9 +63,6 @@
     <ClInclude Include="02-Dense-Layer\DenseLayer.h">
       <Filter>02-Dense-Layer</Filter>
     </ClInclude>
-    <ClInclude Include="02-Dense-Layer\DataManager.h">
-      <Filter>02-Dense-Layer</Filter>
-    </ClInclude>
     <ClInclude Include="03-Activation-Function\ActivationFunction.h">
       <Filter>03-Activation-Function</Filter>
     </ClInclude>
@@ -64,6 +74,9 @@
     </ClInclude>
     <ClInclude Include="05-Loss-Function\LossFunctions.h">
       <Filter>04-Loss-Function</Filter>
+    </ClInclude>
+    <ClInclude Include="06-Managers\DataManager.h">
+      <Filter>06-Managers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

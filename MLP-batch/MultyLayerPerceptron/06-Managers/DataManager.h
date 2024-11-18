@@ -16,6 +16,13 @@ class DataManager {
 
 		static std::vector<Eigen::MatrixXd> ExtractVectors(Eigen::MatrixXd& inputVecs);
 
-		static Eigen::MatrixXd PrepareVectorAsDenseLayerInput(Eigen::MatrixXd& vec);
+		static void Shuffle(std::vector<std::pair<Eigen::MatrixXd, size_t>>* data);
+
+		static std::vector<std::pair<Eigen::MatrixXd, Eigen::MatrixXd>> BuildBatch(
+			std::vector<std::pair<Eigen::MatrixXd,size_t>>& datas
+			, long batchSize
+			, size_t classes
+		);
+
 };		
 

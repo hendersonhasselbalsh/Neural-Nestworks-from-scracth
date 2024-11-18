@@ -19,11 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="02-Dense-Layer\DataManager.cpp" />
     <ClCompile Include="02-Dense-Layer\DenseLayer.cpp" />
     <ClCompile Include="03-Activation-Function\ActivationFunction.cpp" />
     <ClCompile Include="04-MLP\MLP.cpp" />
     <ClCompile Include="05-Loss-Function\LossFunctions.cpp" />
+    <ClCompile Include="06-Managers\DataManager.cpp" />
+    <ClCompile Include="06-Managers\LayerManager.cpp" />
+    <ClCompile Include="06-Managers\LayerManager.h" />
     <ClCompile Include="basic-includes.h" />
     <ClCompile Include="main-project\main.cpp" />
   </ItemGroup>
@@ -32,11 +34,11 @@
     <ClInclude Include="01-interfaces\ILayer.h" />
     <ClInclude Include="01-interfaces\ILossFunction.h" />
     <ClInclude Include="01-interfaces\IOptimizationLayer.h" />
-    <ClInclude Include="02-Dense-Layer\DataManager.h" />
     <ClInclude Include="02-Dense-Layer\DenseLayer.h" />
     <ClInclude Include="03-Activation-Function\ActivationFunction.h" />
     <ClInclude Include="04-MLP\MLP.h" />
     <ClInclude Include="05-Loss-Function\LossFunctions.h" />
+    <ClInclude Include="06-Managers\DataManager.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

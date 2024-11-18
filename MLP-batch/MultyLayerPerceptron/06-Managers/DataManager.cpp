@@ -85,10 +85,48 @@ std::vector<Eigen::MatrixXd> DataManager::ExtractVectors(Eigen::MatrixXd& inputV
 }
 
 
-Eigen::MatrixXd DataManager::PrepareVectorAsDenseLayerInput(Eigen::MatrixXd& vec)
+void DataManager::Shuffle(std::vector<std::pair<Eigen::MatrixXd, size_t>>* data)
 {
-    Eigen::MatrixXd input = Eigen::MatrixXd::Ones(vec.rows()+1, vec.cols());
-    input.block(1, 0, vec.rows(), vec.cols()) = vec;
-
-    return input;
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle( (*data).begin(), (*data).end(), g);
 }
+
+
+std::vector<std::pair<Eigen::MatrixXd, Eigen::MatrixXd>> DataManager::BuildBatch(std::vector<std::pair<Eigen::MatrixXd, size_t>>& datas, long batchSize, size_t classes)
+{
+ 
+    //DataManager::Shuffle( &datas );
+
+    long start = 0;
+    long end = batchSize;
+    long dataSize = datas.size();
+    size_t vectorConponent = datas[0].first.rows();
+
+    std::vector<std::pair<Eigen::MatrixXd, Eigen::MatrixXd>> batchs;
+
+    while (start < dataSize) {
+        size_t vectorQnt = std::min(batchSize, dataSize-start); 
+
+        end = start + vectorQnt;
+
+        Eigen::MatrixXd batchInput = Eigen::MatrixXd(vectorConponent, vectorQnt);
+        Eigen::MatrixXd batchCorrectY = Eigen::MatrixXd::Zero(classes, vectorQnt);
+
+        for (size_t i = 0; i < vectorQnt; i++) {
+            auto& data = datas[start+i];
+            batchInput.col(i) = data.first;
+            batchCorrectY(data.second,i) = 1.0;
+        }
+
+        batchs.push_back( { batchInput, batchCorrectY } );
+
+        start = end;
+    }
+
+
+    return batchs;
+}
+
+
+
