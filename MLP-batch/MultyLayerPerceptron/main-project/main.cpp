@@ -3,6 +3,10 @@
 #include "../02-Dense-Layer/DenseLayer.h"
 #include "../03-Activation-Function/ActivationFunction.h"
 #include "../04-MLP/MLP.h"
+#include "DataLoader.h"
+
+using MNIST_DATA = std::vector<std::pair<Eigen::MatrixXd, size_t>>;
+
 
 
 int main(int argc, const char** argv)
@@ -238,7 +242,7 @@ int main(int argc, const char** argv)
 	});
 	/**/
 	
-	/**/
+	/*
 	Eigen::MatrixXd I1 = Eigen::MatrixXd(5, 1);
 	I1 << 0.01, 0.02, 0.03, 0.04, 0.0;
 
@@ -301,6 +305,39 @@ int main(int argc, const char** argv)
 		epoch++;
 	});
 	/**/
+
+	
+	MNIST_DATA traingDatas = DataLoader("..\\..\\.resources\\train").Load();
+	MNIST_DATA testDatas = DataLoader("..\\..\\.resources\\test").Load();
+	
+
+	MLP mlp = MLPbuilder()
+				.InputSize(28*28)
+				.BatchSize(20)
+				.Architecture({
+					new DenseLayer(128, 0.001),
+					new ReLU(),
+					new DenseLayer(10, 0.001),
+				})
+				.LossFunction(new MSE)
+				.MaxEpochs(40)
+				.OutputClasses(10)
+				.Build();
+
+
+	size_t epoch = 0;
+
+	mlp.Training(traingDatas, [&]() {
+		std::cout << "\n\n\n---------------------------------------------- " << epoch << " ----------------------------------------------\n\n\n\n";
+		
+		std::cout << "TRAINING:\n";
+		Evaluator::Eval_MLP(mlp, traingDatas);
+
+		std::cout << "\n\n\TEST:\n";
+		Evaluator::Eval_MLP(mlp, testDatas);
+		
+		epoch++;
+	});
 
 
 	std::cout << "\n\n\n[SUCCESS]!!!!!\n";

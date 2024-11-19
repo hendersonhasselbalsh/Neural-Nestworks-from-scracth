@@ -49,6 +49,10 @@
     <ClCompile Include="06-Managers\LayerManager.cpp">
       <Filter>06-Managers</Filter>
     </ClCompile>
+    <ClCompile Include="07-Builder\MLPbuilder.cpp" />
+    <ClCompile Include="main-project\DataLoader.cpp">
+      <Filter>main-project</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="01-interfaces\ILayer.h">
@@ -77,6 +81,10 @@
     </ClInclude>
     <ClInclude Include="06-Managers\DataManager.h">
       <Filter>06-Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="07-Builder\MLPbuilder.h" />
+    <ClInclude Include="main-project\DataLoader.h">
+      <Filter>main-project</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
