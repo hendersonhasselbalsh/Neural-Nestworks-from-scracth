@@ -28,6 +28,12 @@
     <Filter Include="08-Optimizer">
       <UniqueIdentifier>{d8df0094-9391-4be3-8a8a-7891e1348bb9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03-Activation-Function\Sigmoid">
+      <UniqueIdentifier>{858d798f-a1aa-44c2-b297-b8c8ff68495d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03-Activation-Function\ReLU">
+      <UniqueIdentifier>{550b9a36-8a7f-4922-a652-4fe6a20d8266}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main-project\main.cpp">
@@ -36,9 +42,6 @@
     <ClCompile Include="basic-includes.h" />
     <ClCompile Include="02-Dense-Layer\DenseLayer.cpp">
       <Filter>02-Dense-Layer</Filter>
-    </ClCompile>
-    <ClCompile Include="03-Activation-Function\ActivationFunction.cpp">
-      <Filter>03-Activation-Function</Filter>
     </ClCompile>
     <ClCompile Include="05-Loss-Function\LossFunctions.cpp">
       <Filter>04-Loss-Function</Filter>
@@ -63,6 +66,12 @@
     </ClCompile>
     <ClCompile Include="08-Optimizers\DropOut.cpp">
       <Filter>08-Optimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="03-Activation-Function\Sigmoid.cpp">
+      <Filter>03-Activation-Function\Sigmoid</Filter>
+    </ClCompile>
+    <ClCompile Include="03-Activation-Function\ReLU.cpp">
+      <Filter>03-Activation-Function\ReLU</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -104,6 +113,12 @@
     </ClInclude>
     <ClInclude Include="08-Optimizers\DropOut.h">
       <Filter>08-Optimizer</Filter>
+    </ClInclude>
+    <ClInclude Include="03-Activation-Function\Sigmoid.h">
+      <Filter>03-Activation-Function\Sigmoid</Filter>
+    </ClInclude>
+    <ClInclude Include="03-Activation-Function\ReLU.h">
+      <Filter>03-Activation-Function\ReLU</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

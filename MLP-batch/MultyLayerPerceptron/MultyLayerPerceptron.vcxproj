@@ -20,7 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="02-Dense-Layer\DenseLayer.cpp" />
-    <ClCompile Include="03-Activation-Function\ActivationFunction.cpp" />
+    <ClCompile Include="03-Activation-Function\ReLU.cpp" />
+    <ClCompile Include="03-Activation-Function\Sigmoid.cpp" />
     <ClCompile Include="04-MLP\MLP.cpp" />
     <ClCompile Include="05-Loss-Function\LossFunctions.cpp" />
     <ClCompile Include="06-Managers\DataManager.cpp" />
@@ -39,6 +40,8 @@
     <ClInclude Include="01-interfaces\IOptimizationLayer.h" />
     <ClInclude Include="02-Dense-Layer\DenseLayer.h" />
     <ClInclude Include="03-Activation-Function\ActivationFunction.h" />
+    <ClInclude Include="03-Activation-Function\ReLU.h" />
+    <ClInclude Include="03-Activation-Function\Sigmoid.h" />
     <ClInclude Include="04-MLP\MLP.h" />
     <ClInclude Include="05-Loss-Function\LossFunctions.h" />
     <ClInclude Include="06-Managers\DataManager.h" />
