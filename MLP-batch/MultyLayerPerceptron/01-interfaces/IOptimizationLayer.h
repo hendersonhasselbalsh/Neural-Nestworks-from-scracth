@@ -1,5 +1,5 @@
 #pragma once
 
-class IOptimizationLayer {
+class IOptimizer {
 	// just a tag to track the object
 };

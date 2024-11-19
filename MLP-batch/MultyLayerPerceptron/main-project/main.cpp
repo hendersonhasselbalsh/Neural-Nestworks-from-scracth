@@ -4,6 +4,7 @@
 #include "../03-Activation-Function/ActivationFunction.h"
 #include "../04-MLP/MLP.h"
 #include "DataLoader.h"
+#include "../08-Optimizers/Optimizers.h"
 
 using MNIST_DATA = std::vector<std::pair<Eigen::MatrixXd, size_t>>;
 
@@ -313,10 +314,11 @@ int main(int argc, const char** argv)
 
 	MLP mlp = MLPbuilder()
 				.InputSize(28*28)
-				.BatchSize(20)
+				.BatchSize(32)
 				.Architecture({
 					new DenseLayer(128, 0.001),
 					new ReLU(),
+					new Dropout(0.5),
 					new DenseLayer(10, 0.001),
 				})
 				.LossFunction(new MSE)

@@ -27,6 +27,7 @@
     <ClCompile Include="06-Managers\LayerManager.cpp" />
     <ClCompile Include="06-Managers\LayerManager.h" />
     <ClCompile Include="07-Builder\MLPbuilder.cpp" />
+    <ClCompile Include="08-Optimizers\DropOut.cpp" />
     <ClCompile Include="basic-includes.h" />
     <ClCompile Include="main-project\DataLoader.cpp" />
     <ClCompile Include="main-project\main.cpp" />
@@ -42,6 +43,8 @@
     <ClInclude Include="05-Loss-Function\LossFunctions.h" />
     <ClInclude Include="06-Managers\DataManager.h" />
     <ClInclude Include="07-Builder\MLPbuilder.h" />
+    <ClInclude Include="08-Optimizers\DropOut.h" />
+    <ClInclude Include="08-Optimizers\Optimizers.h" />
     <ClInclude Include="main-project\DataLoader.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

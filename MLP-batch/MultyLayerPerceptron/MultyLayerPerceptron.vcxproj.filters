@@ -22,6 +22,12 @@
     <Filter Include="06-Managers">
       <UniqueIdentifier>{d89e858a-219b-48f1-a3be-562573b390cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07-Builder">
+      <UniqueIdentifier>{9f5bdd40-31e5-4952-a5ce-c04aa63a5a1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08-Optimizer">
+      <UniqueIdentifier>{d8df0094-9391-4be3-8a8a-7891e1348bb9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main-project\main.cpp">
@@ -49,9 +55,14 @@
     <ClCompile Include="06-Managers\LayerManager.cpp">
       <Filter>06-Managers</Filter>
     </ClCompile>
-    <ClCompile Include="07-Builder\MLPbuilder.cpp" />
     <ClCompile Include="main-project\DataLoader.cpp">
       <Filter>main-project</Filter>
+    </ClCompile>
+    <ClCompile Include="07-Builder\MLPbuilder.cpp">
+      <Filter>07-Builder</Filter>
+    </ClCompile>
+    <ClCompile Include="08-Optimizers\DropOut.cpp">
+      <Filter>08-Optimizer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -82,9 +93,17 @@
     <ClInclude Include="06-Managers\DataManager.h">
       <Filter>06-Managers</Filter>
     </ClInclude>
-    <ClInclude Include="07-Builder\MLPbuilder.h" />
     <ClInclude Include="main-project\DataLoader.h">
       <Filter>main-project</Filter>
+    </ClInclude>
+    <ClInclude Include="07-Builder\MLPbuilder.h">
+      <Filter>07-Builder</Filter>
+    </ClInclude>
+    <ClInclude Include="08-Optimizers\Optimizers.h">
+      <Filter>08-Optimizer</Filter>
+    </ClInclude>
+    <ClInclude Include="08-Optimizers\DropOut.h">
+      <Filter>08-Optimizer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
