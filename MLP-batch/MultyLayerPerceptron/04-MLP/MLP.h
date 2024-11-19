@@ -7,9 +7,12 @@
 #include "../06-Managers/DataManager.h"
 #include "../06-Managers/LayerManager.h"
 
+class MLPbuilder;
+
+
 
 class MLP {
-	public:
+	private:
 		std::vector<ILayer*> _layers;
 		ILossFunction* _lossFunc;
 		size_t _max_epochs;
@@ -24,5 +27,8 @@ class MLP {
 		Eigen::MatrixXd Backpropgagation(Eigen::MatrixXd& dL_dY);
 
 		void Training(std::vector<std::pair<Eigen::MatrixXd, size_t>>& datas, std::function<void(void)> callback = [](){ });
+
+		friend class MLPbuilder;
 };
 
+#include "../07-Builder/MLPbuilder.h"

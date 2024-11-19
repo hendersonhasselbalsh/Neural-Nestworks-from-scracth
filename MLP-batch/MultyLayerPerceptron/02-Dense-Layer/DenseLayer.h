@@ -4,9 +4,12 @@
 #include "../01-interfaces/ILayer.h"
 #include "../06-Managers/DataManager.h"
 
+class MLP;
+
+
 
 class DenseLayer : public ILayer {
-	public:
+	private:
 		Eigen::MatrixXd _weights;					// the neuron weights, each row of this matrix represent a neuron, the columns is represent indivitual weight of each neuron
 		double _learningRate;						// 
 		Eigen::MatrixXd _receivedInputBatch; 			//
@@ -20,4 +23,5 @@ class DenseLayer : public ILayer {
 		virtual Eigen::MatrixXd Forward(Eigen::MatrixXd& inputBatch) override;
 		virtual Eigen::MatrixXd Backward(Eigen::MatrixXd& dL_dU) override;
 
+		friend class MLP;
 };

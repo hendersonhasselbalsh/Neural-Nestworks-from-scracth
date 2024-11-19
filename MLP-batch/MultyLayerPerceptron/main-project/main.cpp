@@ -168,27 +168,27 @@ int main(int argc, const char** argv)
 	}
 	/**/
 
-	
+	/*
 	Eigen::MatrixXd I1 = Eigen::MatrixXd(5,1);
-	I1 << 0.1, 0.2, 0.3, 0.4, 0.5;
+	I1 << 0.01, 0.02, 0.03, 0.04, 0.0;
 
 	Eigen::MatrixXd I2 = Eigen::MatrixXd(5, 1);
-	I2 << 0.6, 0.7, 0.8, 0.9, 0.10;
+	I2 << 0.06, 0.07, 0.08, 0.0, 0.10;
 
 	Eigen::MatrixXd I3 = Eigen::MatrixXd(5, 1);
-	I3 << 0.11, 0.12, 0.13, 0.14, 0.15;
+	I3 << 0.11, 0.12, 0.0, 0.14, 0.15;
 
 	Eigen::MatrixXd I4 = Eigen::MatrixXd(5, 1);
-	I4 << 0.16, 0.17, 0.18, 0.19, 0.20;
+	I4 << 0.16, 0.0, 0.18, 0.19, 0.20;
 
 	Eigen::MatrixXd I5 = Eigen::MatrixXd(5, 1);
-	I5 << 0.21, 0.22, 0.23, 0.24, 0.25;
+	I5 << 0.0, 0.22, 0.23, 0.24, 0.25;
 
 	Eigen::MatrixXd I6 = Eigen::MatrixXd(5, 1);
 	I6 << 0.26, 0.27, 0.28, 0.29, 0.30;
 
 
-	std::vector<std::pair<Eigen::MatrixXd, size_t>> data ={
+	std::vector<std::pair<Eigen::MatrixXd, size_t>> datas ={
 		{I1, 0},
 		{I2, 1},
 		{I3, 2},
@@ -198,7 +198,109 @@ int main(int argc, const char** argv)
 	};
 
 
+
+	MLP mlp = MLP();
+	mlp._batchSize = 3;
+	mlp._lossFunc = new MSE();
+	mlp._max_epochs = 1'000'000;
+	mlp._outputClasses = 6;
+	mlp._layers = {
+		new DenseLayer(50, 0.01),
+		new Sigmoid(),
+		new DenseLayer(6, 0.01),
+	};
+
+	size_t inputSize = 5;
+	for (auto& layer : mlp._layers) {
+		size_t outputSize = 0;
+		layer->Initialize(inputSize, &outputSize);
+		inputSize = outputSize;
+	}
+
+
+	size_t epoch = 0;
+	mlp.Training(datas, [&]() {
+		Eigen::MatrixXd confusionMat = Eigen::MatrixXd::Zero(6,6);
+		for (size_t i = 0; i < datas.size(); i++) {
+			Eigen::MatrixXd output = mlp.CalculateOutput(datas[i].first);
+			size_t predicted = 100, _;
+			output.maxCoeff(&predicted, &_);  
+			//confusionMat.col(i) = output;
+			confusionMat(datas[i].second,predicted)++; 
+		}
+
+		if (epoch % 100 == 0) {
+			std::cout << "\n\n---------------------------------------- " << epoch << " ----------------------------------------\n\n\n"; 
+			std::cout << confusionMat << "\n\n\n";
+		}
+
+		epoch++;
+	});
+	/**/
 	
+	/**/
+	Eigen::MatrixXd I1 = Eigen::MatrixXd(5, 1);
+	I1 << 0.01, 0.02, 0.03, 0.04, 0.0;
+
+	Eigen::MatrixXd I2 = Eigen::MatrixXd(5, 1);
+	I2 << 0.06, 0.07, 0.08, 0.0, 0.10;
+
+	Eigen::MatrixXd I3 = Eigen::MatrixXd(5, 1);
+	I3 << 0.11, 0.12, 0.0, 0.14, 0.15;
+
+	Eigen::MatrixXd I4 = Eigen::MatrixXd(5, 1);
+	I4 << 0.16, 0.0, 0.18, 0.19, 0.20;
+
+	Eigen::MatrixXd I5 = Eigen::MatrixXd(5, 1);
+	I5 << 0.0, 0.22, 0.23, 0.24, 0.25;
+
+	Eigen::MatrixXd I6 = Eigen::MatrixXd(5, 1);
+	I6 << 0.26, 0.27, 0.28, 0.29, 0.30;
+
+
+	std::vector<std::pair<Eigen::MatrixXd, size_t>> datas ={
+		{I1, 0},
+		{I2, 1},
+		{I3, 2},
+		{I4, 3},
+		{I5, 4},
+		{I6, 5},
+	};
+
+
+	MLP mlp = MLPbuilder()
+				.InputSize(5)
+				.Architecture({
+					new DenseLayer(100, 0.01),
+					new Sigmoid(),
+					new DenseLayer(6, 0.01),
+				})
+				.BatchSize(5)
+				.LossFunction(new MSE)
+				.MaxEpochs(10'000)
+				.OutputClasses(6)
+				.Build();
+
+
+	size_t epoch = 0;
+	mlp.Training(datas, [&](){
+		Eigen::MatrixXd confusionMat = Eigen::MatrixXd::Zero(6,6);
+		for (size_t i = 0; i < datas.size(); i++) {
+			Eigen::MatrixXd output = mlp.CalculateOutput(datas[i].first);
+			size_t predicted = 100, _;
+			output.maxCoeff(&predicted, &_);
+			//confusionMat.col(i) = output;
+			confusionMat(datas[i].second, predicted)++;
+		}
+
+		if (epoch % 100 == 0) {
+			std::cout << "\n\n---------------------------------------- " << epoch << " ----------------------------------------\n\n\n";
+			std::cout << confusionMat << "\n\n\n";
+		}
+
+		epoch++;
+	});
+	/**/
 
 
 	std::cout << "\n\n\n[SUCCESS]!!!!!\n";

@@ -2,8 +2,8 @@
 
 MLP::MLP()
 {
-    max_epochs = 0;
-    batchSize = 0;
+    _max_epochs = 0;
+    _batchSize = 0;
 }
 
 
@@ -47,8 +47,8 @@ void MLP::Training(std::vector<std::pair<Eigen::MatrixXd, size_t>>& datas, std::
     while (epoch++ < _max_epochs) {
 
         for (auto& [batchInputs, bachCorrectYs] : DataManager::BuildBatch(datas, _batchSize, _outputClasses)) {
-            Eigen::MatrixXd& predictedOutputs = MLP::CalculateOutput(batchInputs);
-            Eigen::MatrixXd& dL_dbatchXs = MLP::Backpropgagation(predictedOutputs, bachCorrectYs);
+            Eigen::MatrixXd predictedOutputs = MLP::CalculateOutput(batchInputs);
+            Eigen::MatrixXd dL_dbatchXs = MLP::Backpropgagation(predictedOutputs, bachCorrectYs);
         }
 
         callback();
