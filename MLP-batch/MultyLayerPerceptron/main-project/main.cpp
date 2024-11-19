@@ -270,12 +270,12 @@ int main(int argc, const char** argv)
 
 	MLP mlp = MLPbuilder()
 				.InputSize(5)
+				.BatchSize(1)
 				.Architecture({
-					new DenseLayer(100, 0.01),
-					new Sigmoid(),
+					new DenseLayer(30, 0.01),
+					new ReLU(),
 					new DenseLayer(6, 0.01),
 				})
-				.BatchSize(5)
 				.LossFunction(new MSE)
 				.MaxEpochs(10'000)
 				.OutputClasses(6)
@@ -293,7 +293,7 @@ int main(int argc, const char** argv)
 			confusionMat(datas[i].second, predicted)++;
 		}
 
-		if (epoch % 100 == 0) {
+		if (epoch % 1000 == 0) {
 			std::cout << "\n\n---------------------------------------- " << epoch << " ----------------------------------------\n\n\n";
 			std::cout << confusionMat << "\n\n\n";
 		}

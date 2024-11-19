@@ -14,7 +14,7 @@ class DataManager {
 
 		static std::vector<std::pair<Eigen::MatrixXd, Eigen::MatrixXd>> ExtractCorrespondingVectors(Eigen::MatrixXd& dLdU_vecs, Eigen::MatrixXd& inputVecs);
 
-		static std::vector<Eigen::MatrixXd> ExtractVectors(Eigen::MatrixXd& inputVecs);
+		static std::vector<std::pair<Eigen::MatrixXd, size_t>> ExtractVectors(Eigen::MatrixXd& inputVecs);
 
 		static void Shuffle(std::vector<std::pair<Eigen::MatrixXd, size_t>>* data);
 

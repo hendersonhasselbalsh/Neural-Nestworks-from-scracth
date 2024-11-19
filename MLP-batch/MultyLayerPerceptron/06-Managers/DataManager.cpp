@@ -71,14 +71,14 @@ std::vector<std::pair<Eigen::MatrixXd, Eigen::MatrixXd>> DataManager::ExtractCor
 }
 
 
-std::vector<Eigen::MatrixXd> DataManager::ExtractVectors(Eigen::MatrixXd& inputVecs)
+std::vector<std::pair<Eigen::MatrixXd, size_t>> DataManager::ExtractVectors(Eigen::MatrixXd& inputVecs)
 {
-    std::vector<Eigen::MatrixXd> individualVec;
+    std::vector<std::pair<Eigen::MatrixXd, size_t>> individualVec;
 
     for (size_t vec = 0; vec < inputVecs.cols(); vec++) {
         Eigen::MatrixXd vector = inputVecs.col(vec);
 
-        individualVec.push_back(vector);
+        individualVec.push_back({ vector, vec });
     }
 
     return individualVec;

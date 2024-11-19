@@ -1,5 +1,10 @@
 #pragma once
 
 class IActivationFunction {
-	// just a tag to track the object
+	public:
+		virtual double f(double x) { return x; }
+		virtual double df(double x) { return x; }
+
+		virtual Eigen::MatrixXd Activation(Eigen::MatrixXd& weitedSumVec) = 0;
+		virtual Eigen::MatrixXd dActivation_dWeightedSum(Eigen::MatrixXd& weitedSumVec) = 0;
 };

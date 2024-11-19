@@ -26,6 +26,7 @@
     <ClCompile Include="06-Managers\DataManager.cpp" />
     <ClCompile Include="06-Managers\LayerManager.cpp" />
     <ClCompile Include="06-Managers\LayerManager.h" />
+    <ClCompile Include="07-Builder\MLPbuilder.cpp" />
     <ClCompile Include="basic-includes.h" />
     <ClCompile Include="main-project\main.cpp" />
   </ItemGroup>
@@ -39,6 +40,7 @@
     <ClInclude Include="04-MLP\MLP.h" />
     <ClInclude Include="05-Loss-Function\LossFunctions.h" />
     <ClInclude Include="06-Managers\DataManager.h" />
+    <ClInclude Include="07-Builder\MLPbuilder.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

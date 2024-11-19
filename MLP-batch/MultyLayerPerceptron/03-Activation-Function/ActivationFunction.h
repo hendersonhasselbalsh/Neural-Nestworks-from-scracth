@@ -3,26 +3,7 @@
 #include "../basic-includes.h"
 #include "../01-interfaces/ILayer.h"
 #include "../01-interfaces/IActivationFunction.h"
-
-
-
-//------------------------------
-//  LINEAR
-//------------------------------
-
-class Linear : public ILayer, public IActivationFunction {
-	public:
-		//Eigen::MatrixXd* _receivedBatchWeightedSum;	
-
-	public:
-		Linear();
-		~Linear();
-
-		// Inherited via ILayer
-		virtual Eigen::MatrixXd Forward(Eigen::MatrixXd& batchWeightedSum) override;
-		virtual Eigen::MatrixXd Backward(Eigen::MatrixXd& dL_dbatchActivation) override;
-
-};
+#include "../06-Managers/DataManager.h"
 
 
 
@@ -38,10 +19,37 @@ class Sigmoid : public ILayer, public IActivationFunction {
 		Sigmoid();
 		~Sigmoid();
 
-		static double f_sigmoid(double x);
+		// Inherited via IActivationFunction
+		virtual double f(double x) override;
+		virtual Eigen::MatrixXd Activation(Eigen::MatrixXd& weitedSumVec) override;
+		virtual Eigen::MatrixXd dActivation_dWeightedSum(Eigen::MatrixXd& weitedSumVec) override; 
 
 		// Inherited via ILayer
 		virtual Eigen::MatrixXd Forward(Eigen::MatrixXd& batchWeightedSum) override;
 		virtual Eigen::MatrixXd Backward(Eigen::MatrixXd& dL_dbatchActivation) override;
+};
+
+
+
+//------------------------------
+//  ReLU
+//------------------------------
+
+class ReLU : public ILayer, public IActivationFunction {
+	public:
+		Eigen::MatrixXd _receivedBachInput;
+
+	public:
+		ReLU();
+
+		// Inherited via IActivationFunction
+		virtual double f(double x) override;
+		virtual double df(double x) override;
+		virtual Eigen::MatrixXd Activation(Eigen::MatrixXd& weitedSumVec) override; 
+		virtual Eigen::MatrixXd dActivation_dWeightedSum(Eigen::MatrixXd& weitedSumVec) override;
+
+		// Inherited via ILayer
+		virtual Eigen::MatrixXd Forward(Eigen::MatrixXd& weightedSumBatch) override;
+		virtual Eigen::MatrixXd Backward(Eigen::MatrixXd& dLdA_batch) override;
 
 };
