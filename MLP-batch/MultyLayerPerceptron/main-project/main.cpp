@@ -1,17 +1,17 @@
 #include "../basic-includes.h"
-#include "gnuplot-include.h"
 
 #include "../02-Dense-Layer/DenseLayer.h"
 #include "../03-Activation-Function/ActivationFunction.h"
 #include "../04-MLP/MLP.h"
 #include "DataLoader.h"
 #include "../08-Optimizers/Optimizers.h"
+#include "comparations.h"
 
 using MNIST_DATA = std::vector<std::pair<Eigen::MatrixXd, size_t>>;
 
 
 
-int main(int argc, const char** argv)
+int __main(int argc, const char** argv)
 {
 	Gnuplot gnuplot;
 	gnuplot.OutFile("..\\..\\.resources\\gnuplot-output\\res.dat");
@@ -26,13 +26,13 @@ int main(int argc, const char** argv)
 
 	MLP mlp = MLPbuilder()
 				.InputSize(28*28)
-				.BatchSize(32)
+				.BatchSize(64)
 				.Architecture({
-					new DenseLayer(100, 0.0001),
+					new DenseLayer(128, 0.0001),
 					new ReLU(),
 					new Dropout(0.3),
 
-					new DenseLayer(50, 0.0001),
+					new DenseLayer(64, 0.0001),
 					new ReLU(),
 					new Dropout(0.1), 
 
@@ -72,7 +72,7 @@ int main(int argc, const char** argv)
 }
 
 
-int __main(int agrc, const char** argv)
+int ___main(int agrc, const char** argv)
 {
 
 	Gnuplot gnuplot;
@@ -113,3 +113,20 @@ int __main(int agrc, const char** argv)
 
 	return 0;
 }
+ 
+
+
+//-------------------------------------------
+// conparations
+//-------------------------------------------
+
+int main(int argc, const char** argv)
+{
+	MNIST_DATA traingDatas = DataLoader("..\\..\\.resources\\train").Load();
+	MNIST_DATA testDatas = DataLoader("..\\..\\.resources\\test").Load();
+
+	Comparations::With_WithOut_Adam(traingDatas, testDatas);
+
+	return 0;
+}
+

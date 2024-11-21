@@ -24,5 +24,5 @@ class DataLoader {
 class Evaluator {
 	public:
 		static size_t GetLabel(Eigen::MatrixXd& vec);
-		static double Eval_MLP(MLP& mlp, std::vector<std::pair<Eigen::MatrixXd, size_t>> datas);
+		static double Eval_MLP(MLP& mlp, std::vector<std::pair<Eigen::MatrixXd, size_t>>& datas);
 };

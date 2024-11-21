@@ -33,6 +33,7 @@
     <ClCompile Include="08-Optimizers\BatchNorm.cpp" />
     <ClCompile Include="08-Optimizers\DropOut.cpp" />
     <ClCompile Include="basic-includes.h" />
+    <ClCompile Include="main-project\comparations.cpp" />
     <ClCompile Include="main-project\DataLoader.cpp" />
     <ClCompile Include="main-project\main.cpp" />
   </ItemGroup>
@@ -54,6 +55,7 @@
     <ClInclude Include="08-Optimizers\DropOut.h" />
     <ClInclude Include="08-Optimizers\BatchNorm.h" />
     <ClInclude Include="08-Optimizers\Optimizers.h" />
+    <ClInclude Include="main-project\comparations.h" />
     <ClInclude Include="main-project\DataLoader.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

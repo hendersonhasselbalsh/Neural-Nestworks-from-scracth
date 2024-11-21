@@ -94,6 +94,9 @@
     <ClCompile Include="08-Optimizers\BatchNorm.cpp">
       <Filter>08-Optimizer\BatchNorm</Filter>
     </ClCompile>
+    <ClCompile Include="main-project\comparations.cpp">
+      <Filter>main-project</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="01-interfaces\ILayer.h">
@@ -149,6 +152,9 @@
     </ClInclude>
     <ClInclude Include="08-Optimizers\BatchNorm.h">
       <Filter>08-Optimizer\BatchNorm</Filter>
+    </ClInclude>
+    <ClInclude Include="main-project\comparations.h">
+      <Filter>main-project</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

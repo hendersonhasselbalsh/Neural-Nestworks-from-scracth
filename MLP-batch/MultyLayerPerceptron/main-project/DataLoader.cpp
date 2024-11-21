@@ -90,7 +90,7 @@ size_t Evaluator::GetLabel(Eigen::MatrixXd& vec)
 }
 
 
-double Evaluator::Eval_MLP(MLP& mlp, std::vector<std::pair<Eigen::MatrixXd, size_t>> datas)
+double Evaluator::Eval_MLP(MLP& mlp, std::vector<std::pair<Eigen::MatrixXd, size_t>>& datas)
 {
     double H = (double) datas.size();
     double error = 0.0;
