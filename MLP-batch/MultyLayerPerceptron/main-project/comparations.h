@@ -1,10 +1,12 @@
 #pragma once
 
+#include "GnuplotWrapper.h"
+
 #include "../basic-includes.h"
 #include <opencv2/opencv.hpp>
 #include "../04-MLP/MLP.h"
 #include "DataLoader.h"
-#include "gnuplot-include.h"
+
 
 
 

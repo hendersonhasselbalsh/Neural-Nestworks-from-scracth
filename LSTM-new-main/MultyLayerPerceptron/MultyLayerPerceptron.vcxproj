@@ -18,48 +18,6 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="02-Dense-Layer\DenseLayer.cpp" />
-    <ClCompile Include="03-Activation-Function\ReLU.cpp" />
-    <ClCompile Include="03-Activation-Function\Sigmoid.cpp" />
-    <ClCompile Include="03-Activation-Function\Softmax.cpp" />
-    <ClCompile Include="03-Activation-Function\Tanh.cpp" />
-    <ClCompile Include="04-MLP\MLP.cpp" />
-    <ClCompile Include="05-Loss-Function\LossFunctions.cpp" />
-    <ClCompile Include="06-Managers\DataManager.cpp" />
-    <ClCompile Include="06-Managers\LayerManager.cpp" />
-    <ClCompile Include="06-Managers\LayerManager.h" />
-    <ClCompile Include="07-Builder\MLPbuilder.cpp" />
-    <ClCompile Include="08-Optimizers\BatchNorm.cpp" />
-    <ClCompile Include="08-Optimizers\DropOut.cpp" />
-    <ClCompile Include="basic-includes.h" />
-    <ClCompile Include="main-project\comparations.cpp" />
-    <ClCompile Include="main-project\DataLoader.cpp" />
-    <ClCompile Include="main-project\GnuplotWrapper.cpp" />
-    <ClCompile Include="main-project\main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="01-interfaces\IActivationFunction.h" />
-    <ClInclude Include="01-interfaces\ILayer.h" />
-    <ClInclude Include="01-interfaces\ILossFunction.h" />
-    <ClInclude Include="01-interfaces\IOptimizationLayer.h" />
-    <ClInclude Include="02-Dense-Layer\DenseLayer.h" />
-    <ClInclude Include="03-Activation-Function\ActivationFunction.h" />
-    <ClInclude Include="03-Activation-Function\ReLU.h" />
-    <ClInclude Include="03-Activation-Function\Sigmoid.h" />
-    <ClInclude Include="03-Activation-Function\Softmax.h" />
-    <ClInclude Include="03-Activation-Function\Tanh.h" />
-    <ClInclude Include="04-MLP\MLP.h" />
-    <ClInclude Include="05-Loss-Function\LossFunctions.h" />
-    <ClInclude Include="06-Managers\DataManager.h" />
-    <ClInclude Include="07-Builder\MLPbuilder.h" />
-    <ClInclude Include="08-Optimizers\DropOut.h" />
-    <ClInclude Include="08-Optimizers\BatchNorm.h" />
-    <ClInclude Include="08-Optimizers\Optimizers.h" />
-    <ClInclude Include="main-project\comparations.h" />
-    <ClInclude Include="main-project\DataLoader.h" />
-    <ClInclude Include="main-project\GnuplotWrapper.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -140,7 +98,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>..\..\.dependency\opencv-4.8.1\include;..\..\.dependency\json-develop\include;..\..\.dependency\eigen-3.4.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\.dependency\my-custom-made-gnuplot-wrapper;..\..\.dependency\opencv-4.8.1\include;..\..\.dependency\json-develop\include;..\..\.dependency\eigen-3.4.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -182,7 +140,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>..\..\.dependency\opencv-4.8.1\include;..\..\.dependency\json-develop\include;..\..\.dependency\eigen-3.4.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\.dependency\my-custom-made-gnuplot-wrapper;..\..\.dependency\opencv-4.8.1\include;..\..\.dependency\json-develop\include;..\..\.dependency\eigen-3.4.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -196,6 +154,30 @@
       <Command>copy "..\..\.dependency\opencv-4.8.1\bin\opencv_world480.dll" "$(OutDir)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="lstm\lstm-builder.cpp" />
+    <ClCompile Include="lstm\lstm.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="mlp\activation-functions.cpp" />
+    <ClCompile Include="mlp\layer.cpp" />
+    <ClCompile Include="mlp\lost-function.cpp" />
+    <ClCompile Include="mlp\mlp-builder.cpp" />
+    <ClCompile Include="mlp\multy-layer-perceptron.cpp" />
+    <ClCompile Include="utils\lstmUtils.cpp" />
+    <ClCompile Include="utils\utils.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="lstm\lstm-builder.h" />
+    <ClInclude Include="lstm\lstm.h" />
+    <ClInclude Include="mlp\activation-functions.h" />
+    <ClInclude Include="mlp\layer.h" />
+    <ClInclude Include="mlp\lost-function.h" />
+    <ClInclude Include="mlp\mlp-builder.h" />
+    <ClInclude Include="mlp\multy-layer-perceptron.h" />
+    <ClInclude Include="utils\basic-includes.h" />
+    <ClInclude Include="utils\lstmUtils.h" />
+    <ClInclude Include="utils\utils.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

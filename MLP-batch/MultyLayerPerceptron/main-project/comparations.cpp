@@ -3,7 +3,7 @@
 
 void Comparations::Plot_ComparisonChart(const std::string& file1, const std::string& name1, const std::string& file2, const std::string& name2)
 {
-	Gnuplot gnuplot; 
+	GnuplotWrap gnuplot; 
 	gnuplot.OutFile("..\\..\\.resources\\gnuplot-output\\comparison.dat");  
 	gnuplot.xRange("0", "");
 	gnuplot.yRange("-0.01", "1.05");
@@ -19,14 +19,12 @@ void Comparations::Plot_ComparisonChart(const std::string& file1, const std::str
 
 		if (file_1.good()) {
 			file_1 >> epoch;
-			file_1 >> _;
 			file_1 >> file1Data;
 
 			std::cout << epoch << " : " << file1Data << "\n";
 		}
 
 		if (file_2.good()) {
-			file_2 >> _;
 			file_2 >> _;
 			file_2 >> file2_data;
 		}
@@ -43,6 +41,8 @@ void Comparations::Plot_ComparisonChart(const std::string& file1, const std::str
 
 void Comparations::With_WithOut_Adam(std::vector<std::pair<Eigen::MatrixXd, size_t>>& trainingDatas, std::vector<std::pair<Eigen::MatrixXd, size_t>>& testingData)
 {
+	//GnuplotWrap gnuplot;
+
 	MLP mlp_with_Adam = MLPbuilder()
 							.InputSize(28*28)
 							.BatchSize(64)
@@ -94,10 +94,11 @@ void Comparations::With_WithOut_Adam(std::vector<std::pair<Eigen::MatrixXd, size
 		std::cout << "\n\n----------------------- with ADAM " << epoch << " -----------------------\n\n\n";
 		double error = Evaluator::Eval_MLP(mlp_with_Adam, testingData);
 
-		with_adam << epoch << " " << error;
+		with_adam << epoch << " " << error << "\n";
 
 		epoch++;
 	});
+	with_adam.close();
 
 
 	epoch = 0;
@@ -105,14 +106,11 @@ void Comparations::With_WithOut_Adam(std::vector<std::pair<Eigen::MatrixXd, size
 		std::cout << "\n\n----------------------- no ADAM " << epoch << " -----------------------\n\n\n";
 		double error = Evaluator::Eval_MLP(mlp_without_Adam, testingData);
 
-		no_adam << epoch << " " << error;
+		no_adam << epoch << " " << error << "\n";
 
 		epoch++;
 	});
-
-
-	with_adam.close();
-	no_adam.close(); 
+	no_adam.close();  
 	
 
 	Plot_ComparisonChart(

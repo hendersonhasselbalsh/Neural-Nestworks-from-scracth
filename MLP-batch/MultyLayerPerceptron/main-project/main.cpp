@@ -13,7 +13,7 @@ using MNIST_DATA = std::vector<std::pair<Eigen::MatrixXd, size_t>>;
 
 int __main(int argc, const char** argv)
 {
-	Gnuplot gnuplot;
+	GnuplotWrap gnuplot;
 	gnuplot.OutFile("..\\..\\.resources\\gnuplot-output\\res.dat");
 	gnuplot.xRange("0", "");
 	gnuplot.yRange("-0.01", "1.05");
@@ -75,7 +75,7 @@ int __main(int argc, const char** argv)
 int ___main(int agrc, const char** argv)
 {
 
-	Gnuplot gnuplot;
+	GnuplotWrap gnuplot;
 	gnuplot.OutFile("..\\..\\.resources\\gnuplot-output\\comparison.dat");
 	gnuplot.xRange("0", "");
 	gnuplot.yRange("-0.01", "1.05");
@@ -91,7 +91,7 @@ int ___main(int agrc, const char** argv)
 
 		if (no_adam.good()) {
 			no_adam >> epoch;
-			no_adam >> _;
+			//no_adam >> _;
 			no_adam >> noAdamError;
 
 			std::cout << epoch << " : " << noAdamError << "\n";
@@ -99,7 +99,7 @@ int ___main(int agrc, const char** argv)
 
 		if (with_adam.good()) {
 			with_adam >> _;
-			with_adam >> _;
+			//with_adam >> _;
 			with_adam >> withAdamError;
 		}
 
@@ -120,7 +120,7 @@ int ___main(int agrc, const char** argv)
 // conparations
 //-------------------------------------------
 
-int main(int argc, const char** argv)
+int ___main(int argc, const char** argv)
 {
 	MNIST_DATA traingDatas = DataLoader("..\\..\\.resources\\train").Load();
 	MNIST_DATA testDatas = DataLoader("..\\..\\.resources\\test").Load();
