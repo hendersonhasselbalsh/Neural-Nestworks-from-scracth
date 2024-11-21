@@ -19,6 +19,7 @@ void DenseLayer::Initialize(__In__ size_t inputSize, __Out__ size_t* outputSize)
     size_t neurons = _weights.rows();
     size_t weightSize = inputSize + 1;  // must include the bias
     
+    _prev_dLdW = Eigen::MatrixXd::Zero(neurons, weightSize);
     _weights = Eigen::MatrixXd::Ones(neurons, weightSize);
     DataManager::XaviverInitialization(_weights, inputSize, neurons);
 
@@ -62,6 +63,45 @@ Eigen::MatrixXd DenseLayer::Backward(Eigen::MatrixXd& dL_dU)
     }
     
     _weights = _weights - _learningRate * dL_dW;
+
+    return dL_dbatchX;
+}
+
+
+Eigen::MatrixXd DenseLayer::AdamBackprop(Eigen::MatrixXd& dL_dU, double beta)
+{
+    // derivative with respect to the weight
+    Eigen::MatrixXd dL_dW = Eigen::MatrixXd::Zero(_weights.rows(), _weights.cols());    // accumulated dLdW for each input in the batch
+
+    // derivative with respect to the input
+    Eigen::MatrixXd weightsWithoutBias = _weights.block(0, 1, _weights.rows(), _weights.cols()-1);
+    Eigen::MatrixXd dL_dbatchX = Eigen::MatrixXd::Zero(weightsWithoutBias.cols(), _receivedInputBatch.cols());    // dLdX for each input X in the batch
+    size_t vecIndex = 0;
+
+
+    for (auto& [dLdU, dUdW] : DataManager::ExtractCorrespondingVectors(dL_dU, _receivedInputBatch)) {
+        // derivative with respect to the weight
+        Eigen::MatrixXd dLdW = dLdU * dUdW.transpose();
+        dL_dW = dL_dW + dLdW;
+
+
+        // derivative with respect to the input
+        Eigen::MatrixXd dLdX = dLdU.transpose() * weightsWithoutBias;
+        dL_dbatchX.col(vecIndex++) = dLdX.transpose();
+    }
+
+
+    //Eigen::MatrixXd epson = Eigen::MatrixXd::Constant(_prev_dLdW.rows(), _prev_dLdW.cols(), 1e-8);
+    //
+    //_prev_dLdW = beta*_prev_dLdW + (1.0-beta)*dL_dW.cwiseProduct(dL_dW);
+    //Eigen::MatrixXd inverse_prev_dLdW = _prev_dLdW.cwiseSqrt();
+    //inverse_prev_dLdW = (_prev_dLdW + epson).cwiseInverse(); 
+    //
+    //_weights = _weights - _learningRate * (dL_dW.cwiseProduct(inverse_prev_dLdW)); 
+    //_prev_dLdW = (beta*_prev_dLdW + (1.0-beta)*dL_dW);
+
+    _weights = _weights - _learningRate * (beta*_prev_dLdW + (1.0-beta)*dL_dW);  
+    _prev_dLdW = (beta*_prev_dLdW + (1.0-beta)*dL_dW);
 
     return dL_dbatchX;
 }

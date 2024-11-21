@@ -24,6 +24,7 @@ class MLPbuilder {
 		MLPbuilder BatchSize(long batchSize);
 		MLPbuilder OutputClasses(size_t classes);
 		MLPbuilder Architecture(std::vector<ILayer*> layers);
+		MLPbuilder UseAdam(double beta = 0.9);
 
 		MLP Build();
 };

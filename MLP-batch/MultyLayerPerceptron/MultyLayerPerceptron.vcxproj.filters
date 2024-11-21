@@ -34,6 +34,18 @@
     <Filter Include="03-Activation-Function\ReLU">
       <UniqueIdentifier>{550b9a36-8a7f-4922-a652-4fe6a20d8266}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03-Activation-Function\Tanh">
+      <UniqueIdentifier>{e655bbe2-9a73-4912-bd0a-f55c15ac7d1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03-Activation-Function\Softmax">
+      <UniqueIdentifier>{0b83817d-b54d-4d9d-80d8-828b9cb3d3dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08-Optimizer\Dropout">
+      <UniqueIdentifier>{bddbe503-0540-4970-85e7-cd2389e9a341}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08-Optimizer\BatchNorm">
+      <UniqueIdentifier>{40e1e5ec-b433-4e01-83f8-a794c41a84b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main-project\main.cpp">
@@ -64,14 +76,23 @@
     <ClCompile Include="07-Builder\MLPbuilder.cpp">
       <Filter>07-Builder</Filter>
     </ClCompile>
-    <ClCompile Include="08-Optimizers\DropOut.cpp">
-      <Filter>08-Optimizer</Filter>
-    </ClCompile>
     <ClCompile Include="03-Activation-Function\Sigmoid.cpp">
       <Filter>03-Activation-Function\Sigmoid</Filter>
     </ClCompile>
     <ClCompile Include="03-Activation-Function\ReLU.cpp">
       <Filter>03-Activation-Function\ReLU</Filter>
+    </ClCompile>
+    <ClCompile Include="03-Activation-Function\Tanh.cpp">
+      <Filter>03-Activation-Function\Tanh</Filter>
+    </ClCompile>
+    <ClCompile Include="03-Activation-Function\Softmax.cpp">
+      <Filter>03-Activation-Function\Softmax</Filter>
+    </ClCompile>
+    <ClCompile Include="08-Optimizers\DropOut.cpp">
+      <Filter>08-Optimizer\Dropout</Filter>
+    </ClCompile>
+    <ClCompile Include="08-Optimizers\BatchNorm.cpp">
+      <Filter>08-Optimizer\BatchNorm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -111,14 +132,23 @@
     <ClInclude Include="08-Optimizers\Optimizers.h">
       <Filter>08-Optimizer</Filter>
     </ClInclude>
-    <ClInclude Include="08-Optimizers\DropOut.h">
-      <Filter>08-Optimizer</Filter>
-    </ClInclude>
     <ClInclude Include="03-Activation-Function\Sigmoid.h">
       <Filter>03-Activation-Function\Sigmoid</Filter>
     </ClInclude>
     <ClInclude Include="03-Activation-Function\ReLU.h">
       <Filter>03-Activation-Function\ReLU</Filter>
+    </ClInclude>
+    <ClInclude Include="03-Activation-Function\Tanh.h">
+      <Filter>03-Activation-Function\Tanh</Filter>
+    </ClInclude>
+    <ClInclude Include="03-Activation-Function\Softmax.h">
+      <Filter>03-Activation-Function\Softmax</Filter>
+    </ClInclude>
+    <ClInclude Include="08-Optimizers\DropOut.h">
+      <Filter>08-Optimizer\Dropout</Filter>
+    </ClInclude>
+    <ClInclude Include="08-Optimizers\BatchNorm.h">
+      <Filter>08-Optimizer\BatchNorm</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

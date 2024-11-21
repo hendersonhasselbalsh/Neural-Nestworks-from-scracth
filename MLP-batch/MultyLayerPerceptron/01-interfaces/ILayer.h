@@ -12,4 +12,5 @@ class ILayer {
 		virtual Eigen::MatrixXd Backward(Eigen::MatrixXd& dL_dO) = 0;	  // backpropagation
 
 		virtual void Initialize(__In__ size_t inputVecSize, __Out__ size_t* outputSize = nullptr) { (*outputSize) = inputVecSize; }
+		virtual Eigen::MatrixXd AdamBackprop(Eigen::MatrixXd& dL_dO, double beta) { return Eigen::MatrixXd(); }
 };

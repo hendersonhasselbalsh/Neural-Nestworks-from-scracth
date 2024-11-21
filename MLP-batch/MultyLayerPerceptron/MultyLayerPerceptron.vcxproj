@@ -22,12 +22,15 @@
     <ClCompile Include="02-Dense-Layer\DenseLayer.cpp" />
     <ClCompile Include="03-Activation-Function\ReLU.cpp" />
     <ClCompile Include="03-Activation-Function\Sigmoid.cpp" />
+    <ClCompile Include="03-Activation-Function\Softmax.cpp" />
+    <ClCompile Include="03-Activation-Function\Tanh.cpp" />
     <ClCompile Include="04-MLP\MLP.cpp" />
     <ClCompile Include="05-Loss-Function\LossFunctions.cpp" />
     <ClCompile Include="06-Managers\DataManager.cpp" />
     <ClCompile Include="06-Managers\LayerManager.cpp" />
     <ClCompile Include="06-Managers\LayerManager.h" />
     <ClCompile Include="07-Builder\MLPbuilder.cpp" />
+    <ClCompile Include="08-Optimizers\BatchNorm.cpp" />
     <ClCompile Include="08-Optimizers\DropOut.cpp" />
     <ClCompile Include="basic-includes.h" />
     <ClCompile Include="main-project\DataLoader.cpp" />
@@ -42,11 +45,14 @@
     <ClInclude Include="03-Activation-Function\ActivationFunction.h" />
     <ClInclude Include="03-Activation-Function\ReLU.h" />
     <ClInclude Include="03-Activation-Function\Sigmoid.h" />
+    <ClInclude Include="03-Activation-Function\Softmax.h" />
+    <ClInclude Include="03-Activation-Function\Tanh.h" />
     <ClInclude Include="04-MLP\MLP.h" />
     <ClInclude Include="05-Loss-Function\LossFunctions.h" />
     <ClInclude Include="06-Managers\DataManager.h" />
     <ClInclude Include="07-Builder\MLPbuilder.h" />
     <ClInclude Include="08-Optimizers\DropOut.h" />
+    <ClInclude Include="08-Optimizers\BatchNorm.h" />
     <ClInclude Include="08-Optimizers\Optimizers.h" />
     <ClInclude Include="main-project\DataLoader.h" />
   </ItemGroup>

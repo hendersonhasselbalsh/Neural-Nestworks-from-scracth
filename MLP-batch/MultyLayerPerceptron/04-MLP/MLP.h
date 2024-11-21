@@ -18,11 +18,13 @@ class MLP {
 		size_t _max_epochs;
 		long _batchSize;
 		size_t _outputClasses;
+		double _beta;
+		bool _useAdam;
 
 		MLP();
 	
 	public:
-		Eigen::MatrixXd CalculateOutput(Eigen::MatrixXd& inputs);
+		Eigen::MatrixXd CalculateOutput(Eigen::MatrixXd& inputs, bool notInTraining = true);
 		Eigen::MatrixXd Backpropgagation(Eigen::MatrixXd& predictedY, Eigen::MatrixXd& correctY);
 		Eigen::MatrixXd Backpropgagation(Eigen::MatrixXd& dL_dY);
 

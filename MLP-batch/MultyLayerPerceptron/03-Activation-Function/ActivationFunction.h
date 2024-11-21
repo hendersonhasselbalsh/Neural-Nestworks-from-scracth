@@ -7,3 +7,5 @@
 
 #include "Sigmoid.h"
 #include "ReLU.h"
+#include "Tanh.h"
+#include "Softmax.h"

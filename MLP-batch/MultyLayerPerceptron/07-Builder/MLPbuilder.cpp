@@ -51,6 +51,18 @@ MLPbuilder MLPbuilder::Architecture(std::vector<ILayer*> layers)
 		_inputSize = outputSize;
 	}
 
+	_mlp._outputClasses = _inputSize; // last layer output size
+
+	return (*this);
+}
+
+MLPbuilder MLPbuilder::UseAdam(double beta)
+{
+	assert(beta <= 0.0 && beta >= 1.0);
+
+	_mlp._beta = beta;
+	_mlp._useAdam = true;
+
 	return (*this);
 }
 

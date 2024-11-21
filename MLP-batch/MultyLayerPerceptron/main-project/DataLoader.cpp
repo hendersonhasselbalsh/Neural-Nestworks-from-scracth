@@ -90,7 +90,7 @@ size_t Evaluator::GetLabel(Eigen::MatrixXd& vec)
 }
 
 
-void Evaluator::Eval_MLP(MLP& mlp, std::vector<std::pair<Eigen::MatrixXd, size_t>> datas)
+double Evaluator::Eval_MLP(MLP& mlp, std::vector<std::pair<Eigen::MatrixXd, size_t>> datas)
 {
     double H = (double) datas.size();
     double error = 0.0;
@@ -98,12 +98,15 @@ void Evaluator::Eval_MLP(MLP& mlp, std::vector<std::pair<Eigen::MatrixXd, size_t
 
     for (auto& [input, correct_lable] : datas) {
         Eigen::MatrixXd predicted = mlp.CalculateOutput(input);
-        size_t predicted_label = GetLabel(predicted);
+        Eigen::MatrixXd predictProb = Softmax().Activation(predicted); 
+        size_t predicted_label = GetLabel(predictProb);
 
         if (correct_lable != predicted_label) { error += 1.0; }
 
         confusion(predicted_label, correct_lable)++;
     }
-    std::cout << "accuracy: " << 1.0 - (error/H) << "\n\n";
+    std::cout << "error: " << (error/H) << "\n\n";
     std::cout << confusion << "\n\n";
+
+    return (error/H); 
 }
