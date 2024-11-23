@@ -70,7 +70,7 @@ void MLP::Training(std::vector<std::pair<Eigen::MatrixXd, size_t>>& datas, std::
             Eigen::MatrixXd dL_dbatchXs = MLP::Backpropgagation(predictedOutputs, bachCorrectYs);
         }
 
-        
+        //callback();
     }
 
     callback(); 

@@ -95,11 +95,12 @@ double Evaluator::Eval_MLP(MLP& mlp, std::vector<std::pair<Eigen::MatrixXd, size
     double H = (double) datas.size();
     double error = 0.0;
     Eigen::MatrixXd confusion = Eigen::MatrixXd::Zero(10,10);
+    Softmax softmax = Softmax();
 
     for (auto& [input, correct_lable] : datas) {
         Eigen::MatrixXd predicted = mlp.CalculateOutput(input);
-        Eigen::MatrixXd predictProb = Softmax().Activation(predicted); 
-        size_t predicted_label = GetLabel(predictProb);
+        Eigen::MatrixXd prob = softmax.Activation(predicted);
+        size_t predicted_label = GetLabel(prob);
 
         if (correct_lable != predicted_label) { error += 1.0; }
 

@@ -120,12 +120,17 @@ int ___main(int agrc, const char** argv)
 // conparations
 //-------------------------------------------
 
-int ___main(int argc, const char** argv)
+int main(int argc, const char** argv)
 {
-	MNIST_DATA traingDatas = DataLoader("..\\..\\.resources\\train").Load();
-	MNIST_DATA testDatas = DataLoader("..\\..\\.resources\\test").Load();
-
-	Comparations::With_WithOut_Adam(traingDatas, testDatas);
+	MNIST_DATA traingDatas;
+	//MNIST_DATA traingDatas = DataLoader("..\\..\\.resources\\train").Load();
+	//MNIST_DATA testDatas = DataLoader("..\\..\\.resources\\test").Load();
+	
+	//Comparations::With_WithOut_Adam(traingDatas, testDatas); 
+	//Comparations::BatchSize(traingDatas, testDatas);
+	//Comparations::LossFunction(traingDatas, testDatas);
+	//Comparations::ActivationFunction(traingDatas, testDatas);
+	Comparations::Adam_beta(traingDatas, traingDatas);
 
 	return 0;
 }

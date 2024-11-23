@@ -3,6 +3,7 @@
 MLPbuilder::MLPbuilder()
 {
 	_mlp = MLP();
+	_mlp._useAdam = false;
 }
 
 

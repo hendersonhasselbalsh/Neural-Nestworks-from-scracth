@@ -97,6 +97,9 @@
     <ClCompile Include="main-project\comparations.cpp">
       <Filter>main-project</Filter>
     </ClCompile>
+    <ClCompile Include="main-project\GnuplotWrapper.cpp">
+      <Filter>main-project</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="01-interfaces\ILayer.h">
@@ -154,6 +157,9 @@
       <Filter>08-Optimizer\BatchNorm</Filter>
     </ClInclude>
     <ClInclude Include="main-project\comparations.h">
+      <Filter>main-project</Filter>
+    </ClInclude>
+    <ClInclude Include="main-project\GnuplotWrapper.h">
       <Filter>main-project</Filter>
     </ClInclude>
   </ItemGroup>
