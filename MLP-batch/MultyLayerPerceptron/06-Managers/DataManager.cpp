@@ -95,7 +95,7 @@ void DataManager::Shuffle(std::vector<std::pair<Eigen::MatrixXd, size_t>>* data)
 
 std::vector<std::pair<Eigen::MatrixXd, Eigen::MatrixXd>> DataManager::BuildBatch(std::vector<std::pair<Eigen::MatrixXd, size_t>>& datas, long batchSize, size_t classes)
 {
-    DataManager::Shuffle( &datas );
+    //DataManager::Shuffle( &datas );
 
     long start = 0;
     long end = batchSize;

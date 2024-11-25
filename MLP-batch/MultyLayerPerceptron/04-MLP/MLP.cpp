@@ -6,6 +6,7 @@ MLP::MLP()
     _batchSize = 1;
     _beta = 1.0;
     _useAdam = false;
+    _shuffleData = false;
 }
 
 
@@ -65,12 +66,14 @@ void MLP::Training(std::vector<std::pair<Eigen::MatrixXd, size_t>>& datas, std::
 
         callback(); 
 
+        if (_shuffleData) { DataManager::Shuffle(&datas); }
+
         for (auto& [batchInputs, bachCorrectYs] : DataManager::BuildBatch(datas, _batchSize, _outputClasses)) {
             Eigen::MatrixXd predictedOutputs = MLP::CalculateOutput(batchInputs, false);
             Eigen::MatrixXd dL_dbatchXs = MLP::Backpropgagation(predictedOutputs, bachCorrectYs);
         }
 
-        //callback();
+
     }
 
     callback(); 

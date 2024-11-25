@@ -60,30 +60,30 @@ void Comparations::With_WithOut_Adam(std::vector<std::pair<Eigen::MatrixXd, size
 {
 	MLP mlp_with_Adam =  MLPbuilder()
 							.InputSize(28*28)
-							.BatchSize(64)
+							.BatchSize(128)
 							.Architecture({
-								new DenseLayer(30, 1e-4),
-								new Sigmoid(),
+								new DenseLayer(128, 1e-4),
+								new ReLU(),
 								new Dropout(0.1),
 								new DenseLayer(10, 1e-4),
 							})
-							.LossFunction(new MSE)
-							.MaxEpochs(30)
+							.LossFunction(new SoftmaxEntropy)
+							.MaxEpochs(50)
 							.UseAdam(0.9)
 							.Build();
 
 
 	MLP mlp_without_Adam = MLPbuilder()
 							.InputSize(28*28)
-							.BatchSize(64)
+							.BatchSize(128)
 							.Architecture({
-								new DenseLayer(30, 1e-4),
-								new Sigmoid(),
+								new DenseLayer(128, 1e-4),
+								new ReLU(),
 								new Dropout(0.1),
 								new DenseLayer(10, 1e-4),
 							})
-							.LossFunction(new MSE)
-							.MaxEpochs(30)
+							.LossFunction(new SoftmaxEntropy)
+							.MaxEpochs(50)
 							.Build();
 
 

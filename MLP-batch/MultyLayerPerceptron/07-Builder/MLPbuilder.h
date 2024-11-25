@@ -25,6 +25,8 @@ class MLPbuilder {
 		MLPbuilder OutputClasses(size_t classes);
 		MLPbuilder Architecture(std::vector<ILayer*> layers);
 		MLPbuilder UseAdam(double beta = 0.9);
+		MLPbuilder ShuffleData(bool shuffle = true);
+
 
 		MLP Build();
 };

@@ -68,6 +68,13 @@ MLPbuilder MLPbuilder::UseAdam(double beta)
 }
 
 
+MLPbuilder MLPbuilder::ShuffleData(bool shuffle)
+{
+	_mlp._shuffleData = shuffle;
+	return (*this);
+}
+
+
 MLP MLPbuilder::Build()
 {
 	return _mlp;

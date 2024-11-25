@@ -20,6 +20,7 @@ class MLP {
 		size_t _outputClasses;
 		double _beta;
 		bool _useAdam;
+		bool _shuffleData;
 
 		MLP();
 	
